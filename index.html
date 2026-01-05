@@ -113,7 +113,7 @@
       border-bottom: 1px solid var(--border);
     }
     .nav{
-      display:flex; align-items:center; justify-content:space-between; gap: 16px;
+      display:flex; align-items:center; justify-content:space-between; gap: 18px;
     }
 
     /* ✅ Only logo in header (no text) */
@@ -138,6 +138,10 @@
     .brand:hover .logo-img{ transform: translateY(-1px); }
 
     /* Menu */
+    nav{
+      margin-left: auto;     /* ✅ pushes nav to right end */
+    }
+    
     nav ul{
       list-style:none;
       display:flex;
@@ -145,6 +149,7 @@
       padding:0;
       margin:0;
       align-items:center;
+      justify-content:flex-end; /* ✅ right aligned */
     }
     nav a{
       text-decoration:none;
@@ -163,7 +168,11 @@
     }
 
     /* Right side: only hamburger (no buttons) */
-    .nav-cta{ display:flex; align-items:center; }
+    .nav-cta{
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+    }
 
     .hamburger{
       display:none;
