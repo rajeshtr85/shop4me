@@ -1,0 +1,815 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Shop4Me — Premium Shopping, Negotiation & Warranty Support</title>
+  <meta name="description" content="Tell us what you want to buy. Shop4Me shortlists the best options, negotiates the best deal (online & offline), and supports you through warranty & after-sales." />
+
+  <style>
+    :root{
+      --bg: #ffffff;
+      --text: #0b0d12;
+      --muted: #525866;
+      --card: rgba(255,255,255,0.86);
+      --border: rgba(15, 23, 42, 0.10);
+      --shadow: 0 12px 40px rgba(2, 6, 23, 0.08);
+      --shadow-sm: 0 8px 24px rgba(2, 6, 23, 0.08);
+      --radius-xl: 28px;
+      --radius-lg: 18px;
+      --radius-md: 14px;
+      --max: 1160px;
+      --pad: 22px;
+      --ease: cubic-bezier(.2,.8,.2,1);
+    }
+
+    *{ box-sizing:border-box; }
+    html{ scroll-behavior:smooth; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      overflow-x:hidden;
+    }
+
+    /* Top scroll progress */
+    .progress{
+      position: fixed; inset: 0 0 auto 0;
+      height: 2px;
+      background: rgba(15,23,42,0.35);
+      transform-origin: left;
+      transform: scaleX(0);
+      z-index: 60;
+    }
+
+    /* Subtle background */
+    .bg-grid{
+      position: fixed; inset: 0;
+      pointer-events:none;
+      background-image: radial-gradient(circle at 1px 1px, rgba(0,0,0,0.06) 1px, transparent 0);
+      background-size: 26px 26px;
+      opacity: .45;
+      z-index: -2;
+    }
+    .bg-wash{
+      position: fixed; inset: -20%;
+      pointer-events:none;
+      background:
+        radial-gradient(40% 40% at 20% 10%, rgba(99,102,241,0.16), transparent 60%),
+        radial-gradient(45% 45% at 80% 15%, rgba(16,185,129,0.14), transparent 60%),
+        radial-gradient(50% 50% at 50% 80%, rgba(236,72,153,0.10), transparent 60%);
+      filter: blur(20px);
+      z-index: -3;
+    }
+
+    /* Layout */
+    .wrap{ max-width: var(--max); margin: 0 auto; padding: 0 var(--pad); }
+    .section{ padding: 72px 0; }
+    .anchor{ scroll-margin-top: 110px; }
+
+    /* Header */
+    header{
+      position: sticky; top: 0; z-index: 50;
+      padding: 14px 0;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.88), rgba(255,255,255,0.62));
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav{
+      display:flex; align-items:center; justify-content:space-between; gap: 14px;
+    }
+    .brand{
+      display:flex; align-items:center; gap: 10px; text-decoration:none; color: var(--text);
+      min-width: 220px;
+    }
+    .logo{
+      width: 38px; height: 38px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(15,23,42,0.08), rgba(15,23,42,0.02));
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+    .brand-title{ font-weight: 650; font-size: 14px; line-height: 1.1; }
+    .brand-sub{ font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+    nav ul{ list-style:none; display:flex; gap: 18px; padding:0; margin:0; }
+    nav a{
+      text-decoration:none; color: rgba(2,6,23,0.72);
+      font-size: 13px; font-weight: 550;
+      padding: 10px 10px; border-radius: 12px;
+      transition: background .2s var(--ease), color .2s var(--ease);
+      white-space: nowrap;
+    }
+    nav a:hover{ background: rgba(2,6,23,0.06); color: rgba(2,6,23,0.92); }
+
+    .nav-cta{ display:flex; align-items:center; gap: 10px; }
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap: 10px;
+      height: 44px; padding: 0 16px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.85);
+      color: var(--text);
+      font-weight: 650;
+      font-size: 13px;
+      text-decoration:none;
+      box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+      transition: transform .25s var(--ease), background .25s var(--ease), box-shadow .25s var(--ease);
+    }
+    .btn:hover{ transform: translateY(-1px); box-shadow: var(--shadow-sm); background: rgba(255,255,255,0.98); }
+    .btn.primary{
+      background: rgba(2,6,23,0.92);
+      color: #fff;
+      border-color: rgba(2,6,23,0.92);
+    }
+    .btn.primary:hover{ background: rgba(2,6,23,1); }
+    .btn.ghost{
+      background: transparent;
+      border-color: transparent;
+      color: rgba(2,6,23,0.75);
+    }
+    .btn.ghost:hover{ background: rgba(2,6,23,0.06); border-color: var(--border); }
+
+    .hamburger{ display:none; border: 1px solid var(--border); background: rgba(255,255,255,0.8); border-radius: 14px; height: 44px; width: 44px; }
+    .hamburger:active{ transform: translateY(1px); }
+
+    /* Hero */
+    .hero{ padding: 44px 0 26px; position: relative; overflow:hidden; }
+    .pill{
+      display:inline-flex; align-items:center; gap: 8px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.8);
+      color: rgba(2,6,23,0.75);
+      font-size: 12px; font-weight: 650;
+      box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+    }
+    .hero h1{
+      margin: 18px 0 0;
+      font-size: 44px;
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      font-weight: 700;
+      max-width: 16ch;
+      text-wrap: balance;
+    }
+    .hero p{
+      margin: 14px 0 0;
+      max-width: 62ch;
+      color: var(--muted);
+      font-size: 16px;
+    }
+    .hero-actions{ margin-top: 22px; display:flex; gap: 10px; flex-wrap:wrap; }
+
+    .hero-strip{
+      margin-top: 26px;
+      display:grid;
+      gap: 12px;
+      grid-template-columns: repeat(12, 1fr);
+    }
+
+    .card{
+      position: relative;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--border);
+      background: var(--card);
+      box-shadow: var(--shadow-sm);
+      overflow:hidden;
+    }
+    .card::before{
+      content:"";
+      position:absolute; inset:0;
+      background: linear-gradient(180deg, rgba(2,6,23,0.04), transparent 55%);
+      pointer-events:none;
+    }
+    .card > *{ position: relative; }
+
+    .mini{ padding: 16px; }
+    .mini h3{ margin:0; font-size: 14px; font-weight: 700; }
+    .mini p{ margin: 6px 0 0; font-size: 13px; color: var(--muted); }
+
+    .col4{ grid-column: span 4; }
+    .col6{ grid-column: span 6; }
+    .col12{ grid-column: span 12; }
+
+    /* Big showcase */
+    .showcase{
+      margin-top: 14px;
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 12px;
+    }
+    .panel{ padding: 22px; }
+    .panel h3{ margin:0; font-size: 16px; font-weight: 750; letter-spacing: -0.01em; }
+    .panel p{ margin: 10px 0 0; color: var(--muted); font-size: 13px; }
+
+    .chips{ margin-top: 14px; display:flex; flex-wrap:wrap; gap: 8px; }
+    .chip{
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.9);
+      font-size: 12px;
+      font-weight: 650;
+      color: rgba(2,6,23,0.74);
+    }
+    .requests{ display:grid; gap: 10px; padding: 18px; }
+    .req{
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.92);
+      padding: 14px;
+      box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+      transition: transform .35s var(--ease), box-shadow .35s var(--ease);
+    }
+    .req:hover{ transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+    .req .t{ font-weight: 700; font-size: 13px; }
+    .req .s{ margin-top: 4px; color: var(--muted); font-size: 12px; }
+
+    /* Section headings */
+    .eyebrow{
+      display:flex; align-items:center; gap:10px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .22em;
+      color: rgba(2,6,23,0.55);
+      font-weight: 700;
+    }
+    .h2{
+      margin: 10px 0 0;
+      font-size: 30px;
+      letter-spacing: -0.02em;
+      font-weight: 750;
+      text-wrap: balance;
+    }
+    .lead{
+      margin: 10px 0 0;
+      color: var(--muted);
+      max-width: 70ch;
+    }
+
+    /* Services grid */
+    .grid{
+      margin-top: 22px;
+      display:grid;
+      gap: 12px;
+      grid-template-columns: repeat(12, 1fr);
+    }
+    .service{ padding: 18px; }
+    .service h3{ margin:0; font-size: 15px; font-weight: 750; }
+    .service p{ margin: 8px 0 0; color: var(--muted); font-size: 13px; }
+    .link{
+      display:inline-flex; align-items:center; gap: 6px;
+      margin-top: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      color: rgba(2,6,23,0.86);
+      text-decoration:none;
+      padding: 10px 0;
+    }
+    .link:hover{ text-decoration: underline; }
+
+    /* Steps */
+    .steps{ display:grid; gap: 10px; margin-top: 18px; }
+    .step{ padding: 16px; display:flex; gap: 12px; align-items:flex-start; }
+    .num{
+      width: 34px; height: 34px; border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(2,6,23,0.04);
+      display:flex; align-items:center; justify-content:center;
+      font-weight: 800; font-size: 12px;
+    }
+    .step .tt{ font-weight: 750; font-size: 14px; }
+    .step .dd{ margin-top: 4px; color: var(--muted); font-size: 13px; }
+
+    /* Pricing */
+    .price{ padding: 18px; }
+    .badge{
+      display:inline-flex; align-items:center;
+      border: 1px solid var(--border);
+      background: rgba(2,6,23,0.04);
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 750;
+      color: rgba(2,6,23,0.74);
+    }
+    .price .p{
+      margin-top: 12px;
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .price ul{ margin: 12px 0 0 18px; color: var(--muted); font-size: 13px; }
+    .price li{ margin: 6px 0; }
+
+    /* Trust */
+    .trust{ padding: 18px; }
+    .trust h3{ margin:0; font-size: 15px; font-weight: 800; }
+    .trust p{ margin: 8px 0 0; color: var(--muted); font-size: 13px; }
+
+    /* FAQ (details) */
+    details{
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: rgba(255,255,255,0.92);
+      box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+      padding: 12px 14px;
+    }
+    details + details{ margin-top: 10px; }
+    summary{
+      cursor:pointer;
+      font-weight: 800;
+      font-size: 14px;
+      list-style:none;
+    }
+    summary::-webkit-details-marker{ display:none; }
+    details p{ margin: 10px 0 0; color: var(--muted); font-size: 13px; }
+
+    /* Form */
+    form{ display:grid; gap: 10px; }
+    input, textarea, select{
+      width: 100%;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.92);
+      padding: 12px 12px;
+      font: inherit;
+      color: var(--text);
+      outline:none;
+      transition: box-shadow .2s var(--ease), border-color .2s var(--ease);
+    }
+    input:focus, textarea:focus, select:focus{
+      border-color: rgba(99,102,241,0.45);
+      box-shadow: 0 0 0 6px rgba(99,102,241,0.12);
+    }
+    textarea{ min-height: 120px; resize: vertical; }
+
+    footer{
+      padding: 34px 0 42px;
+      border-top: 1px solid var(--border);
+      color: rgba(2,6,23,0.62);
+      font-size: 13px;
+    }
+    .footer-row{ display:flex; justify-content:space-between; gap: 14px; flex-wrap:wrap; }
+    .footer-links{ display:flex; gap: 14px; flex-wrap:wrap; }
+    .footer-links a{ color: rgba(2,6,23,0.62); text-decoration:none; font-weight: 650; }
+    .footer-links a:hover{ color: rgba(2,6,23,0.9); }
+
+    /* Reveal animations */
+    .reveal{ opacity:0; transform: translateY(16px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
+    .reveal.in{ opacity:1; transform: translateY(0); }
+    .reveal.delay-1{ transition-delay: .08s; }
+    .reveal.delay-2{ transition-delay: .16s; }
+    .reveal.delay-3{ transition-delay: .24s; }
+
+    /* Responsive */
+    @media (max-width: 980px){
+      nav ul{ display:none; }
+      .hamburger{ display:inline-flex; align-items:center; justify-content:center; }
+      .brand{ min-width: auto; }
+    }
+    @media (max-width: 820px){
+      .hero h1{ font-size: 36px; max-width: 18ch; }
+      .col4, .col6 { grid-column: span 12; }
+      .section{ padding: 58px 0; }
+    }
+
+    /* Mobile menu */
+    .mobile{
+      display:none;
+      border-top: 1px solid var(--border);
+      padding-top: 10px;
+      margin-top: 10px;
+    }
+    .mobile a{
+      display:block;
+      text-decoration:none;
+      color: rgba(2,6,23,0.78);
+      font-weight: 700;
+      padding: 10px 8px;
+      border-radius: 12px;
+    }
+    .mobile a:hover{ background: rgba(2,6,23,0.05); }
+    .mobile.open{ display:block; }
+  </style>
+</head>
+
+<body>
+  <div class="progress" id="progress"></div>
+  <div class="bg-wash" aria-hidden="true"></div>
+  <div class="bg-grid" aria-hidden="true"></div>
+
+  <header>
+    <div class="wrap">
+      <div class="nav">
+        <a class="brand" href="#home">
+          <div class="logo" aria-hidden="true"></div>
+          <div>
+            <div class="brand-title">Shop4Me</div>
+            <div class="brand-sub">Shopping • Negotiation • Warranty Support</div>
+          </div>
+        </a>
+
+        <nav aria-label="Primary">
+          <ul>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#how">How it works</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#trust">Trust</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+
+        <div class="nav-cta">
+          <a class="btn ghost" href="#contact">Talk to us</a>
+          <a class="btn primary" href="#contact">Get started →</a>
+          <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">☰</button>
+        </div>
+      </div>
+
+      <div class="mobile" id="mobileMenu">
+        <a href="#services">Services</a>
+        <a href="#how">How it works</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#trust">Trust</a>
+        <a href="#faq">FAQ</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- HERO -->
+    <section class="hero" id="home">
+      <div class="pill reveal">Premium concierge • Better deals • After-sales support</div>
+      <h1 class="reveal delay-1">A premium buying experience — without the shopping stress.</h1>
+      <p class="reveal delay-2">
+        Tell us what you want to buy. We shortlist the best options, negotiate the best deal
+        (online & offline), and support you through warranty and after-sales.
+      </p>
+      <div class="hero-actions reveal delay-3">
+        <a class="btn primary" href="#contact">Start a request →</a>
+        <a class="btn" href="#services">Explore services</a>
+      </div>
+
+      <div class="hero-strip">
+        <div class="card mini col4 reveal">
+          <h3>Right specs</h3>
+          <p>Clear trade-offs so you buy what you actually need.</p>
+        </div>
+        <div class="card mini col4 reveal delay-1">
+          <h3>Better pricing</h3>
+          <p>We find hidden offers and negotiate across sellers.</p>
+        </div>
+        <div class="card mini col4 reveal delay-2">
+          <h3>Warranty support</h3>
+          <p>Single point of contact during the warranty lifecycle.</p>
+        </div>
+      </div>
+
+      <div class="showcase">
+        <div class="card panel col6 reveal">
+          <h3>One request. End-to-end.</h3>
+          <p>
+            Requirement → Shortlist → Deal search → Negotiation → Purchase assistance → After-sales.
+            You approve the final decision. We handle the heavy lifting.
+          </p>
+          <div class="chips">
+            <span class="chip">Online + offline deals</span>
+            <span class="chip">Clear recommendations</span>
+            <span class="chip">Documentation checks</span>
+            <span class="chip">Service follow-ups</span>
+          </div>
+          <a class="link" href="#how">See how it works →</a>
+        </div>
+
+        <div class="card col6 reveal delay-1">
+          <div class="requests">
+            <div class="req">
+              <div class="t">Laptop for video editing under ₹90K</div>
+              <div class="s">Shortlist • Deal search • Negotiation</div>
+            </div>
+            <div class="req">
+              <div class="t">Refrigerator with low power usage</div>
+              <div class="s">Spec evaluation • Value comparison</div>
+            </div>
+            <div class="req">
+              <div class="t">Office procurement: monitors + chairs</div>
+              <div class="s">Vendor options • Bulk pricing</div>
+            </div>
+            <div class="req">
+              <div class="t">Phone + exchange + warranty bundle</div>
+              <div class="s">Offer stacking • Best total value</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section class="section">
+      <div class="anchor" id="services"></div>
+      <div class="eyebrow reveal">Services</div>
+      <h2 class="h2 reveal delay-1">Everything you need — with clarity and control</h2>
+      <p class="lead reveal delay-2">
+        We handle research, comparisons, negotiations, and after-sales coordination. You stay in control with transparent recommendations and approval.
+      </p>
+
+      <div class="grid">
+        <div class="card service col4 reveal">
+          <h3>Requirement & spec evaluation</h3>
+          <p>We decode specs and real-world performance so you avoid over/under-buying.</p>
+          <a class="link" href="#contact">Request this →</a>
+        </div>
+        <div class="card service col4 reveal delay-1">
+          <h3>Shortlist (2–5 best options)</h3>
+          <p>We compare price, warranty/service quality, and long-term value with clear trade-offs.</p>
+          <a class="link" href="#contact">Request this →</a>
+        </div>
+        <div class="card service col4 reveal delay-2">
+          <h3>Deal search (online + offline)</h3>
+          <p>Brand stores, local retailers, marketplaces — we compare all meaningful options.</p>
+          <a class="link" href="#contact">Request this →</a>
+        </div>
+
+        <div class="card service col4 reveal">
+          <h3>Negotiation on your behalf</h3>
+          <p>Better pricing, bundles, accessories, delivery/installation terms, and value adds.</p>
+          <a class="link" href="#contact">Request this →</a>
+        </div>
+        <div class="card service col4 reveal delay-1">
+          <h3>Purchase assistance</h3>
+          <p>Invoice checks, warranty registration guidance, documentation hygiene — done right.</p>
+          <a class="link" href="#contact">Request this →</a>
+        </div>
+        <div class="card service col4 reveal delay-2">
+          <h3>Warranty & after-sales support</h3>
+          <p>We coordinate service centers, track requests, follow up, and escalate when needed.</p>
+          <a class="link" href="#contact">Request this →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="section">
+      <div class="anchor" id="how"></div>
+      <div class="grid" style="align-items:start;">
+        <div class="col6">
+          <div class="eyebrow reveal">Process</div>
+          <h2 class="h2 reveal delay-1">A premium workflow built for busy people</h2>
+          <p class="lead reveal delay-2">
+            Minimal inputs. Maximum clarity. Consistent updates — like a concierge should.
+          </p>
+        </div>
+        <div class="col6">
+          <div class="steps">
+            <div class="card step reveal">
+              <div class="num">1</div>
+              <div>
+                <div class="tt">Tell us your need</div>
+                <div class="dd">Share budget, preferences, must-haves. We ask a few sharp questions.</div>
+              </div>
+            </div>
+            <div class="card step reveal delay-1">
+              <div class="num">2</div>
+              <div>
+                <div class="tt">We shortlist + search deals</div>
+                <div class="dd">2–5 best options with a clean comparison and reasoning.</div>
+              </div>
+            </div>
+            <div class="card step reveal delay-2">
+              <div class="num">3</div>
+              <div>
+                <div class="tt">We negotiate</div>
+                <div class="dd">We pursue better pricing, bundles, add-ons, and better terms.</div>
+              </div>
+            </div>
+            <div class="card step reveal delay-3">
+              <div class="num">4</div>
+              <div>
+                <div class="tt">You approve + we support after purchase</div>
+                <div class="dd">Transparent final decision, then warranty/service coordination when needed.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING -->
+    <section class="section">
+      <div class="anchor" id="pricing"></div>
+      <div class="eyebrow reveal">Pricing</div>
+      <h2 class="h2 reveal delay-1">Flexible options that feel fair</h2>
+      <p class="lead reveal delay-2">Pick what fits your purchase. Confirm scope and terms upfront.</p>
+
+      <div class="grid">
+        <div class="card price col4 reveal">
+          <span class="badge">Most popular</span>
+          <div class="p">Success fee (on savings)</div>
+          <ul>
+            <li>No savings → no success fee</li>
+            <li>Best for high-value purchases</li>
+            <li>Transparent recommendation + approval</li>
+          </ul>
+          <div style="margin-top:14px;"><a class="btn primary" href="#contact" style="width:100%;">Discuss my case →</a></div>
+        </div>
+
+        <div class="card price col4 reveal delay-1">
+          <span class="badge">Simple</span>
+          <div class="p">Flat concierge fee</div>
+          <ul>
+            <li>Category-based one-time fee</li>
+            <li>Evaluation + shortlist + negotiation</li>
+            <li>Clear scope and deliverables</li>
+          </ul>
+          <div style="margin-top:14px;"><a class="btn" href="#contact" style="width:100%;">Get a quote →</a></div>
+        </div>
+
+        <div class="card price col4 reveal delay-2">
+          <span class="badge">After-sales</span>
+          <div class="p">AMC (annual support)</div>
+          <ul>
+            <li>Warranty tracking and follow-ups</li>
+            <li>Service coordination + escalation</li>
+            <li>Great for families & SMEs</li>
+          </ul>
+          <div style="margin-top:14px;"><a class="btn" href="#contact" style="width:100%;">Explore AMC →</a></div>
+        </div>
+      </div>
+
+      <p class="lead reveal" style="margin-top:14px; font-size:13px;">
+        Tip: Replace the pricing text with your final policy (exact % / fees) when ready.
+      </p>
+    </section>
+
+    <!-- TRUST -->
+    <section class="section">
+      <div class="anchor" id="trust"></div>
+      <div class="grid" style="align-items:start;">
+        <div class="col6">
+          <div class="eyebrow reveal">Trust</div>
+          <h2 class="h2 reveal delay-1">Professional, transparent, customer-first</h2>
+          <p class="lead reveal delay-2">
+            Premium design is great — premium behavior matters more. Built on clarity and consent.
+          </p>
+        </div>
+
+        <div class="col6">
+          <div class="grid" style="margin-top:0;">
+            <div class="card trust col12 reveal">
+              <h3>No forced purchases</h3>
+              <p>You approve every decision. We recommend with clear reasoning and trade-offs.</p>
+            </div>
+            <div class="card trust col12 reveal delay-1">
+              <h3>Clear disclosure</h3>
+              <p>We share pricing, seller type, and warranty terms — so you can decide confidently.</p>
+            </div>
+            <div class="card trust col12 reveal delay-2">
+              <h3>Warranty facilitation</h3>
+              <p>We coordinate and escalate when needed — warranty remains with manufacturer/seller.</p>
+            </div>
+            <div class="card trust col12 reveal delay-3">
+              <h3>Right product. Best deal. Zero stress.</h3>
+              <p>With Shop4Me, you never shop alone.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section">
+      <div class="anchor" id="faq"></div>
+      <div class="grid" style="align-items:start;">
+        <div class="col6">
+          <div class="eyebrow reveal">FAQ</div>
+          <h2 class="h2 reveal delay-1">Questions, answered</h2>
+          <p class="lead reveal delay-2">Short, clear answers — like the rest of the experience.</p>
+        </div>
+        <div class="col6 reveal">
+          <details>
+            <summary>Do you sell products?</summary>
+            <p>No. Shop4Me acts on your behalf and you approve the final decision before any transaction.</p>
+          </details>
+          <details>
+            <summary>How do you charge?</summary>
+            <p>We can work via a success fee on savings, a flat concierge fee, or AMC for after-sales support.</p>
+          </details>
+          <details>
+            <summary>What categories do you support?</summary>
+            <p>High-value electronics/appliances/gadgets and procurement support for startups/SMEs.</p>
+          </details>
+          <details>
+            <summary>Do you help after purchase?</summary>
+            <p>Yes. We coordinate with brands/service centers, track requests, follow up, and escalate when needed.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="section">
+      <div class="anchor" id="contact"></div>
+      <div class="grid" style="align-items:start;">
+        <div class="col6">
+          <div class="eyebrow reveal">Contact</div>
+          <h2 class="h2 reveal delay-1">Start with a single message</h2>
+          <p class="lead reveal delay-2">
+            Share what you want to buy and your budget. We’ll respond with a clear plan and timeline.
+          </p>
+          <div class="card panel reveal" style="margin-top:18px;">
+            <h3>Prefer WhatsApp?</h3>
+            <p>Replace the link below with your click-to-chat number.</p>
+            <a class="btn" href="https://wa.me/" target="_blank" rel="noopener" style="margin-top:12px;">WhatsApp us</a>
+          </div>
+        </div>
+
+        <div class="col6 reveal">
+          <div class="card panel">
+            <h3>Send a request</h3>
+            <p style="margin-bottom:14px;">This form is a template. Connect it to Formspree / Google Forms / Netlify Forms.</p>
+
+            <!-- Replace action="" with your endpoint or Formspree link -->
+            <form action="" method="post">
+              <div style="display:grid; gap:10px; grid-template-columns: 1fr 1fr;">
+                <input name="name" placeholder="Full name" required />
+                <input name="phone" placeholder="Phone / WhatsApp" required />
+              </div>
+
+              <input name="item" placeholder="What do you want to buy? (category or model)" required />
+
+              <div style="display:grid; gap:10px; grid-template-columns: 1fr 1fr;">
+                <input name="budget" placeholder="Budget (₹)" />
+                <input name="city" placeholder="City" />
+              </div>
+
+              <textarea name="notes" placeholder="Must-haves, timeline, preferred brands, etc."></textarea>
+
+              <button class="btn primary" type="submit" style="width:100%;">Submit request →</button>
+              <div style="font-size:12px; color: var(--muted); margin-top:6px;">
+                Tip: If you don’t have a backend, use Formspree or a Google Form.
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="wrap footer-row">
+        <div>© <span id="year"></span> Shop4Me</div>
+        <div class="footer-links">
+          <a href="#services">Services</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#faq">FAQ</a>
+          <a href="#contact">Contact</a>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    // Year
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // Scroll progress
+    const progress = document.getElementById("progress");
+    const onScroll = () => {
+      const h = document.documentElement;
+      const max = (h.scrollHeight - h.clientHeight) || 1;
+      const p = h.scrollTop / max;
+      progress.style.transform = `scaleX(${p})`;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+
+    // Reveal on scroll (IntersectionObserver)
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) e.target.classList.add("in");
+      }
+    }, { threshold: 0.18 });
+
+    document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+
+    // Mobile menu
+    const hamburger = document.getElementById("hamburger");
+    const mobileMenu = document.getElementById("mobileMenu");
+    hamburger?.addEventListener("click", () => {
+      const open = mobileMenu.classList.toggle("open");
+      hamburger.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+    // Close menu on click
+    mobileMenu?.querySelectorAll("a").forEach(a => a.addEventListener("click", () => {
+      mobileMenu.classList.remove("open");
+      hamburger.setAttribute("aria-expanded", "false");
+    }));
+  </script>
+</body>
+</html>
