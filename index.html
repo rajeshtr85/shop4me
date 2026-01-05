@@ -29,6 +29,9 @@
 
       --ease: cubic-bezier(.2,.8,.2,1);
 
+      --focus: rgba(99,102,241,0.45);
+      --focus-ring: 0 0 0 6px rgba(99,102,241,0.12);
+
       /* spacing scale */
       --s-1: 6px;
       --s-2: 10px;
@@ -39,20 +42,22 @@
       --s-7: 36px;
       --s-8: 48px;
       --s-9: 64px;
-
-      --focus: rgba(99,102,241,0.45);
-      --focus-ring: 0 0 0 6px rgba(99,102,241,0.12);
     }
 
     *{ box-sizing:border-box; }
     html{ scroll-behavior:smooth; }
     body{
       margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      font-family:
+        -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+        "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
       background: var(--bg);
       color: var(--text);
       line-height: 1.5;
       overflow-x:hidden;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     a, button{ -webkit-tap-highlight-color: transparent; }
@@ -103,97 +108,67 @@
     header{
       position: sticky; top: 0; z-index: 50;
       padding: 14px 0;
-      background: linear-gradient(to bottom, rgba(255,255,255,0.90), rgba(255,255,255,0.68));
+      background: linear-gradient(to bottom, rgba(255,255,255,0.92), rgba(255,255,255,0.70));
       backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--border);
     }
     .nav{
-      display:flex; align-items:center; justify-content:space-between; gap: 14px;
+      display:flex; align-items:center; justify-content:space-between; gap: 16px;
     }
+
+    /* ✅ Only logo in header (no text) */
     .brand{
-      display:flex; align-items:center; gap: 12px;
-      text-decoration:none; color: var(--text);
-      min-width: 240px;
-    }
-    /* ✅ Put s4m_logo.png in the same folder as index.html */
-    .logo-img{
-      height: 40px;
-      width: auto;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: #fff;
-      padding: 6px 10px;
-      object-fit: contain;
-      box-shadow: var(--shadow-xs);
+      display:flex; align-items:center;
+      text-decoration:none;
+      color: var(--text);
       flex: 0 0 auto;
-      transition: transform .35s var(--ease), box-shadow .35s var(--ease);
     }
-    .brand:hover .logo-img{ transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+    /* Put s4m_logo.png in same folder as this HTML */
+    .logo-img{
+      height: 58px; /* bigger logo */
+      width: auto;
+      border: none;
+      background: transparent;
+      padding: 0;
+      object-fit: contain;
+      box-shadow: none;
+      transition: transform .35s var(--ease);
+      display:block;
+    }
+    .brand:hover .logo-img{ transform: translateY(-1px); }
 
-    .brand-title{ font-weight: 750; font-size: 14px; line-height: 1.1; letter-spacing: -0.01em; }
-    .brand-sub{ font-size: 12px; color: var(--muted); margin-top: 2px; }
-
-    nav ul{ list-style:none; display:flex; gap: 10px; padding:0; margin:0; }
+    /* Menu */
+    nav ul{
+      list-style:none;
+      display:flex;
+      gap: 18px;
+      padding:0;
+      margin:0;
+      align-items:center;
+    }
     nav a{
       text-decoration:none;
-      color: rgba(2,6,23,0.74);
-      font-size: 13px; font-weight: 650;
-      padding: 10px 10px;
+      color: rgba(2,6,23,0.78);
+      font-size: 13px;
+      font-weight: 650;
+      padding: 8px 10px;
       border-radius: 12px;
       transition: background .2s var(--ease), color .2s var(--ease), transform .2s var(--ease);
       white-space: nowrap;
-      position: relative;
     }
     nav a:hover{
       background: rgba(2,6,23,0.06);
-      color: rgba(2,6,23,0.92);
+      color: rgba(2,6,23,0.95);
       transform: translateY(-1px);
     }
 
-    .nav-cta{ display:flex; align-items:center; gap: 10px; }
-    .btn{
-      display:inline-flex; align-items:center; justify-content:center; gap: 10px;
-      height: 44px; padding: 0 16px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.86);
-      color: var(--text);
-      font-weight: 750;
-      font-size: 13px;
-      text-decoration:none;
-      box-shadow: var(--shadow-xs);
-      transition: transform .25s var(--ease), background .25s var(--ease), box-shadow .25s var(--ease);
-    }
-    .btn:hover{ transform: translateY(-1px); box-shadow: var(--shadow-sm); background: rgba(255,255,255,0.98); }
-    .btn.primary{
-      background: rgba(2,6,23,0.94);
-      color: #fff;
-      border-color: rgba(2,6,23,0.94);
-      position: relative;
-      overflow: hidden;
-    }
-    .btn.primary::after{
-      content:"";
-      position:absolute;
-      inset: -40% -60%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
-      transform: translateX(-60%) rotate(18deg);
-      transition: transform .9s var(--ease);
-    }
-    .btn.primary:hover{ background: rgba(2,6,23,1); }
-    .btn.primary:hover::after{ transform: translateX(60%) rotate(18deg); }
-    .btn.ghost{
-      background: transparent;
-      border-color: transparent;
-      color: rgba(2,6,23,0.75);
-      box-shadow: none;
-    }
-    .btn.ghost:hover{ background: rgba(2,6,23,0.06); border-color: var(--border); box-shadow: var(--shadow-xs); }
+    /* Right side: only hamburger (no buttons) */
+    .nav-cta{ display:flex; align-items:center; }
 
     .hamburger{
       display:none;
       border: 1px solid var(--border);
-      background: rgba(255,255,255,0.88);
+      background: rgba(255,255,255,0.90);
       border-radius: 14px;
       height: 44px;
       width: 44px;
@@ -202,9 +177,8 @@
     }
     .hamburger:hover{ box-shadow: var(--shadow-sm); transform: translateY(-1px); }
     .hamburger:active{ transform: translateY(1px); }
-    .burger{
-      width: 18px; height: 12px; margin: 0 auto; position: relative;
-    }
+
+    .burger{ width: 18px; height: 12px; margin: 0 auto; position: relative; }
     .burger span{
       position:absolute; left:0; right:0;
       height: 2px; border-radius: 99px;
@@ -249,6 +223,39 @@
       from{ opacity:0; transform: translateY(-6px); }
       to{ opacity:1; transform: translateY(0); }
     }
+
+    /* Buttons (used elsewhere) */
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap: 10px;
+      height: 44px; padding: 0 16px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.86);
+      color: var(--text);
+      font-weight: 750;
+      font-size: 13px;
+      text-decoration:none;
+      box-shadow: var(--shadow-xs);
+      transition: transform .25s var(--ease), background .25s var(--ease), box-shadow .25s var(--ease);
+    }
+    .btn:hover{ transform: translateY(-1px); box-shadow: var(--shadow-sm); background: rgba(255,255,255,0.98); }
+    .btn.primary{
+      background: rgba(2,6,23,0.94);
+      color: #fff;
+      border-color: rgba(2,6,23,0.94);
+      position: relative;
+      overflow: hidden;
+    }
+    .btn.primary::after{
+      content:"";
+      position:absolute;
+      inset: -40% -60%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
+      transform: translateX(-60%) rotate(18deg);
+      transition: transform .9s var(--ease);
+    }
+    .btn.primary:hover{ background: rgba(2,6,23,1); }
+    .btn.primary:hover::after{ transform: translateX(60%) rotate(18deg); }
 
     /* Cards */
     .card{
@@ -552,18 +559,6 @@
     @media (max-width: 980px){
       nav ul{ display:none; }
       .hamburger{ display:inline-flex; align-items:center; justify-content:center; }
-
-      .brand{ min-width: 0; flex: 1; }
-      .brand > div:last-child{ min-width: 0; }
-      .brand-title, .brand-sub{
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 52vw;
-      }
-
-      /* on mobile: hide buttons, keep only hamburger */
-      .nav-cta a{ display:none; }
     }
     @media (max-width: 860px){
       .hero h1{ font-size: 38px; max-width: 20ch; }
@@ -571,8 +566,11 @@
       .usecase{ grid-column: span 12; }
       .section{ padding: var(--s-8) 0; }
     }
+    @media (max-width: 520px){
+      .logo-img{ height: 50px; } /* fit better on small phones */
+    }
 
-    /* Respect reduced motion */
+    /* Reduced motion */
     @media (prefers-reduced-motion: reduce){
       html{ scroll-behavior:auto; }
       .bg-wash{ animation: none; }
@@ -591,12 +589,8 @@
   <header>
     <div class="wrap">
       <div class="nav">
-        <a class="brand" href="#home">
+        <a class="brand" href="#home" aria-label="Shop4Me Home">
           <img class="logo-img" src="s4m_logo.png" alt="Shop4Me logo" />
-          <div>
-            <div class="brand-title">Shop4Me</div>
-            <div class="brand-sub">Shopping • Negotiation • Warranty Support</div>
-          </div>
         </a>
 
         <nav aria-label="Primary">
@@ -612,9 +606,6 @@
         </nav>
 
         <div class="nav-cta">
-          <a class="btn ghost" href="#contact">Talk to us</a>
-          <a class="btn primary" href="#contact">Get started →</a>
-
           <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
             <div class="burger" aria-hidden="true">
               <span></span><span></span><span></span>
@@ -631,7 +622,6 @@
         <a href="#trust">Trust</a>
         <a href="#faq">FAQ</a>
         <a href="#contact">Contact</a>
-        <a href="#contact" style="margin-top:6px; font-weight:950;">Get started →</a>
       </div>
     </div>
   </header>
@@ -641,7 +631,7 @@
     <section class="hero" id="home">
       <div class="pill reveal">Premium concierge • Better deals • After-sales support</div>
 
-      <h1 class="reveal delay-2">A premium buying experience - without the shopping stress.</h1>
+      <h1 class="reveal delay-1">A premium buying experience - without the shopping stress.</h1>
 
       <p class="reveal delay-2">
         Tell us what you want to buy. We shortlist the best options, negotiate the best deal
@@ -773,7 +763,7 @@
             <span class="usecase-tag">Electronics</span>
           </div>
           <div class="flow">
-            <div class="flow-step"><span class="flow-dot">1</span> Understand your editing workflow (Premiere/DaVinci), storage & RAM needs</div>
+            <div class="flow-step"><span class="flow-dot">1</span> Understand your workflow (Premiere/DaVinci), storage & RAM needs</div>
             <div class="flow-step"><span class="flow-dot">2</span> Shortlist 2–5 best options with clear trade-offs</div>
             <div class="flow-step"><span class="flow-dot">3</span> Search deals (online + offline) + validate warranty</div>
             <div class="flow-step"><span class="flow-dot">4</span> Negotiate price / bundles / accessories</div>
@@ -1099,7 +1089,7 @@
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
 
-    // Reveal on scroll (IntersectionObserver)
+    // Reveal on scroll
     const io = new IntersectionObserver((entries) => {
       for (const e of entries) {
         if (e.isIntersecting) e.target.classList.add("in");
