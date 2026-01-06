@@ -25,9 +25,9 @@
   <meta name="twitter:description" content="Shortlist → Deal search → Negotiation → Purchase assistance → Warranty & after-sales support." />
   <meta name="twitter:image" content="https://shop4me.in/s4m_logo.png" />
 
-  <!-- Favicon (use your attached favicon.jpeg in same folder) -->
-  <link rel="icon" href="Favicon.png" type="image/png" />
-  <link rel="apple-touch-icon" href="Favicon.png" />
+  <!-- Favicon -->
+  <link rel="icon" href="Favicon.jpeg" type="image/jpeg" />
+  <link rel="apple-touch-icon" href="Favicon.jpeg" />
 
   <!-- Structured Data -->
   <script type="application/ld+json">
@@ -79,6 +79,9 @@
       --s-7:36px;
       --s-8:48px;
       --s-9:64px;
+
+      --footer:#0b0d12;
+      --footer-text:rgba(255,255,255,0.80);
     }
 
     *{ box-sizing:border-box; }
@@ -108,7 +111,7 @@
       z-index:60;
     }
 
-    /* Subtle background */
+    /* Background */
     .bg-grid{
       position:fixed; inset:0;
       pointer-events:none;
@@ -332,12 +335,12 @@
       line-height:1.06;
       letter-spacing:-0.03em;
       font-weight:820;
-      max-width:18ch;
+      max-width:20ch;
       text-wrap:balance;
     }
     .hero p{
       margin:14px 0 0;
-      max-width:68ch;
+      max-width:70ch;
       color:var(--muted);
       font-size:16px;
     }
@@ -380,19 +383,6 @@
       color:rgba(2,6,23,0.74);
     }
 
-    .requests{ display:grid; gap:10px; padding:18px; }
-    .req{
-      border-radius:18px;
-      border:1px solid var(--border);
-      background:rgba(255,255,255,0.92);
-      padding:14px;
-      box-shadow:var(--shadow-xs);
-      transition:transform .45s var(--ease), box-shadow .45s var(--ease);
-    }
-    .req:hover{ transform:translateY(-2px); box-shadow:var(--shadow-sm); }
-    .req .t{ font-weight:900; font-size:14px; letter-spacing:-0.01em; }
-    .req .s{ margin-top:5px; color:var(--muted); font-size:13px; font-weight:650; }
-
     /* Section headings */
     .eyebrow{
       display:flex; align-items:center; gap:10px;
@@ -411,23 +401,46 @@
     }
     .lead{ margin:10px 0 0; color:var(--muted); max-width:74ch; }
 
+    /* Story cards (replaces old request list) */
+    .storyGrid{
+      display:grid;
+      gap:12px;
+    }
+    .story{
+      border-radius:18px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,0.92);
+      padding:14px;
+      box-shadow:var(--shadow-xs);
+      transition:transform .45s var(--ease), box-shadow .45s var(--ease);
+    }
+    .story:hover{ transform:translateY(-2px); box-shadow:var(--shadow-sm); }
+    .story .k{
+      font-weight:950;
+      font-size:13px;
+      letter-spacing:-0.01em;
+    }
+    .story .d{
+      margin-top:6px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.45;
+    }
+
     /* Services cards */
     .service{ padding:18px; }
     .service h3{ margin:0; font-size:15px; font-weight:900; letter-spacing:-0.01em; }
     .service p{ margin:8px 0 0; color:var(--muted); font-size:13px; }
-    .link{
-      display:inline-flex; align-items:center; gap:6px;
-      margin-top:12px;
-      font-size:13px;
-      font-weight:900;
-      color:rgba(2,6,23,0.88);
-      text-decoration:none;
-      padding:10px 0;
-    }
-    .link:hover{ text-decoration:underline; }
 
-    /* Use cases (step-by-step inside each card) */
-    .usecaseCard{ padding:18px; }
+    .servicesCtaRow{
+      margin-top:16px;
+      display:flex;
+      justify-content:flex-start;
+    }
+
+    /* Use cases — fixed equal height */
+    .usecaseCard{ padding:18px; display:flex; flex-direction:column; }
+    .useHead{ flex:0 0 auto; }
     .useTitle{
       font-weight:950;
       letter-spacing:-0.01em;
@@ -440,10 +453,13 @@
       font-size:13px;
       max-width:62ch;
     }
+
     .useSteps{
       margin-top:14px;
       display:grid;
       gap:10px;
+      flex:1 1 auto;               /* allow equal height cards */
+      align-content:start;
     }
     .useStep{
       display:flex;
@@ -455,6 +471,7 @@
       background:rgba(255,255,255,0.92);
       box-shadow:var(--shadow-xs);
       transition:transform .45s var(--ease), box-shadow .45s var(--ease);
+      min-height:74px;            /* equal height for each point */
     }
     .useStep:hover{ transform:translateY(-1px); box-shadow:var(--shadow-sm); }
     .useBadge{
@@ -483,8 +500,9 @@
       color:var(--muted);
       line-height:1.42;
     }
+    .useCta{ margin-top:12px; }
 
-    /* ---------- Process (fixed cards) ---------- */
+    /* Process */
     .stepsGrid{
       display:grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -533,7 +551,7 @@
       line-height: 1.45;
     }
 
-    /* ---------- Trust (fixed stack) ---------- */
+    /* Trust */
     .trustStack{
       display:grid;
       gap: 12px;
@@ -577,6 +595,45 @@
     .faq-q{ font-weight:950; font-size:14px; letter-spacing:-0.01em; }
     .faq-a{ margin-top:10px; color:var(--muted); font-size:13px; }
 
+    /* Contact channels */
+    .channels{
+      margin-top:14px;
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap:10px;
+    }
+    .channel{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      padding:12px 12px;
+      border:1px solid var(--border);
+      border-radius:16px;
+      background:rgba(255,255,255,0.92);
+      text-decoration:none;
+      color:rgba(2,6,23,0.86);
+      font-weight:850;
+      box-shadow:var(--shadow-xs);
+      transition:transform .45s var(--ease), box-shadow .45s var(--ease), background .45s var(--ease);
+    }
+    .channel:hover{
+      transform:translateY(-2px);
+      box-shadow:var(--shadow-sm);
+      background:rgba(255,255,255,0.98);
+    }
+    .ico{
+      width:34px;
+      height:34px;
+      border-radius:14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:rgba(2,6,23,0.06);
+      border:1px solid var(--border);
+      flex:0 0 auto;
+    }
+    .ico svg{ width:18px; height:18px; fill:rgba(2,6,23,0.70); }
+
     /* Form */
     form{ display:grid; gap:10px; }
     input, textarea{
@@ -594,11 +651,15 @@
     input:hover, textarea:hover{ transform:translateY(-1px); }
     textarea{ min-height:120px; resize:vertical; }
 
+    /* smaller placeholder/text inside input fields */
+    input, textarea{ font-size:13px; }
+    input::placeholder, textarea::placeholder{ font-size:12.5px; color:rgba(82,88,102,0.95); }
+
     /* Footer */
     footer{
       margin-top:var(--s-8);
-      background:#0b0d12;
-      color:rgba(255,255,255,0.78);
+      background:var(--footer);
+      color:var(--footer-text);
       border-top:1px solid rgba(255,255,255,0.08);
       padding:22px 0;
       text-align:center;
@@ -625,11 +686,13 @@
       .hamburger{ display:inline-flex; align-items:center; justify-content:center; }
     }
     @media (max-width: 860px){
-      .hero h1{ font-size:38px; max-width:20ch; }
+      .hero h1{ font-size:38px; max-width:22ch; }
       .col4, .col6{ grid-column:span 12; }
       .section{ padding:var(--s-8) 0; }
       .stepsGrid{ grid-template-columns: 1fr; }
       .stepCard{ min-height: auto; }
+      .channels{ grid-template-columns: 1fr; }
+      .useStep{ min-height:auto; } /* allow natural height on small screens */
     }
     @media (max-width: 520px){
       .logo-img{ height:56px; }
@@ -640,7 +703,7 @@
       html{ scroll-behavior:auto; }
       .bg-wash{ animation:none; }
       .reveal{ transition:none; opacity:1; transform:none; }
-      .btn, .card, nav a, .req, .faq-item, .logo-img, .stepCard, .trustCard, .useStep{ transition:none; }
+      .btn, .card, nav a, .faq-item, .logo-img, .stepCard, .trustCard, .useStep, .story, .channel{ transition:none; }
       .btn.primary::after, .card::after{ display:none; }
     }
   </style>
@@ -655,7 +718,6 @@
     <div class="wrap">
       <div class="nav">
         <a class="brand" href="#home" aria-label="Shop4Me Home">
-          <!-- Put s4m_logo.png in the same folder as this HTML -->
           <img class="logo-img" src="s4m_logo.png" alt="Shop4Me logo" />
         </a>
 
@@ -678,6 +740,7 @@
         </div>
       </div>
 
+      <!-- ✅ removed repeated use-case list from header (per request) -->
       <div class="mobile" id="mobileMenu">
         <a href="#services">Services</a>
         <a href="#usecases">Use cases</a>
@@ -718,39 +781,41 @@
         </div>
       </div>
 
+      <!-- ✅ improved "One request. End-to-end." with simple storytelling -->
       <div class="grid12" style="margin-top:12px;">
         <div class="card panel col6 reveal">
-          <h3>One request. End-to-end.</h3>
+          <h3>One message → one clear plan.</h3>
           <p>
-            Requirement → Shortlist → Deal search → Negotiation → Purchase assistance → After-sales.
-            You approve the final decision. We handle the heavy lifting.
+            You tell us what you need and your budget. We ask a few smart questions, then return with a short list of the best choices.
+            Next we compare offers across online + offline sellers, negotiate for a better total value, and help you buy confidently.
+            If anything happens after purchase, we stay with you for warranty and service follow-ups.
           </p>
           <div class="chips">
-            <span class="chip">Online + offline deals</span>
-            <span class="chip">Clear recommendations</span>
-            <span class="chip">Documentation checks</span>
-            <span class="chip">Service follow-ups</span>
+            <span class="chip">Short, clear shortlist</span>
+            <span class="chip">Offer stacking</span>
+            <span class="chip">Negotiation</span>
+            <span class="chip">After-sales support</span>
           </div>
-          <a class="link" href="#how">See how it works →</a>
+          <a class="btn primary" href="#usecases" style="margin-top:12px;">See use cases →</a>
         </div>
 
-        <div class="card col6 reveal delay-1">
-          <div class="requests">
-            <div class="req">
-              <div class="t">Laptop for video editing under ₹90K</div>
-              <div class="s">Shortlist • Deal search • Negotiation</div>
+        <div class="card panel col6 reveal delay-1">
+          <h3>What we optimize</h3>
+          <p>
+            Not just the “price.” We optimize the full purchase outcome: right product, right warranty/service, right terms, and best net value after offers.
+          </p>
+          <div class="storyGrid" style="margin-top:14px;">
+            <div class="story">
+              <div class="k">Best total value</div>
+              <div class="d">Exchange + bank offers + coupons + bundles — we calculate the real final cost.</div>
             </div>
-            <div class="req">
-              <div class="t">Refrigerator with low power usage</div>
-              <div class="s">Spec evaluation • Value comparison</div>
+            <div class="story">
+              <div class="k">Seller & warranty clarity</div>
+              <div class="d">We confirm warranty terms and service reputation to avoid unpleasant surprises.</div>
             </div>
-            <div class="req">
-              <div class="t">Office procurement: monitors + chairs</div>
-              <div class="s">Vendor options • Bulk pricing</div>
-            </div>
-            <div class="req">
-              <div class="t">Phone + exchange + warranty bundle</div>
-              <div class="s">Offer stacking • Best total value</div>
+            <div class="story">
+              <div class="k">Support after purchase</div>
+              <div class="d">We coordinate service follow-ups and escalation when needed.</div>
             </div>
           </div>
         </div>
@@ -769,38 +834,37 @@
         <div class="card service col4 reveal">
           <h3>Requirement & spec evaluation</h3>
           <p>We decode specs and real-world performance so you avoid over/under-buying.</p>
-          <a class="link" href="#contact">Request this →</a>
         </div>
         <div class="card service col4 reveal delay-1">
           <h3>Shortlist (2–5 best options)</h3>
           <p>We compare price, warranty/service quality, and long-term value with clear trade-offs.</p>
-          <a class="link" href="#contact">Request this →</a>
         </div>
         <div class="card service col4 reveal delay-2">
           <h3>Deal search (online + offline)</h3>
           <p>Brand stores, local retailers, marketplaces — we compare all meaningful options.</p>
-          <a class="link" href="#contact">Request this →</a>
         </div>
 
         <div class="card service col4 reveal">
           <h3>Negotiation on your behalf</h3>
           <p>Better pricing, bundles, accessories, delivery/installation terms, and value adds.</p>
-          <a class="link" href="#contact">Request this →</a>
         </div>
         <div class="card service col4 reveal delay-1">
           <h3>Purchase assistance</h3>
           <p>Invoice checks, warranty registration guidance, documentation hygiene — done right.</p>
-          <a class="link" href="#contact">Request this →</a>
         </div>
         <div class="card service col4 reveal delay-2">
           <h3>Warranty & after-sales support</h3>
           <p>We coordinate service centers, track requests, follow up, and escalate when needed.</p>
-          <a class="link" href="#contact">Request this →</a>
         </div>
+      </div>
+
+      <!-- ✅ single common CTA for all services -->
+      <div class="servicesCtaRow reveal" style="margin-top:18px;">
+        <a class="btn primary" href="#contact">Discuss your requirement →</a>
       </div>
     </section>
 
-    <!-- USE CASES (ELABORATED STEP-BY-STEP) -->
+    <!-- USE CASES -->
     <section class="section" id="usecases">
       <div class="eyebrow reveal">Use cases</div>
       <h2 class="h2 reveal delay-1">Use cases that walk you through our process</h2>
@@ -811,185 +875,201 @@
       <div class="grid">
         <!-- Use case 1 -->
         <div class="card usecaseCard col6 reveal">
-          <h3 class="useTitle">Laptop for video editing under ₹90K</h3>
-          <p class="useSub">Optimized for performance, thermals, display accuracy, and warranty/service quality.</p>
+          <div class="useHead">
+            <h3 class="useTitle">Laptop for video editing under ₹90K</h3>
+            <p class="useSub">Optimized for performance, thermals, display accuracy, and warranty/service quality.</p>
+          </div>
 
           <div class="useSteps">
             <div class="useStep">
               <div class="useBadge">1</div>
               <div class="useText">
                 <p class="useKicker">Understand your workflow</p>
-                <p class="useDesc">Premiere/DaVinci? 1080p/4K? We confirm requirements (CPU/GPU/RAM/SSD, display type).</p>
+                <p class="useDesc">Premiere/DaVinci? 1080p/4K? We lock CPU/GPU/RAM/SSD and display requirements.</p>
               </div>
             </div>
             <div class="useStep">
               <div class="useBadge">2</div>
               <div class="useText">
-                <p class="useKicker">Shortlist (2–5 best options)</p>
-                <p class="useDesc">We compare real-world value, upgrade paths, heating, ports, and warranty coverage.</p>
+                <p class="useKicker">Shortlist the right models</p>
+                <p class="useDesc">2–5 options with clear trade-offs: speed, heat, battery, ports, upgradeability.</p>
               </div>
             </div>
             <div class="useStep">
               <div class="useBadge">3</div>
               <div class="useText">
                 <p class="useKicker">Deal search (online + offline)</p>
-                <p class="useDesc">Marketplace + brand store + local seller quotes, including bank offers and exchange options.</p>
+                <p class="useDesc">We compare brand store, marketplaces, and local quotes with bank offers/exchange.</p>
               </div>
             </div>
             <div class="useStep">
               <div class="useBadge">4</div>
               <div class="useText">
-                <p class="useKicker">Negotiate bundles & pricing</p>
-                <p class="useDesc">We target freebies (RAM/SSD upgrade), warranty add-ons, accessories, and better final price.</p>
+                <p class="useKicker">Negotiate best total value</p>
+                <p class="useDesc">We push for a better final price, bundles, upgrades, and warranty add-ons.</p>
               </div>
             </div>
             <div class="useStep">
               <div class="useBadge">5</div>
               <div class="useText">
                 <p class="useKicker">Purchase + after-sales setup</p>
-                <p class="useDesc">Invoice check, warranty registration guidance, and a support path if anything goes wrong.</p>
+                <p class="useDesc">Invoice check, warranty guidance, and support escalation path if needed later.</p>
               </div>
             </div>
+          </div>
 
-            <a class="btn primary" href="#contact" style="margin-top:6px;">Start this request →</a>
+          <div class="useCta">
+            <a class="btn primary" href="#contact">Start this request →</a>
           </div>
         </div>
 
         <!-- Use case 2 -->
         <div class="card usecaseCard col6 reveal delay-1">
-          <h3 class="useTitle">Refrigerator with low power usage</h3>
-          <p class="useSub">Focused on energy savings, compressor type, service network, and long-term reliability.</p>
+          <div class="useHead">
+            <h3 class="useTitle">Refrigerator with low power usage</h3>
+            <p class="useSub">Focused on energy savings, compressor type, service network, and long-term reliability.</p>
+          </div>
 
           <div class="useSteps">
             <div class="useStep">
               <div class="useBadge">1</div>
               <div class="useText">
-                <p class="useKicker">Clarify capacity & usage</p>
-                <p class="useDesc">Family size, kitchen space, inverter requirement, and must-have features (frost-free, convertible).</p>
+                <p class="useKicker">Confirm capacity & fit</p>
+                <p class="useDesc">Family size, kitchen space, frost-free/inverter needs, and key features.</p>
               </div>
             </div>
             <div class="useStep">
               <div class="useBadge">2</div>
               <div class="useText">
                 <p class="useKicker">Shortlist best value models</p>
-                <p class="useDesc">We compare star ratings, annual units, build quality, and real service feedback.</p>
+                <p class="useDesc">We compare star rating/units, build quality, and actual service experience.</p>
               </div>
             </div>
             <div class="useStep">
               <div class="useBadge">3</div>
               <div class="useText">
-                <p class="useKicker">Deal search + installation terms</p>
-                <p class="useDesc">We compare across sellers and include delivery/installation and exchange deals.</p>
+                <p class="useKicker">Deal search + delivery terms</p>
+                <p class="useDesc">Price + delivery + installation + exchange — across multiple sellers.</p>
               </div>
             </div>
             <div class="useStep">
               <div class="useBadge">4</div>
               <div class="useText">
                 <p class="useKicker">Negotiate extras</p>
-                <p class="useDesc">We push for better pricing, extended warranty, and freebies (stabilizer/stand where applicable).</p>
+                <p class="useDesc">We push for better pricing, extended warranty, and value adds where applicable.</p>
               </div>
             </div>
             <div class="useStep">
               <div class="useBadge">5</div>
               <div class="useText">
                 <p class="useKicker">Post-purchase support</p>
-                <p class="useDesc">We guide registration and support escalation during warranty if required.</p>
+                <p class="useDesc">We guide warranty registration and service follow-ups if required.</p>
               </div>
             </div>
+          </div>
 
-            <a class="btn primary" href="#contact" style="margin-top:6px;">Start this request →</a>
+          <div class="useCta">
+            <a class="btn primary" href="#contact">Start this request →</a>
           </div>
         </div>
 
         <!-- Use case 3 -->
         <div class="card usecaseCard col6 reveal">
-          <h3 class="useTitle">Office procurement: monitors + chairs</h3>
-          <p class="useSub">Designed for startups/SMEs: consistency, bulk pricing, invoices, and service reliability.</p>
+          <div class="useHead">
+            <h3 class="useTitle">Office procurement: monitors + chairs</h3>
+            <p class="useSub">Built for startups/SMEs: consistency, bulk pricing, invoices, and service reliability.</p>
+          </div>
 
           <div class="useSteps">
             <div class="useStep">
               <div class="useBadge">1</div>
               <div class="useText">
-                <p class="useKicker">Finalize specs for your team</p>
-                <p class="useDesc">Monitor size/resolution/refresh, chair ergonomics, usage hours, and budget bands.</p>
+                <p class="useKicker">Lock specs for your team</p>
+                <p class="useDesc">Usage hours, ergonomics, resolution/size, and budget bands for each role.</p>
               </div>
             </div>
             <div class="useStep">
               <div class="useBadge">2</div>
               <div class="useText">
                 <p class="useKicker">Shortlist vendor-ready options</p>
-                <p class="useDesc">We choose models with consistent availability and service support across units.</p>
+                <p class="useDesc">We choose reliable models with consistent stock and service support.</p>
               </div>
             </div>
             <div class="useStep">
               <div class="useBadge">3</div>
               <div class="useText">
-                <p class="useKicker">Vendor quotes + comparisons</p>
-                <p class="useDesc">Multiple suppliers, warranty terms, delivery timelines, GST invoice support.</p>
+                <p class="useKicker">Vendor quotes + comparison</p>
+                <p class="useDesc">Multiple suppliers, GST invoices, warranty terms, and delivery timelines.</p>
               </div>
             </div>
             <div class="useStep">
               <div class="useBadge">4</div>
               <div class="useText">
                 <p class="useKicker">Negotiate bulk pricing</p>
-                <p class="useDesc">We push for bulk discounts, installation, replacements policy, and delivery coordination.</p>
+                <p class="useDesc">Bulk discounts, installation, replacements policy, and delivery coordination.</p>
               </div>
             </div>
             <div class="useStep">
               <div class="useBadge">5</div>
               <div class="useText">
                 <p class="useKicker">After-sales coordination</p>
-                <p class="useDesc">Support tickets, replacements, escalation, and tracking throughout the warranty period.</p>
+                <p class="useDesc">Support tickets, replacements, escalation, and tracking through warranty.</p>
               </div>
             </div>
+          </div>
 
-            <a class="btn primary" href="#contact" style="margin-top:6px;">Start this request →</a>
+          <div class="useCta">
+            <a class="btn primary" href="#contact">Start this request →</a>
           </div>
         </div>
 
         <!-- Use case 4 -->
         <div class="card usecaseCard col6 reveal delay-1">
-          <h3 class="useTitle">Phone + exchange + warranty bundle</h3>
-          <p class="useSub">We optimize total value — not just sticker price — by stacking the right offers.</p>
+          <div class="useHead">
+            <h3 class="useTitle">Phone + exchange + warranty bundle</h3>
+            <p class="useSub">We optimize total value — by stacking the right offers and exchange options.</p>
+          </div>
 
           <div class="useSteps">
             <div class="useStep">
               <div class="useBadge">1</div>
               <div class="useText">
-                <p class="useKicker">Confirm needs & priorities</p>
-                <p class="useDesc">Camera/battery/storage, brand preference, and a fair exchange estimate for your old device.</p>
+                <p class="useKicker">Confirm priorities</p>
+                <p class="useDesc">Camera/battery/storage + fair exchange estimate for your current phone.</p>
               </div>
             </div>
             <div class="useStep">
               <div class="useBadge">2</div>
               <div class="useText">
-                <p class="useKicker">Shortlist best options</p>
-                <p class="useDesc">We compare features + service reputation and avoid “spec traps” that look good on paper only.</p>
+                <p class="useKicker">Shortlist the best fit</p>
+                <p class="useDesc">We compare features + service reputation and avoid “spec traps.”</p>
               </div>
             </div>
             <div class="useStep">
               <div class="useBadge">3</div>
               <div class="useText">
                 <p class="useKicker">Offer stacking</p>
-                <p class="useDesc">Exchange + bank + coupons + bundles. We calculate the best total effective price.</p>
+                <p class="useDesc">Exchange + bank + coupons + bundles — we compute the best net cost.</p>
               </div>
             </div>
             <div class="useStep">
               <div class="useBadge">4</div>
               <div class="useText">
                 <p class="useKicker">Negotiate add-ons</p>
-                <p class="useDesc">We try for accessories, extended warranty, screen protection, and improved terms.</p>
+                <p class="useDesc">We try for better exchange value, accessories, and extended warranty options.</p>
               </div>
             </div>
             <div class="useStep">
               <div class="useBadge">5</div>
               <div class="useText">
-                <p class="useKicker">Purchase guidance + warranty setup</p>
-                <p class="useDesc">Invoice verification, warranty registration, and support escalation if needed later.</p>
+                <p class="useKicker">Purchase + warranty setup</p>
+                <p class="useDesc">Invoice verification, warranty registration guidance, and support escalation later.</p>
               </div>
             </div>
+          </div>
 
-            <a class="btn primary" href="#contact" style="margin-top:6px;">Start this request →</a>
+          <div class="useCta">
+            <a class="btn primary" href="#contact">Start this request →</a>
           </div>
         </div>
       </div>
@@ -1001,9 +1081,7 @@
         <div class="col6">
           <div class="eyebrow reveal">Process</div>
           <h2 class="h2 reveal delay-1">A premium workflow built for busy people</h2>
-          <p class="lead reveal delay-2">
-            Minimal inputs. Maximum clarity. Consistent updates — like a concierge should.
-          </p>
+          <p class="lead reveal delay-2">Minimal inputs. Maximum clarity. Consistent updates — like a concierge should.</p>
         </div>
 
         <div class="col6">
@@ -1013,7 +1091,7 @@
                 <span class="stepNum">1</span>
                 <div class="stepTitle">Tell us your need</div>
               </div>
-              <div class="stepDesc">Share budget, preferences, must-haves. We ask a few sharp questions.</div>
+              <div class="stepDesc">Budget, preferences, must-haves. We ask a few sharp questions.</div>
             </div>
 
             <div class="stepCard">
@@ -1029,7 +1107,7 @@
                 <span class="stepNum">3</span>
                 <div class="stepTitle">We negotiate</div>
               </div>
-              <div class="stepDesc">We pursue better pricing, bundles, add-ons, and better terms.</div>
+              <div class="stepDesc">Better pricing, bundles, add-ons, and better terms.</div>
             </div>
 
             <div class="stepCard">
@@ -1037,7 +1115,7 @@
                 <span class="stepNum">4</span>
                 <div class="stepTitle">You approve + we support after purchase</div>
               </div>
-              <div class="stepDesc">Transparent final decision, then warranty/service coordination when needed.</div>
+              <div class="stepDesc">Final approval, then warranty/service coordination when needed.</div>
             </div>
           </div>
         </div>
@@ -1054,18 +1132,19 @@
         <div class="card service col4 reveal">
           <h3>Success fee (on savings)</h3>
           <p>No savings → no success fee. Best for high-value purchases.</p>
-          <a class="link" href="#contact">Discuss my case →</a>
         </div>
         <div class="card service col4 reveal delay-1">
           <h3>Flat concierge fee</h3>
           <p>Category-based one-time fee. Clear deliverables and scope.</p>
-          <a class="link" href="#contact">Get a quote →</a>
         </div>
         <div class="card service col4 reveal delay-2">
           <h3>AMC (annual support)</h3>
           <p>Warranty tracking, service coordination, escalation support.</p>
-          <a class="link" href="#contact">Explore AMC →</a>
         </div>
+      </div>
+
+      <div class="servicesCtaRow reveal" style="margin-top:16px;">
+        <a class="btn primary" href="#contact">Get pricing for your request →</a>
       </div>
     </section>
 
@@ -1075,9 +1154,7 @@
         <div class="col6">
           <div class="eyebrow reveal">Trust</div>
           <h2 class="h2 reveal delay-1">Professional, transparent, customer-first</h2>
-          <p class="lead reveal delay-2">
-            Premium behavior matters: clarity, consent, and accountability.
-          </p>
+          <p class="lead reveal delay-2">Premium behavior matters: clarity, consent, and accountability.</p>
         </div>
 
         <div class="col6">
@@ -1124,6 +1201,14 @@
               <div class="faq-a">High-value electronics/appliances/gadgets and procurement support for startups/SMEs.</div>
             </div>
             <div class="faq-item">
+              <div class="faq-q">Do you support importing items from abroad?</div>
+              <div class="faq-a">We can help you evaluate options and total landed cost (pricing, shipping, duties). Availability depends on the product and seller policies.</div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q">Do you support better exchange deals?</div>
+              <div class="faq-a">Yes. We compare exchange offers across platforms and sellers and optimize for the best effective price.</div>
+            </div>
+            <div class="faq-item">
               <div class="faq-q">Do you help after purchase?</div>
               <div class="faq-a">Yes. We coordinate with brands/service centers, track requests, follow up, and escalate when needed.</div>
             </div>
@@ -1141,9 +1226,58 @@
           <p class="lead reveal delay-2">Share what you want to buy and your budget. We’ll respond with a clear plan and timeline.</p>
 
           <div class="card panel reveal" style="margin-top:18px;">
-            <h3>Prefer WhatsApp?</h3>
-            <p>Replace the link below with your click-to-chat number.</p>
-            <a class="btn" href="https://wa.me/" target="_blank" rel="noopener" style="margin-top:12px;">WhatsApp us</a>
+            <h3>Reach us on your preferred channel</h3>
+            <p>Replace the links below with your official handles.</p>
+
+            <div class="channels" aria-label="Contact channels">
+              <!-- WhatsApp -->
+              <a class="channel" href="https://wa.me/" target="_blank" rel="noopener">
+                <span class="ico" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.15 6.42 2.15 11.88c0 1.77.46 3.5 1.33 5.03L2 22l5.2-1.36c1.46.8 3.1 1.22 4.83 1.22 5.46 0 9.89-4.42 9.89-9.88C21.92 6.42 17.5 2 12.04 2zm5.76 14.3c-.24.68-1.17 1.25-1.94 1.41-.54.11-1.24.2-3.6-.78-3.02-1.25-4.97-4.33-5.12-4.54-.14-.21-1.23-1.64-1.23-3.13 0-1.48.78-2.21 1.05-2.52.27-.31.6-.39.8-.39.2 0 .4 0 .58.01.19.01.44-.07.69.53.24.6.83 2.09.9 2.24.07.15.12.34.02.55-.1.21-.15.34-.29.52-.14.18-.3.4-.43.54-.14.14-.28.29-.12.57.16.28.72 1.19 1.55 1.93 1.07.96 1.98 1.26 2.26 1.4.28.14.44.12.6-.07.16-.19.69-.8.88-1.08.19-.28.38-.23.64-.14.26.09 1.64.77 1.92.91.28.14.46.21.53.33.07.12.07.69-.17 1.37z"/></svg>
+                </span>
+                WhatsApp
+              </a>
+
+              <!-- Email -->
+              <a class="channel" href="mailto:hello@shop4me.in">
+                <span class="ico" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5L4 8V6l8 5 8-5v2z"/></svg>
+                </span>
+                Email
+              </a>
+
+              <!-- Facebook -->
+              <a class="channel" href="https://facebook.com/" target="_blank" rel="noopener">
+                <span class="ico" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.5 9.9v-7H8v-3h2.5V9.5A3.5 3.5 0 0 1 14.2 6h2.3v3h-2.3c-.8 0-1.2.5-1.2 1.1V12H16.5l-.5 3H13v7A10 10 0 0 0 22 12z"/></svg>
+                </span>
+                Facebook
+              </a>
+
+              <!-- Instagram -->
+              <a class="channel" href="https://instagram.com/" target="_blank" rel="noopener">
+                <span class="ico" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm10 2H7a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3zm-5 4.5A5.5 5.5 0 1 1 6.5 14 5.5 5.5 0 0 1 12 8.5zm0 2A3.5 3.5 0 1 0 15.5 14 3.5 3.5 0 0 0 12 10.5zM18 6.8a1.2 1.2 0 1 1-1.2-1.2A1.2 1.2 0 0 1 18 6.8z"/></svg>
+                </span>
+                Instagram
+              </a>
+
+              <!-- LinkedIn -->
+              <a class="channel" href="https://linkedin.com/" target="_blank" rel="noopener">
+                <span class="ico" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M20.4 2H3.6A1.6 1.6 0 0 0 2 3.6v16.8A1.6 1.6 0 0 0 3.6 22h16.8a1.6 1.6 0 0 0 1.6-1.6V3.6A1.6 1.6 0 0 0 20.4 2zM8.1 19.3H5.4V9.2h2.7v10.1zM6.7 8A1.6 1.6 0 1 1 8.3 6.4 1.6 1.6 0 0 1 6.7 8zm12.6 11.3h-2.7v-4.9c0-1.2 0-2.7-1.7-2.7s-1.9 1.3-1.9 2.6v5h-2.7V9.2h2.6v1.4h.04a2.9 2.9 0 0 1 2.6-1.4c2.8 0 3.3 1.8 3.3 4.2v5.9z"/></svg>
+                </span>
+                LinkedIn
+              </a>
+
+              <!-- Twitter/X -->
+              <a class="channel" href="https://x.com/" target="_blank" rel="noopener">
+                <span class="ico" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M18.9 2H22l-6.8 7.8L23 22h-6.6l-5.1-6.6L5.6 22H2.5l7.3-8.4L1 2h6.7l4.6 6.1L18.9 2zm-1.2 18h1.7L7.5 3.9H5.7L17.7 20z"/></svg>
+                </span>
+                Twitter / X
+              </a>
+            </div>
           </div>
         </div>
 
