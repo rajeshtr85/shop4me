@@ -27,7 +27,7 @@
 
   <!-- Favicon -->
   <link rel="icon" href="Favicon.png" type="image/png" />
-  <link rel="apple-touch-icon" href="Favicon.png" />
+  <link rel="apple-touch-icon" href="Vavicon.png" />
 
   <!-- Structured Data -->
   <script type="application/ld+json">
@@ -371,17 +371,6 @@
     .panel h3{ margin:0; font-size:16px; font-weight:900; letter-spacing:-0.01em; }
     .panel p{ margin:10px 0 0; color:var(--muted); font-size:13px; }
 
-    .chips{ margin-top:14px; display:flex; flex-wrap:wrap; gap:8px; }
-    .chip{
-      padding:8px 10px;
-      border:1px solid var(--border);
-      border-radius:999px;
-      background:rgba(255,255,255,0.92);
-      font-size:12px;
-      font-weight:800;
-      color:rgba(2,6,23,0.74);
-    }
-
     .storyGrid{ display:grid; gap:12px; margin-top:14px; }
     .story{
       border-radius:18px;
@@ -496,12 +485,6 @@
     .faq-q{ font-weight:950; font-size:14px; letter-spacing:-0.01em; }
     .faq-a{ margin-top:10px; color:var(--muted); font-size:13px; }
 
-    /* Contact — aligned and equal height */
-    .contactGrid{ align-items:stretch; }
-    .contactCol{ display:flex; }
-    .contactCol .card{ width:100%; }
-    .contactCol .panel{ height:100%; }
-
     /* Contact channels */
     .channels{
       margin-top:14px;
@@ -550,7 +533,7 @@
       color:var(--text);
       outline:none;
       transition:box-shadow .2s var(--ease), border-color .2s var(--ease), transform .2s var(--ease);
-      font-size:13px; /* smaller inside textbox */
+      font-size:13px;
     }
     input::placeholder, textarea::placeholder{ font-size:12.5px; color:rgba(82,88,102,0.95); }
     input:focus, textarea:focus{ border-color:var(--focus); box-shadow:var(--focus-ring); }
@@ -594,7 +577,6 @@
       .stepsGrid{ grid-template-columns: 1fr; }
       .channels{ grid-template-columns: 1fr; }
       .useStep{ min-height:auto; }
-      .contactCol{ display:block; }
     }
     @media (max-width: 520px){
       .logo-img{ height:56px; }
@@ -632,6 +614,7 @@
             <li><a href="#trust">Trust</a></li>
             <li><a href="#faq">FAQ</a></li>
             <li><a href="#contact">Contact</a></li>
+            <li><a href="#request">Request</a></li>
           </ul>
         </nav>
 
@@ -650,6 +633,7 @@
         <a href="#trust">Trust</a>
         <a href="#faq">FAQ</a>
         <a href="#contact">Contact</a>
+        <a href="#request">Request</a>
       </div>
     </div>
   </header>
@@ -663,7 +647,7 @@
         (online & offline), and support you through warranty and after-sales.
       </p>
       <div class="hero-actions reveal delay-2">
-        <a class="btn primary" href="#contact">Start a request →</a>
+        <a class="btn primary" href="#request">Start a request →</a>
         <a class="btn" href="#services">Explore services</a>
       </div>
 
@@ -674,48 +658,67 @@
         </div>
         <div class="card mini col4 reveal delay-1">
           <h3>Better pricing</h3>
-          <p>We find hidden offers and negotiate across sellers.</p>
+          <p>We compare offers and negotiate across sellers.</p>
         </div>
         <div class="card mini col4 reveal delay-2">
-          <h3>Warranty support</h3>
-          <p>Single point of contact during the warranty lifecycle.</p>
+          <h3>After-sales support</h3>
+          <p>Warranty and service follow-ups when needed.</p>
         </div>
       </div>
 
+      <!-- Clean, non-duplicated hero panels -->
       <div class="grid" style="margin-top:12px;">
         <div class="card panel col6 reveal">
-          <h3>One message → one clear plan.</h3>
+          <h3>From one message to a confident purchase</h3>
           <p>
-            You tell us what you need and your budget. We ask a few smart questions, then return with a short list of the best choices.
-            Next we compare offers across online + offline sellers, negotiate for a better total value, and help you buy confidently.
-            If anything happens after purchase, we stay with you for warranty and service follow-ups.
+            Tell us what you want to buy and your budget. We do the research and deal work,
+            then you approve the final option before you pay.
           </p>
-          <div class="chips">
-            <span class="chip">Short, clear shortlist</span>
-            <span class="chip">Offer stacking</span>
-            <span class="chip">Negotiation</span>
-            <span class="chip">After-sales support</span>
+
+          <div class="storyGrid" style="margin-top:14px;">
+            <div class="story">
+              <div class="k">1) Understand your need</div>
+              <div class="d">We ask a few sharp questions to lock the right specs and priorities.</div>
+            </div>
+            <div class="story">
+              <div class="k">2) Shortlist the best options</div>
+              <div class="d">You get 2–5 choices with clear trade-offs and a recommendation.</div>
+            </div>
+            <div class="story">
+              <div class="k">3) Find + negotiate the best deal</div>
+              <div class="d">We compare online + offline offers and negotiate for better value.</div>
+            </div>
+            <div class="story">
+              <div class="k">4) Support after purchase</div>
+              <div class="d">Warranty coordination, follow-ups, and escalation when needed.</div>
+            </div>
           </div>
-          <a class="btn primary" href="#usecases" style="margin-top:12px;">See use cases →</a>
+
+          <a class="btn primary" href="#request" style="margin-top:14px; width:100%;">Start a request →</a>
         </div>
 
         <div class="card panel col6 reveal delay-1">
-          <h3>What we optimize</h3>
-          <p>We optimize the full purchase outcome: right product, right warranty/service, right terms, best net value.</p>
-          <div class="storyGrid">
+          <h3>What you get</h3>
+          <p>
+            Not just a link. You get a clear recommendation, better total value, and support when it matters.
+          </p>
+
+          <div class="storyGrid" style="margin-top:14px;">
             <div class="story">
-              <div class="k">Best total value</div>
-              <div class="d">Exchange + bank offers + coupons + bundles — we calculate the real final cost.</div>
+              <div class="k">The right product (for your use)</div>
+              <div class="d">We match specs to real-life needs so you don’t overpay or compromise.</div>
             </div>
             <div class="story">
-              <div class="k">Seller & warranty clarity</div>
-              <div class="d">We confirm warranty terms and service reputation to avoid surprises.</div>
+              <div class="k">Best net value (not just sticker price)</div>
+              <div class="d">We optimize exchange, bank offers, bundles, delivery, and warranty value.</div>
             </div>
             <div class="story">
-              <div class="k">Support after purchase</div>
-              <div class="d">We coordinate service follow-ups and escalation when needed.</div>
+              <div class="k">Peace of mind after purchase</div>
+              <div class="d">One point of contact for warranty/service follow-ups and escalation.</div>
             </div>
           </div>
+
+          <a class="btn" href="#usecases" style="margin-top:14px; width:100%;">See real use cases →</a>
         </div>
       </div>
     </section>
@@ -757,7 +760,7 @@
       </div>
 
       <div class="servicesCtaRow reveal">
-        <a class="btn primary" href="#contact">Discuss your requirement →</a>
+        <a class="btn primary" href="#request">Discuss your requirement →</a>
       </div>
     </section>
 
@@ -784,7 +787,7 @@
             <div class="useStep"><div class="useBadge">5</div><div class="useText"><p class="useKicker">Purchase + after-sales setup</p><p class="useDesc">Invoice check, warranty guidance, and escalation path if needed later.</p></div></div>
           </div>
 
-          <div class="useCta"><a class="btn primary" href="#contact">Start this request →</a></div>
+          <div class="useCta"><a class="btn primary" href="#request">Start this request →</a></div>
         </div>
 
         <div class="card usecaseCard col6 reveal delay-1">
@@ -801,7 +804,7 @@
             <div class="useStep"><div class="useBadge">5</div><div class="useText"><p class="useKicker">Post-purchase support</p><p class="useDesc">Warranty registration guidance and service follow-ups if needed.</p></div></div>
           </div>
 
-          <div class="useCta"><a class="btn primary" href="#contact">Start this request →</a></div>
+          <div class="useCta"><a class="btn primary" href="#request">Start this request →</a></div>
         </div>
 
         <div class="card usecaseCard col6 reveal">
@@ -818,7 +821,7 @@
             <div class="useStep"><div class="useBadge">5</div><div class="useText"><p class="useKicker">After-sales coordination</p><p class="useDesc">Tickets, replacements, escalation, warranty tracking.</p></div></div>
           </div>
 
-          <div class="useCta"><a class="btn primary" href="#contact">Start this request →</a></div>
+          <div class="useCta"><a class="btn primary" href="#request">Start this request →</a></div>
         </div>
 
         <div class="card usecaseCard col6 reveal delay-1">
@@ -835,7 +838,7 @@
             <div class="useStep"><div class="useBadge">5</div><div class="useText"><p class="useKicker">Purchase + warranty setup</p><p class="useDesc">Invoice verification, warranty guidance, and support escalation later.</p></div></div>
           </div>
 
-          <div class="useCta"><a class="btn primary" href="#contact">Start this request →</a></div>
+          <div class="useCta"><a class="btn primary" href="#request">Start this request →</a></div>
         </div>
       </div>
     </section>
@@ -894,7 +897,7 @@
       </div>
 
       <div class="servicesCtaRow reveal" style="margin-top:16px;">
-        <a class="btn primary" href="#contact">Get pricing for your request →</a>
+        <a class="btn primary" href="#request">Get pricing for your request →</a>
       </div>
     </section>
 
@@ -947,80 +950,69 @@
       </div>
     </section>
 
-    <!-- CONTACT -->
+    <!-- CONTACT (separate row/section) -->
     <section class="section" id="contact">
-      <div class="grid contactGrid" style="align-items:stretch;">
-        <div class="col6 contactCol">
-          <div class="card panel reveal">
-            <div>
-              <div class="eyebrow">Contact</div>
-              <h2 class="h2" style="margin-top:8px;">Start with a single message</h2>
-              <p class="lead" style="margin-top:10px;">Share what you want to buy and your budget. We’ll respond with a clear plan and timeline.</p>
-            </div>
+      <div class="eyebrow reveal">Contact</div>
+      <h2 class="h2 reveal delay-1">Reach us on your preferred channel</h2>
+      <p class="lead reveal delay-2">Choose what’s easiest — we’ll respond with a clear plan and next steps.</p>
 
-            <div style="margin-top:18px;">
-              <h3 style="margin:0; font-size:16px; font-weight:900; letter-spacing:-0.01em;">Reach us on your preferred channel</h3>
-              <div class="channels" aria-label="Contact channels">
-                <a class="channel" href="https://wa.me/" target="_blank" rel="noopener">
-                  <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.15 6.42 2.15 11.88c0 1.77.46 3.5 1.33 5.03L2 22l5.2-1.36c1.46.8 3.1 1.22 4.83 1.22 5.46 0 9.89-4.42 9.89-9.88C21.92 6.42 17.5 2 12.04 2zm5.76 14.3c-.24.68-1.17 1.25-1.94 1.41-.54.11-1.24.2-3.6-.78-3.02-1.25-4.97-4.33-5.12-4.54-.14-.21-1.23-1.64-1.23-3.13 0-1.48.78-2.21 1.05-2.52.27-.31.6-.39.8-.39.2 0 .4 0 .58.01.19.01.44-.07.69.53.24.6.83 2.09.9 2.24.07.15.12.34.02.55-.1.21-.15.34-.29.52-.14.18-.3.4-.43.54-.14.14-.28.29-.12.57.16.28.72 1.19 1.55 1.93 1.07.96 1.98 1.26 2.26 1.4.28.14.44.12.6-.07.16-.19.69-.8.88-1.08.19-.28.38-.23.64-.14.26.09 1.64.77 1.92.91.28.14.46.21.53.33.07.12.07.69-.17 1.37z"/></svg></span>
-                  WhatsApp
-                </a>
+      <div class="grid">
+        <div class="card panel col12 reveal">
+          <div class="channels" aria-label="Contact channels" style="margin-top:0;">
+            <a class="channel" href="https://wa.me/" target="_blank" rel="noopener">
+              <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.15 6.42 2.15 11.88c0 1.77.46 3.5 1.33 5.03L2 22l5.2-1.36c1.46.8 3.1 1.22 4.83 1.22 5.46 0 9.89-4.42 9.89-9.88C21.92 6.42 17.5 2 12.04 2zm5.76 14.3c-.24.68-1.17 1.25-1.94 1.41-.54.11-1.24.2-3.6-.78-3.02-1.25-4.97-4.33-5.12-4.54-.14-.21-1.23-1.64-1.23-3.13 0-1.48.78-2.21 1.05-2.52.27-.31.6-.39.8-.39.2 0 .4 0 .58.01.19.01.44-.07.69.53.24.6.83 2.09.9 2.24.07.15.12.34.02.55-.1.21-.15.34-.29.52-.14.18-.3.4-.43.54-.14.14-.28.29-.12.57.16.28.72 1.19 1.55 1.93 1.07.96 1.98 1.26 2.26 1.4.28.14.44.12.6-.07.16-.19.69-.8.88-1.08.19-.28.38-.23.64-.14.26.09 1.64.77 1.92.91.28.14.46.21.53.33.07.12.07.69-.17 1.37z"/></svg></span>
+              WhatsApp
+            </a>
 
-                <a class="channel" href="mailto:hello@shop4me.in">
-                  <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5L4 8V6l8 5 8-5v2z"/></svg></span>
-                  Email
-                </a>
+            <a class="channel" href="mailto:hello@shop4me.in">
+              <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5L4 8V6l8 5 8-5v2z"/></svg></span>
+              Email
+            </a>
 
-                <a class="channel" href="https://facebook.com/" target="_blank" rel="noopener">
-                  <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.5 9.9v-7H8v-3h2.5V9.5A3.5 3.5 0 0 1 14.2 6h2.3v3h-2.3c-.8 0-1.2.5-1.2 1.1V12H16.5l-.5 3H13v7A10 10 0 0 0 22 12z"/></svg></span>
-                  Facebook
-                </a>
+            <a class="channel" href="https://facebook.com/" target="_blank" rel="noopener">
+              <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.5 9.9v-7H8v-3h2.5V9.5A3.5 3.5 0 0 1 14.2 6h2.3v3h-2.3c-.8 0-1.2.5-1.2 1.1V12H16.5l-.5 3H13v7A10 10 0 0 0 22 12z"/></svg></span>
+              Facebook
+            </a>
 
-                <a class="channel" href="https://instagram.com/" target="_blank" rel="noopener">
-                  <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm10 2H7a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3zm-5 4.5A5.5 5.5 0 1 1 6.5 14 5.5 5.5 0 0 1 12 8.5zm0 2A3.5 3.5 0 1 0 15.5 14 3.5 3.5 0 0 0 12 10.5zM18 6.8a1.2 1.2 0 1 1-1.2-1.2A1.2 1.2 0 0 1 18 6.8z"/></svg></span>
-                  Instagram
-                </a>
+            <a class="channel" href="https://instagram.com/" target="_blank" rel="noopener">
+              <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm10 2H7a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3zm-5 4.5A5.5 5.5 0 1 1 6.5 14 5.5 5.5 0 0 1 12 8.5zm0 2A3.5 3.5 0 1 0 15.5 14 3.5 3.5 0 0 0 12 10.5zM18 6.8a1.2 1.2 0 1 1-1.2-1.2A1.2 1.2 0 0 1 18 6.8z"/></svg></span>
+              Instagram
+            </a>
 
-                <a class="channel" href="https://linkedin.com/" target="_blank" rel="noopener">
-                  <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.4 2H3.6A1.6 1.6 0 0 0 2 3.6v16.8A1.6 1.6 0 0 0 3.6 22h16.8a1.6 1.6 0 0 0 1.6-1.6V3.6A1.6 1.6 0 0 0 20.4 2zM8.1 19.3H5.4V9.2h2.7v10.1zM6.7 8A1.6 1.6 0 1 1 8.3 6.4 1.6 1.6 0 0 1 6.7 8zm12.6 11.3h-2.7v-4.9c0-1.2 0-2.7-1.7-2.7s-1.9 1.3-1.9 2.6v5h-2.7V9.2h2.6v1.4h.04a2.9 2.9 0 0 1 2.6-1.4c2.8 0 3.3 1.8 3.3 4.2v5.9z"/></svg></span>
-                  LinkedIn
-                </a>
-              </div>
-            </div>
-
-            <div style="margin-top:auto;"></div>
+            <a class="channel" href="https://linkedin.com/" target="_blank" rel="noopener">
+              <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.4 2H3.6A1.6 1.6 0 0 0 2 3.6v16.8A1.6 1.6 0 0 0 3.6 22h16.8a1.6 1.6 0 0 0 1.6-1.6V3.6A1.6 1.6 0 0 0 20.4 2zM8.1 19.3H5.4V9.2h2.7v10.1zM6.7 8A1.6 1.6 0 1 1 8.3 6.4 1.6 1.6 0 0 1 6.7 8zm12.6 11.3h-2.7v-4.9c0-1.2 0-2.7-1.7-2.7s-1.9 1.3-1.9 2.6v5h-2.7V9.2h2.6v1.4h.04a2.9 2.9 0 0 1 2.6-1.4c2.8 0 3.3 1.8 3.3 4.2v5.9z"/></svg></span>
+              LinkedIn
+            </a>
           </div>
         </div>
+      </div>
+    </section>
 
-        <div class="col6 contactCol">
-          <div class="card panel reveal">
-            <div>
-              <div class="eyebrow">Request</div>
-              <h2 class="h2" style="margin-top:8px;">Send a request</h2>
-              <p class="lead" style="margin-top:10px;">Tell us what you want to buy — we’ll respond with options and a plan.</p>
+    <!-- REQUEST (separate row/section) -->
+    <section class="section" id="request">
+      <div class="eyebrow reveal">Request</div>
+      <h2 class="h2 reveal delay-1">Send a request</h2>
+      <p class="lead reveal delay-2">Tell us what you want to buy — we’ll respond with options and a plan.</p>
+
+      <div class="grid">
+        <div class="card panel col12 reveal">
+          <form action="" method="post" style="margin-top:0;">
+            <div style="display:grid; gap:10px; grid-template-columns: 1fr 1fr;">
+              <input name="name" placeholder="Full name" required />
+              <input name="phone" placeholder="Phone / WhatsApp" required />
             </div>
 
-            <!-- Removed: template sentence + tip (as requested) -->
-            <form action="" method="post">
-              <div style="display:grid; gap:10px; grid-template-columns: 1fr 1fr;">
-                <input name="name" placeholder="Full name" required />
-                <input name="phone" placeholder="Phone / WhatsApp" required />
-              </div>
+            <input name="item" placeholder="What do you want to buy? (category or model)" required />
 
-              <input name="item" placeholder="What do you want to buy? (category or model)" required />
+            <div style="display:grid; gap:10px; grid-template-columns: 1fr 1fr;">
+              <input name="budget" placeholder="Budget (₹)" />
+              <input name="city" placeholder="City" />
+            </div>
 
-              <div style="display:grid; gap:10px; grid-template-columns: 1fr 1fr;">
-                <input name="budget" placeholder="Budget (₹)" />
-                <input name="city" placeholder="City" />
-              </div>
+            <textarea name="notes" placeholder="Must-haves, timeline, preferred brands, etc."></textarea>
 
-              <textarea name="notes" placeholder="Must-haves, timeline, preferred brands, etc."></textarea>
-
-              <button class="btn primary" type="submit" style="width:100%;">Submit request →</button>
-            </form>
-
-            <div style="margin-top:auto;"></div>
-          </div>
+            <button class="btn primary" type="submit" style="width:100%;">Submit request →</button>
+          </form>
         </div>
       </div>
     </section>
