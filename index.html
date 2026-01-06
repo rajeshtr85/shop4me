@@ -623,6 +623,39 @@
       .logo-img{ height:56px; }
     }
 
+    /* Desktop: normal 2-column */
+.what-row{
+  display:grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 12px;
+}
+.what-row .what-card{ grid-column: span 6; }
+
+/* Mobile: horizontal scroll instead of stacking */
+@media (max-width: 820px){
+  .what-row{
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 86%;
+    gap: 12px;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+
+    padding-bottom: 8px; /* space for scrollbar */
+  }
+
+  .what-row .what-card{
+    grid-column: auto;
+    scroll-snap-align: start;
+  }
+
+  /* Optional: hide scrollbar (keeps swipe working) */
+  .what-row::-webkit-scrollbar{ height: 0; }
+}
+
     /* Reduce motion */
     @media (prefers-reduced-motion: reduce){
       html{ scroll-behavior:auto; }
@@ -695,7 +728,7 @@
       </div>
 
       <!-- SIMPLE: What we do / What you get (no pointers) -->
-      <div class="grid" style="margin-top:12px;">
+      <div class="grid what-row" style="margin-top:12px;">
         <div class="card panel col6 reveal">
           <h3>What we do</h3>
           <p>
