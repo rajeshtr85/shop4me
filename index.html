@@ -27,7 +27,7 @@
 
   <!-- Favicon -->
   <link rel="icon" href="Favicon.png" type="image/png" />
-  <link rel="apple-touch-icon" href="Vavicon.png" />
+  <link rel="apple-touch-icon" href="Favicon.png" />
 
   <!-- Structured Data -->
   <script type="application/ld+json">
@@ -314,8 +314,18 @@
     }
     .card:hover::after{ transform:translateX(70%) rotate(12deg); opacity:.55; }
 
-    /* Hero */
-    .hero{ padding:var(--s-7) 0 var(--s-5); }
+    /* HERO: show only hero on first screen */
+    .hero{
+      min-height: calc(100svh - 92px); /* header height safe default */
+      padding: 42px 0 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    @media (min-width: 980px){
+      .hero{ min-height: calc(100svh - 96px); }
+    }
+
     .hero h1{
       margin:0;
       font-size:46px;
@@ -332,6 +342,20 @@
       font-size:16px;
     }
     .hero-actions{ margin-top:18px; display:flex; gap:10px; flex-wrap:wrap; }
+
+    .scrollHint{
+      margin-top: 18px;
+      font-size: 12px;
+      font-weight: 700;
+      color: rgba(2,6,23,0.55);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      animation: hint 1.8s var(--ease) infinite;
+    }
+    @keyframes hint{
+      0%,100%{ transform: translateY(0); opacity: .7; }
+      50%{ transform: translateY(6px); opacity: 1; }
+    }
 
     /* Section headings */
     .eyebrow{
@@ -589,6 +613,7 @@
       .reveal{ transition:none; opacity:1; transform:none; }
       .btn, .card, nav a, .logo-img, .stepCard, .trustCard, .useStep, .story, .channel{ transition:none; }
       .btn.primary::after, .card::after{ display:none; }
+      .scrollHint{ animation:none; }
     }
   </style>
 </head>
@@ -641,56 +666,50 @@
   <main class="wrap">
     <!-- HERO -->
     <section class="hero" id="home">
-      <h1 class="reveal">A premium buying experience — without the shopping stress.</h1>
+      <h1 class="reveal">A premium shopping concierge for better deals — and less stress.</h1>
       <p class="reveal delay-1">
-        Tell us what you want to buy. We shortlist the best options, negotiate the best deal
-        (online & offline), and support you through warranty and after-sales.
+        Tell us what you want to buy. We shortlist the best options, negotiate the best deal (online & offline),
+        and support you through warranty and after-sales.
       </p>
+
       <div class="hero-actions reveal delay-2">
         <a class="btn primary" href="#request">Start a request →</a>
-        <a class="btn" href="#services">Explore services</a>
+        <a class="btn" href="#usecases">See use cases</a>
       </div>
 
-      <div class="grid">
+      <div class="grid" style="margin-top:16px;">
         <div class="card mini col4 reveal">
-          <h3>Right specs</h3>
-          <p>Clear trade-offs so you buy what you actually need.</p>
+          <h3>Right choice</h3>
+          <p>Shortlist with clear trade-offs.</p>
         </div>
         <div class="card mini col4 reveal delay-1">
-          <h3>Better pricing</h3>
-          <p>We compare offers and negotiate across sellers.</p>
+          <h3>Better value</h3>
+          <p>Offer search + negotiation.</p>
         </div>
         <div class="card mini col4 reveal delay-2">
-          <h3>After-sales support</h3>
-          <p>Warranty and service follow-ups when needed.</p>
+          <h3>Peace of mind</h3>
+          <p>Warranty & service support.</p>
         </div>
       </div>
 
-      <!-- Clean, non-duplicated hero panels -->
+      <!-- Hero: short & simple (no duplication of "How it works") -->
       <div class="grid" style="margin-top:12px;">
         <div class="card panel col6 reveal">
-          <h3>From one message to a confident purchase</h3>
-          <p>
-            Tell us what you want to buy and your budget. We do the research and deal work,
-            then you approve the final option before you pay.
-          </p>
+          <h3>What we do</h3>
+          <p>A premium concierge that handles research, comparisons, and negotiation — so you buy confidently.</p>
 
           <div class="storyGrid" style="margin-top:14px;">
             <div class="story">
-              <div class="k">1) Understand your need</div>
-              <div class="d">We ask a few sharp questions to lock the right specs and priorities.</div>
+              <div class="k">Shortlist</div>
+              <div class="d">2–5 best options with clean trade-offs.</div>
             </div>
             <div class="story">
-              <div class="k">2) Shortlist the best options</div>
-              <div class="d">You get 2–5 choices with clear trade-offs and a recommendation.</div>
+              <div class="k">Best net value</div>
+              <div class="d">Online + offline deals, plus exchange & offers.</div>
             </div>
             <div class="story">
-              <div class="k">3) Find + negotiate the best deal</div>
-              <div class="d">We compare online + offline offers and negotiate for better value.</div>
-            </div>
-            <div class="story">
-              <div class="k">4) Support after purchase</div>
-              <div class="d">Warranty coordination, follow-ups, and escalation when needed.</div>
+              <div class="k">After purchase support</div>
+              <div class="d">Warranty/service follow-ups when needed.</div>
             </div>
           </div>
 
@@ -699,28 +718,28 @@
 
         <div class="card panel col6 reveal delay-1">
           <h3>What you get</h3>
-          <p>
-            Not just a link. You get a clear recommendation, better total value, and support when it matters.
-          </p>
+          <p>A clear recommendation, better total value, and support after you buy.</p>
 
           <div class="storyGrid" style="margin-top:14px;">
             <div class="story">
-              <div class="k">The right product (for your use)</div>
-              <div class="d">We match specs to real-life needs so you don’t overpay or compromise.</div>
+              <div class="k">Right product</div>
+              <div class="d">Matched to your needs and budget.</div>
             </div>
             <div class="story">
-              <div class="k">Best net value (not just sticker price)</div>
-              <div class="d">We optimize exchange, bank offers, bundles, delivery, and warranty value.</div>
+              <div class="k">Less risk</div>
+              <div class="d">Seller + warranty clarity before you pay.</div>
             </div>
             <div class="story">
-              <div class="k">Peace of mind after purchase</div>
-              <div class="d">One point of contact for warranty/service follow-ups and escalation.</div>
+              <div class="k">One point of contact</div>
+              <div class="d">For follow-ups and escalation if required.</div>
             </div>
           </div>
 
-          <a class="btn" href="#usecases" style="margin-top:14px; width:100%;">See real use cases →</a>
+          <a class="btn" href="#usecases" style="margin-top:14px; width:100%;">See use cases →</a>
         </div>
       </div>
+
+      <div class="scrollHint reveal delay-3" aria-hidden="true">Scroll ↓</div>
     </section>
 
     <!-- SERVICES -->
@@ -769,7 +788,7 @@
       <div class="eyebrow reveal">Use cases</div>
       <h2 class="h2 reveal delay-1">Use cases that walk you through our process</h2>
       <p class="lead reveal delay-2">
-        Each use case follows the same premium workflow — we just tune the steps for the product and your priorities.
+        Each use case follows the same premium workflow — tuned for the product and your priorities.
       </p>
 
       <div class="grid">
@@ -780,11 +799,11 @@
           </div>
 
           <div class="useSteps">
-            <div class="useStep"><div class="useBadge">1</div><div class="useText"><p class="useKicker">Understand your workflow</p><p class="useDesc">Premiere/DaVinci? 1080p/4K? We lock CPU/GPU/RAM/SSD and display needs.</p></div></div>
-            <div class="useStep"><div class="useBadge">2</div><div class="useText"><p class="useKicker">Shortlist the right models</p><p class="useDesc">2–5 options with trade-offs: speed, heat, battery, ports, upgradeability.</p></div></div>
-            <div class="useStep"><div class="useBadge">3</div><div class="useText"><p class="useKicker">Deal search (online + offline)</p><p class="useDesc">Brand store, marketplaces, local quotes — with bank offers/exchange.</p></div></div>
-            <div class="useStep"><div class="useBadge">4</div><div class="useText"><p class="useKicker">Negotiate best total value</p><p class="useDesc">We push for better final price, bundles, upgrades, and warranty options.</p></div></div>
-            <div class="useStep"><div class="useBadge">5</div><div class="useText"><p class="useKicker">Purchase + after-sales setup</p><p class="useDesc">Invoice check, warranty guidance, and escalation path if needed later.</p></div></div>
+            <div class="useStep"><div class="useBadge">1</div><div class="useText"><p class="useKicker">Lock the right specs</p><p class="useDesc">Workload + software decides CPU/GPU/RAM/SSD and display needs.</p></div></div>
+            <div class="useStep"><div class="useBadge">2</div><div class="useText"><p class="useKicker">Shortlist best models</p><p class="useDesc">2–5 options with trade-offs: speed, heat, ports, upgradeability.</p></div></div>
+            <div class="useStep"><div class="useBadge">3</div><div class="useText"><p class="useKicker">Deal search</p><p class="useDesc">Brand store + marketplaces + local quotes with bank/exchange.</p></div></div>
+            <div class="useStep"><div class="useBadge">4</div><div class="useText"><p class="useKicker">Negotiate better value</p><p class="useDesc">Better final price, bundles, upgrades, warranty options.</p></div></div>
+            <div class="useStep"><div class="useBadge">5</div><div class="useText"><p class="useKicker">Purchase + support</p><p class="useDesc">Invoice checks and warranty guidance. Help if issues arise later.</p></div></div>
           </div>
 
           <div class="useCta"><a class="btn primary" href="#request">Start this request →</a></div>
@@ -793,15 +812,15 @@
         <div class="card usecaseCard col6 reveal delay-1">
           <div class="useHead">
             <h3 class="useTitle">Refrigerator with low power usage</h3>
-            <p class="useSub">Focused on energy savings, compressor type, service network, and long-term reliability.</p>
+            <p class="useSub">Focused on energy savings, compressor type, service network, and reliability.</p>
           </div>
 
           <div class="useSteps">
-            <div class="useStep"><div class="useBadge">1</div><div class="useText"><p class="useKicker">Confirm capacity & fit</p><p class="useDesc">Family size, kitchen space, inverter needs, and key features.</p></div></div>
-            <div class="useStep"><div class="useBadge">2</div><div class="useText"><p class="useKicker">Shortlist best value models</p><p class="useDesc">We compare star rating, build quality, and service reputation.</p></div></div>
-            <div class="useStep"><div class="useBadge">3</div><div class="useText"><p class="useKicker">Deal search + delivery terms</p><p class="useDesc">Price + delivery + installation + exchange — across sellers.</p></div></div>
-            <div class="useStep"><div class="useBadge">4</div><div class="useText"><p class="useKicker">Negotiate extras</p><p class="useDesc">We push for better pricing, extended warranty, and value adds.</p></div></div>
-            <div class="useStep"><div class="useBadge">5</div><div class="useText"><p class="useKicker">Post-purchase support</p><p class="useDesc">Warranty registration guidance and service follow-ups if needed.</p></div></div>
+            <div class="useStep"><div class="useBadge">1</div><div class="useText"><p class="useKicker">Capacity + fit</p><p class="useDesc">Family size, kitchen space, inverter needs, must-have features.</p></div></div>
+            <div class="useStep"><div class="useBadge">2</div><div class="useText"><p class="useKicker">Shortlist best value</p><p class="useDesc">Star rating, build quality, and service reputation.</p></div></div>
+            <div class="useStep"><div class="useBadge">3</div><div class="useText"><p class="useKicker">Deal search + terms</p><p class="useDesc">Price, delivery, installation, and exchange across sellers.</p></div></div>
+            <div class="useStep"><div class="useBadge">4</div><div class="useText"><p class="useKicker">Negotiate extras</p><p class="useDesc">Discounts, extended warranty, and value adds.</p></div></div>
+            <div class="useStep"><div class="useBadge">5</div><div class="useText"><p class="useKicker">After-sales support</p><p class="useDesc">Warranty setup guidance and service follow-ups if needed.</p></div></div>
           </div>
 
           <div class="useCta"><a class="btn primary" href="#request">Start this request →</a></div>
@@ -814,10 +833,10 @@
           </div>
 
           <div class="useSteps">
-            <div class="useStep"><div class="useBadge">1</div><div class="useText"><p class="useKicker">Lock specs for your team</p><p class="useDesc">Usage hours, ergonomics, resolution/size, and budgets by role.</p></div></div>
-            <div class="useStep"><div class="useBadge">2</div><div class="useText"><p class="useKicker">Shortlist vendor-ready options</p><p class="useDesc">Models with consistent stock and dependable service support.</p></div></div>
-            <div class="useStep"><div class="useBadge">3</div><div class="useText"><p class="useKicker">Vendor quotes + comparison</p><p class="useDesc">Multiple suppliers, GST invoices, warranty terms, timelines.</p></div></div>
-            <div class="useStep"><div class="useBadge">4</div><div class="useText"><p class="useKicker">Negotiate bulk pricing</p><p class="useDesc">Discounts, installation, replacements policy, delivery coordination.</p></div></div>
+            <div class="useStep"><div class="useBadge">1</div><div class="useText"><p class="useKicker">Lock specs</p><p class="useDesc">Usage hours, ergonomics, size/resolution, budgets by role.</p></div></div>
+            <div class="useStep"><div class="useBadge">2</div><div class="useText"><p class="useKicker">Shortlist vendor-ready options</p><p class="useDesc">Consistent stock and dependable support.</p></div></div>
+            <div class="useStep"><div class="useBadge">3</div><div class="useText"><p class="useKicker">Vendor quotes</p><p class="useDesc">GST invoices, warranty terms, timelines.</p></div></div>
+            <div class="useStep"><div class="useBadge">4</div><div class="useText"><p class="useKicker">Negotiate bulk pricing</p><p class="useDesc">Discounts, delivery, replacement terms.</p></div></div>
             <div class="useStep"><div class="useBadge">5</div><div class="useText"><p class="useKicker">After-sales coordination</p><p class="useDesc">Tickets, replacements, escalation, warranty tracking.</p></div></div>
           </div>
 
@@ -827,15 +846,15 @@
         <div class="card usecaseCard col6 reveal delay-1">
           <div class="useHead">
             <h3 class="useTitle">Phone + exchange + warranty bundle</h3>
-            <p class="useSub">We optimize total value — by stacking the right offers and exchange options.</p>
+            <p class="useSub">We optimize total value by stacking the right offers and exchange options.</p>
           </div>
 
           <div class="useSteps">
-            <div class="useStep"><div class="useBadge">1</div><div class="useText"><p class="useKicker">Confirm priorities</p><p class="useDesc">Camera/battery/storage + fair exchange estimate for your current phone.</p></div></div>
-            <div class="useStep"><div class="useBadge">2</div><div class="useText"><p class="useKicker">Shortlist the best fit</p><p class="useDesc">Compare features + service reputation and avoid “spec traps.”</p></div></div>
-            <div class="useStep"><div class="useBadge">3</div><div class="useText"><p class="useKicker">Offer stacking</p><p class="useDesc">Exchange + bank + coupons + bundles — we compute best net cost.</p></div></div>
-            <div class="useStep"><div class="useBadge">4</div><div class="useText"><p class="useKicker">Negotiate add-ons</p><p class="useDesc">Try for better exchange value, accessories, and warranty options.</p></div></div>
-            <div class="useStep"><div class="useBadge">5</div><div class="useText"><p class="useKicker">Purchase + warranty setup</p><p class="useDesc">Invoice verification, warranty guidance, and support escalation later.</p></div></div>
+            <div class="useStep"><div class="useBadge">1</div><div class="useText"><p class="useKicker">Confirm priorities</p><p class="useDesc">Camera/battery/storage + exchange estimate for your current phone.</p></div></div>
+            <div class="useStep"><div class="useBadge">2</div><div class="useText"><p class="useKicker">Shortlist best fit</p><p class="useDesc">Compare features and service reputation.</p></div></div>
+            <div class="useStep"><div class="useBadge">3</div><div class="useText"><p class="useKicker">Offer stacking</p><p class="useDesc">Exchange + bank + coupons + bundles = best net cost.</p></div></div>
+            <div class="useStep"><div class="useBadge">4</div><div class="useText"><p class="useKicker">Negotiate add-ons</p><p class="useDesc">Better exchange value, accessories, warranty options.</p></div></div>
+            <div class="useStep"><div class="useBadge">5</div><div class="useText"><p class="useKicker">Purchase + setup</p><p class="useDesc">Invoice check and warranty guidance + escalation path.</p></div></div>
           </div>
 
           <div class="useCta"><a class="btn primary" href="#request">Start this request →</a></div>
