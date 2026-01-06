@@ -77,6 +77,8 @@
 
       --footer:#0b0d12;
       --footer-text:rgba(255,255,255,0.80);
+      --footer-icon:rgba(255,255,255,0.75);
+      --footer-icon-hover:rgba(255,255,255,0.95);
     }
 
     *{ box-sizing:border-box; }
@@ -145,7 +147,6 @@
       backdrop-filter:blur(14px);
       border-bottom:1px solid var(--border);
     }
-
     .nav{
       display:flex;
       align-items:center;
@@ -385,10 +386,6 @@
     .col6{ grid-column:span 6; }
     .col12{ grid-column:span 12; }
 
-    .mini{ padding:16px; }
-    .mini h3{ margin:0; font-size:14px; font-weight:850; letter-spacing:-0.01em; }
-    .mini p{ margin:6px 0 0; font-size:13px; color:var(--muted); }
-
     .panel{ padding:22px; height:100%; display:flex; flex-direction:column; }
     .panel h3{ margin:0; font-size:16px; font-weight:900; letter-spacing:-0.01em; }
     .panel p{ margin:10px 0 0; color:var(--muted); font-size:13px; }
@@ -561,18 +558,51 @@
     .reveal.delay-2{ transition-delay:.16s; }
     .reveal.delay-3{ transition-delay:.24s; }
 
-    /* Footer */
+    /* Footer (LEFT copyright, RIGHT icons) */
     footer{
       margin-top:var(--s-8);
       background:var(--footer);
       color:var(--footer-text);
       border-top:1px solid rgba(255,255,255,0.08);
-      padding:22px 0;
-      text-align:center;
+      padding:18px 0;
+    }
+    .footer-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+    }
+    .footer-left{
       font-size:13px;
       font-weight:650;
       letter-spacing:0.01em;
     }
+    .footer-icons{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .footer-icon{
+      width:38px;
+      height:38px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,0.12);
+      background:rgba(255,255,255,0.06);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:var(--footer-icon);
+      text-decoration:none;
+      transition:transform .35s var(--ease), background .35s var(--ease), color .35s var(--ease), border-color .35s var(--ease);
+    }
+    .footer-icon:hover{
+      transform:translateY(-2px);
+      background:rgba(255,255,255,0.10);
+      color:var(--footer-icon-hover);
+      border-color:rgba(255,255,255,0.18);
+    }
+    .footer-icon svg{ width:18px; height:18px; fill:currentColor; }
 
     /* Responsive */
     @media (max-width: 980px){
@@ -586,6 +616,13 @@
       .stepsGrid{ grid-template-columns: 1fr; }
       .channels{ grid-template-columns: 1fr; }
       .useStep{ min-height:auto; }
+
+      /* footer mobile: copyright top, icons below */
+      .footer-row{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+      .footer-icons{ margin-top:8px; }
     }
     @media (max-width: 520px){
       .logo-img{ height:56px; }
@@ -596,7 +633,7 @@
       html{ scroll-behavior:auto; }
       .bg-wash{ animation:none; }
       .reveal{ transition:none; opacity:1; transform:none; }
-      .btn, .card, nav a, .logo-img, .stepCard, .trustCard, .useStep, .channel{ transition:none; }
+      .btn, .card, nav a, .logo-img, .stepCard, .trustCard, .useStep, .channel, .footer-icon{ transition:none; }
       .btn.primary::after, .card::after{ display:none; }
       .scrollHint{ animation:none; }
     }
@@ -649,7 +686,7 @@
   </header>
 
   <main class="wrap">
-    <!-- HERO -->
+    <!-- HERO (Removed the 3 feature cards row as requested) -->
     <section class="hero" id="home">
       <h1 class="reveal">A premium shopping concierge for better deals — and less stress.</h1>
       <p class="reveal delay-1">
@@ -662,23 +699,8 @@
         <a class="btn" href="#usecases">See use cases</a>
       </div>
 
-      <div class="grid" style="margin-top:16px;">
-        <div class="card mini col4 reveal">
-          <h3>Right choice</h3>
-          <p>Shortlist with clear trade-offs.</p>
-        </div>
-        <div class="card mini col4 reveal delay-1">
-          <h3>Better value</h3>
-          <p>Offer search + negotiation.</p>
-        </div>
-        <div class="card mini col4 reveal delay-2">
-          <h3>Peace of mind</h3>
-          <p>Warranty & service support.</p>
-        </div>
-      </div>
-
       <!-- SIMPLE: What we do / What you get (no pointers) -->
-      <div class="grid" style="margin-top:12px;">
+      <div class="grid" style="margin-top:16px;">
         <div class="card panel col6 reveal">
           <h3>What we do</h3>
           <p>
@@ -832,19 +854,19 @@
           <div class="stepsGrid reveal">
             <div class="stepCard">
               <div class="stepTop"><span class="stepNum">1</span><div class="stepTitle">Tell us your need</div></div>
-              <div class="stepDesc">Budget, preferences, must-haves. We ask a few sharp questions.</div>
+              <div class="stepDesc">Share budget, preferences, must-haves. We ask a few sharp questions.</div>
             </div>
             <div class="stepCard">
-              <div class="stepTop"><span class="stepNum">2</span><div class="stepTitle">We shortlist + search deals</div></div>
-              <div class="stepDesc">2–5 best options with a clean comparison and reasoning.</div>
+              <div class="stepTop"><span class="stepNum">2</span><div class="stepTitle">Shortlist + comparisons</div></div>
+              <div class="stepDesc">2–5 options with clear trade-offs and a recommendation.</div>
             </div>
             <div class="stepCard">
-              <div class="stepTop"><span class="stepNum">3</span><div class="stepTitle">We negotiate</div></div>
-              <div class="stepDesc">Better pricing, bundles, add-ons, and better terms.</div>
+              <div class="stepTop"><span class="stepNum">3</span><div class="stepTitle">Deal search + negotiation</div></div>
+              <div class="stepDesc">Online + offline offers, better pricing, bundles, and terms.</div>
             </div>
             <div class="stepCard">
-              <div class="stepTop"><span class="stepNum">4</span><div class="stepTitle">You approve + we support after purchase</div></div>
-              <div class="stepDesc">Final approval, then warranty/service coordination when needed.</div>
+              <div class="stepTop"><span class="stepNum">4</span><div class="stepTitle">Support after purchase</div></div>
+              <div class="stepDesc">Warranty coordination, follow-ups, and escalation when needed.</div>
             </div>
           </div>
         </div>
@@ -858,22 +880,23 @@
       <p class="lead reveal delay-2">Pick what fits your purchase. Confirm scope and terms upfront.</p>
 
       <div class="grid">
-        <div class="card service col4 reveal">
+        <div class="card panel col4 reveal">
           <h3>Success fee (on savings)</h3>
           <p>No savings → no success fee. Best for high-value purchases.</p>
+          <a class="btn primary" href="#request" style="margin-top:14px; width:100%;">Discuss my case →</a>
         </div>
-        <div class="card service col4 reveal delay-1">
-          <h3>Flat concierge fee</h3>
-          <p>Category-based one-time fee. Clear deliverables and scope.</p>
-        </div>
-        <div class="card service col4 reveal delay-2">
-          <h3>AMC (annual support)</h3>
-          <p>Warranty tracking, service coordination, escalation support.</p>
-        </div>
-      </div>
 
-      <div class="servicesCtaRow reveal" style="margin-top:16px;">
-        <a class="btn primary" href="#request">Get pricing for your request →</a>
+        <div class="card panel col4 reveal delay-1">
+          <h3>Flat concierge fee</h3>
+          <p>Category-based one-time fee for evaluation + shortlist + negotiation.</p>
+          <a class="btn" href="#request" style="margin-top:14px; width:100%;">Get a quote →</a>
+        </div>
+
+        <div class="card panel col4 reveal delay-2">
+          <h3>AMC (annual support)</h3>
+          <p>Warranty tracking + follow-ups + escalation support.</p>
+          <a class="btn" href="#request" style="margin-top:14px; width:100%;">Explore AMC →</a>
+        </div>
       </div>
     </section>
 
@@ -911,90 +934,153 @@
         <div class="col6">
           <div class="eyebrow reveal">FAQ</div>
           <h2 class="h2 reveal delay-1">Questions, answered</h2>
-          <p class="lead reveal delay-2">Short, clear answers — like the rest of the experience.</p>
+          <p class="lead reveal delay-2">Always expanded for quick reading.</p>
         </div>
+
         <div class="col6 reveal">
           <div class="faq-open">
-            <div class="faq-item"><div class="faq-q">Do you sell products?</div><div class="faq-a">No. Shop4Me acts on your behalf and you approve the final decision before any transaction.</div></div>
-            <div class="faq-item"><div class="faq-q">How do you charge?</div><div class="faq-a">We can work via a success fee on savings, a flat concierge fee, or AMC for after-sales support.</div></div>
-            <div class="faq-item"><div class="faq-q">What categories do you support?</div><div class="faq-a">High-value electronics/appliances/gadgets and procurement support for startups/SMEs.</div></div>
-            <div class="faq-item"><div class="faq-q">Do you support importing items from abroad?</div><div class="faq-a">We can help evaluate options and landed cost (pricing, shipping, duties). Availability depends on product/seller policies.</div></div>
-            <div class="faq-item"><div class="faq-q">Do you support better exchange deals?</div><div class="faq-a">Yes. We compare exchange offers across platforms and sellers and optimize for the best effective price.</div></div>
-            <div class="faq-item"><div class="faq-q">Do you help after purchase?</div><div class="faq-a">Yes. We coordinate with brands/service centers, track requests, follow up, and escalate when needed.</div></div>
+            <div class="faq-item">
+              <div class="faq-q">Do you sell products?</div>
+              <div class="faq-a">No. Shop4Me acts on your behalf and you approve the final decision before any transaction.</div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q">How do you charge?</div>
+              <div class="faq-a">We can work via a success fee on savings, a flat concierge fee, or AMC for after-sales support.</div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q">What categories do you support?</div>
+              <div class="faq-a">High-value electronics/appliances/gadgets and procurement support for startups/SMEs.</div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q">Do you support importing things from abroad?</div>
+              <div class="faq-a">We can advise on options, pricing, and risk/after-sales considerations. Actual import availability depends on product, seller, and warranty terms.</div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q">Do you support getting a better exchange deal?</div>
+              <div class="faq-a">Yes. We compare exchange programs and offers and optimize for the best net value.</div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q">Do you help after purchase?</div>
+              <div class="faq-a">Yes. We coordinate with brands/service centers, track requests, follow up, and escalate when needed.</div>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- CONTACT (separate row/section) -->
+    <!-- CONTACT (separate row) -->
     <section class="section" id="contact">
-      <div class="eyebrow reveal">Contact</div>
-      <h2 class="h2 reveal delay-1">Reach us on your preferred channel</h2>
-      <p class="lead reveal delay-2">Choose what’s easiest — we’ll respond with a clear plan and next steps.</p>
+      <div class="grid" style="align-items:stretch;">
+        <div class="col6">
+          <div class="eyebrow reveal">Contact</div>
+          <h2 class="h2 reveal delay-1">Reach us</h2>
+          <p class="lead reveal delay-2">Pick the channel you prefer. We respond with a clear next step.</p>
 
-      <div class="grid">
-        <div class="card panel col12 reveal">
-          <div class="channels" aria-label="Contact channels" style="margin-top:0;">
-            <a class="channel" href="https://wa.me/" target="_blank" rel="noopener">
-              <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.15 6.42 2.15 11.88c0 1.77.46 3.5 1.33 5.03L2 22l5.2-1.36c1.46.8 3.1 1.22 4.83 1.22 5.46 0 9.89-4.42 9.89-9.88C21.92 6.42 17.5 2 12.04 2zm5.76 14.3c-.24.68-1.17 1.25-1.94 1.41-.54.11-1.24.2-3.6-.78-3.02-1.25-4.97-4.33-5.12-4.54-.14-.21-1.23-1.64-1.23-3.13 0-1.48.78-2.21 1.05-2.52.27-.31.6-.39.8-.39.2 0 .4 0 .58.01.19.01.44-.07.69.53.24.6.83 2.09.9 2.24.07.15.12.34.02.55-.1.21-.15.34-.29.52-.14.18-.3.4-.43.54-.14.14-.28.29-.12.57.16.28.72 1.19 1.55 1.93 1.07.96 1.98 1.26 2.26 1.4.28.14.44.12.6-.07.16-.19.69-.8.88-1.08.19-.28.38-.23.64-.14.26.09 1.64.77 1.92.91.28.14.46.21.53.33.07.12.07.69-.17 1.37z"/></svg></span>
-              WhatsApp
-            </a>
+          <div class="card panel reveal" style="margin-top:18px;">
+            <h3>Quick channels</h3>
+            <p>Replace links with your official handles.</p>
 
-            <a class="channel" href="mailto:hello@shop4me.in">
-              <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5L4 8V6l8 5 8-5v2z"/></svg></span>
-              Email
-            </a>
+            <div class="channels">
+              <a class="channel" href="https://wa.me/" target="_blank" rel="noopener">
+                <span class="ico" aria-hidden="true">
+                  <!-- WhatsApp -->
+                  <svg viewBox="0 0 24 24"><path d="M12 2a9.7 9.7 0 0 0-9.6 11.2L1 22l8.9-1.4A9.7 9.7 0 1 0 12 2Zm0 17.7a8 8 0 0 1-4.1-1.1l-.3-.2-5.2.8.8-5-.2-.3A8 8 0 1 1 12 19.7Zm4.6-6.1c-.2-.1-1.2-.6-1.4-.7s-.3-.1-.5.1-.6.7-.7.9-.2.1-.4 0a6.5 6.5 0 0 1-1.9-1.2 7.2 7.2 0 0 1-1.3-1.6c-.1-.2 0-.3.1-.4l.4-.5c.1-.1.2-.2.2-.3a.5.5 0 0 0 0-.4c0-.1-.5-1.3-.7-1.7-.2-.5-.4-.4-.5-.4h-.4c-.1 0-.4.1-.6.3s-.8.7-.8 1.8.8 2.1.9 2.3a8.4 8.4 0 0 0 3.3 3c.4.2.8.4 1.1.5.5.2 1 .2 1.4.1.4-.1 1.2-.5 1.4-1 .2-.5.2-.9.1-1 0-.1-.2-.2-.4-.3Z"/></svg>
+                </span>
+                WhatsApp
+              </a>
 
-            <a class="channel" href="https://facebook.com/" target="_blank" rel="noopener">
-              <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.5 9.9v-7H8v-3h2.5V9.5A3.5 3.5 0 0 1 14.2 6h2.3v3h-2.3c-.8 0-1.2.5-1.2 1.1V12H16.5l-.5 3H13v7A10 10 0 0 0 22 12z"/></svg></span>
-              Facebook
-            </a>
+              <a class="channel" href="mailto:hello@shop4me.in">
+                <span class="ico" aria-hidden="true">
+                  <!-- Email -->
+                  <svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4-8 5L4 8V6l8 5 8-5v2Z"/></svg>
+                </span>
+                Email
+              </a>
 
-            <a class="channel" href="https://instagram.com/" target="_blank" rel="noopener">
-              <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm10 2H7a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3zm-5 4.5A5.5 5.5 0 1 1 6.5 14 5.5 5.5 0 0 1 12 8.5zm0 2A3.5 3.5 0 1 0 15.5 14 3.5 3.5 0 0 0 12 10.5zM18 6.8a1.2 1.2 0 1 1-1.2-1.2A1.2 1.2 0 0 1 18 6.8z"/></svg></span>
-              Instagram
-            </a>
+              <a class="channel" href="#" target="_blank" rel="noopener">
+                <span class="ico" aria-hidden="true">
+                  <!-- Facebook -->
+                  <svg viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7h-2.1V12h2.1V9.8c0-2.1 1.3-3.3 3.2-3.3.9 0 1.9.2 1.9.2v2.1h-1.1c-1.1 0-1.4.7-1.4 1.4V12h2.4l-.4 2.9h-2v7A10 10 0 0 0 22 12Z"/></svg>
+                </span>
+                Facebook
+              </a>
 
-            <a class="channel" href="https://linkedin.com/" target="_blank" rel="noopener">
-              <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.4 2H3.6A1.6 1.6 0 0 0 2 3.6v16.8A1.6 1.6 0 0 0 3.6 22h16.8a1.6 1.6 0 0 0 1.6-1.6V3.6A1.6 1.6 0 0 0 20.4 2zM8.1 19.3H5.4V9.2h2.7v10.1zM6.7 8A1.6 1.6 0 1 1 8.3 6.4 1.6 1.6 0 0 1 6.7 8zm12.6 11.3h-2.7v-4.9c0-1.2 0-2.7-1.7-2.7s-1.9 1.3-1.9 2.6v5h-2.7V9.2h2.6v1.4h.04a2.9 2.9 0 0 1 2.6-1.4c2.8 0 3.3 1.8 3.3 4.2v5.9z"/></svg></span>
-              LinkedIn
-            </a>
+              <a class="channel" href="#" target="_blank" rel="noopener">
+                <span class="ico" aria-hidden="true">
+                  <!-- Instagram -->
+                  <svg viewBox="0 0 24 24"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm10 2H7a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3Zm-5 3.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5Zm0 2A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5ZM17.8 6.7a1 1 0 1 1-1 1 1 1 0 0 1 1-1Z"/></svg>
+                </span>
+                Instagram
+              </a>
+
+              <a class="channel" href="#" target="_blank" rel="noopener">
+                <span class="ico" aria-hidden="true">
+                  <!-- LinkedIn -->
+                  <svg viewBox="0 0 24 24"><path d="M20.4 20.4h-3.6v-5.6c0-1.3 0-3-1.9-3s-2.2 1.4-2.2 2.9v5.7H9.1V9h3.4v1.6h.1c.5-.9 1.7-1.9 3.5-1.9 3.7 0 4.3 2.4 4.3 5.5v6.2ZM5.1 7.4a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2Zm-1.8 13h3.6V9H3.3v11.4Z"/></svg>
+                </span>
+                LinkedIn
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col6 reveal">
+          <div class="card panel" style="height:100%;">
+            <h3 id="request">Send a request</h3>
+
+            <!-- Replace action="" with your endpoint -->
+            <form action="" method="post">
+              <div style="display:grid; gap:10px; grid-template-columns: 1fr 1fr;">
+                <input name="name" placeholder="Full name" required />
+                <input name="phone" placeholder="Phone / WhatsApp" required />
+              </div>
+
+              <input name="item" placeholder="What do you want to buy? (category or model)" required />
+
+              <div style="display:grid; gap:10px; grid-template-columns: 1fr 1fr;">
+                <input name="budget" placeholder="Budget (₹)" />
+                <input name="city" placeholder="City" />
+              </div>
+
+              <textarea name="notes" placeholder="Must-haves, timeline, preferred brands, etc."></textarea>
+
+              <button class="btn primary" type="submit" style="width:100%;">Submit request →</button>
+            </form>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- REQUEST (separate row/section) -->
-    <section class="section" id="request">
-      <div class="eyebrow reveal">Request</div>
-      <h2 class="h2 reveal delay-1">Send a request</h2>
-      <p class="lead reveal delay-2">Tell us what you want to buy — we’ll respond with options and a plan.</p>
+    <!-- FOOTER (left text, right icons; mobile stacks) -->
+    <footer>
+      <div class="wrap footer-row">
+        <div class="footer-left">© 2026 Shop4Me</div>
 
-      <div class="grid">
-        <div class="card panel col12 reveal">
-          <form action="" method="post" style="margin-top:0;">
-            <div style="display:grid; gap:10px; grid-template-columns: 1fr 1fr;">
-              <input name="name" placeholder="Full name" required />
-              <input name="phone" placeholder="Phone / WhatsApp" required />
-            </div>
+        <div class="footer-icons" aria-label="Reach us">
+          <!-- Replace links with your real profiles -->
+          <a class="footer-icon" href="https://wa.me/" target="_blank" rel="noopener" aria-label="WhatsApp">
+            <svg viewBox="0 0 24 24"><path d="M12 2a9.7 9.7 0 0 0-9.6 11.2L1 22l8.9-1.4A9.7 9.7 0 1 0 12 2Zm0 17.7a8 8 0 0 1-4.1-1.1l-.3-.2-5.2.8.8-5-.2-.3A8 8 0 1 1 12 19.7Zm4.6-6.1c-.2-.1-1.2-.6-1.4-.7s-.3-.1-.5.1-.6.7-.7.9-.2.1-.4 0a6.5 6.5 0 0 1-1.9-1.2 7.2 7.2 0 0 1-1.3-1.6c-.1-.2 0-.3.1-.4l.4-.5c.1-.1.2-.2.2-.3a.5.5 0 0 0 0-.4c0-.1-.5-1.3-.7-1.7-.2-.5-.4-.4-.5-.4h-.4c-.1 0-.4.1-.6.3s-.8.7-.8 1.8.8 2.1.9 2.3a8.4 8.4 0 0 0 3.3 3c.4.2.8.4 1.1.5.5.2 1 .2 1.4.1.4-.1 1.2-.5 1.4-1 .2-.5.2-.9.1-1 0-.1-.2-.2-.4-.3Z"/></svg>
+          </a>
 
-            <input name="item" placeholder="What do you want to buy? (category or model)" required />
+          <a class="footer-icon" href="mailto:hello@shop4me.in" aria-label="Email">
+            <svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4-8 5L4 8V6l8 5 8-5v2Z"/></svg>
+          </a>
 
-            <div style="display:grid; gap:10px; grid-template-columns: 1fr 1fr;">
-              <input name="budget" placeholder="Budget (₹)" />
-              <input name="city" placeholder="City" />
-            </div>
+          <a class="footer-icon" href="#" target="_blank" rel="noopener" aria-label="Facebook">
+            <svg viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7h-2.1V12h2.1V9.8c0-2.1 1.3-3.3 3.2-3.3.9 0 1.9.2 1.9.2v2.1h-1.1c-1.1 0-1.4.7-1.4 1.4V12h2.4l-.4 2.9h-2v7A10 10 0 0 0 22 12Z"/></svg>
+          </a>
 
-            <textarea name="notes" placeholder="Must-haves, timeline, preferred brands, etc."></textarea>
+          <a class="footer-icon" href="#" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg viewBox="0 0 24 24"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm10 2H7a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3Zm-5 3.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5Zm0 2A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5ZM17.8 6.7a1 1 0 1 1-1 1 1 1 0 0 1 1-1Z"/></svg>
+          </a>
 
-            <button class="btn primary" type="submit" style="width:100%;">Submit request →</button>
-          </form>
+          <a class="footer-icon" href="#" target="_blank" rel="noopener" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24"><path d="M20.4 20.4h-3.6v-5.6c0-1.3 0-3-1.9-3s-2.2 1.4-2.2 2.9v5.7H9.1V9h3.4v1.6h.1c.5-.9 1.7-1.9 3.5-1.9 3.7 0 4.3 2.4 4.3 5.5v6.2ZM5.1 7.4a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2Zm-1.8 13h3.6V9H3.3v11.4Z"/></svg>
+          </a>
         </div>
       </div>
-    </section>
+    </footer>
   </main>
-
-  <footer>© 2026 Shop4Me</footer>
 
   <script>
     // Scroll progress
@@ -1011,37 +1097,22 @@
     // Reveal on scroll
     const io = new IntersectionObserver((entries) => {
       for (const e of entries) if (e.isIntersecting) e.target.classList.add("in");
-    }, { threshold: 0.16 });
+    }, { threshold: 0.18 });
     document.querySelectorAll(".reveal").forEach(el => io.observe(el));
 
     // Mobile menu
     const hamburger = document.getElementById("hamburger");
     const mobileMenu = document.getElementById("mobileMenu");
-
-    function setMenu(open){
-      if (!mobileMenu || !hamburger) return;
-      mobileMenu.classList.toggle("open", open);
+    hamburger?.addEventListener("click", () => {
+      const open = mobileMenu.classList.toggle("open");
       hamburger.classList.toggle("is-open", open);
       hamburger.setAttribute("aria-expanded", open ? "true" : "false");
-    }
-
-    hamburger?.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const openNow = !mobileMenu.classList.contains("open");
-      setMenu(openNow);
     });
-
-    mobileMenu?.querySelectorAll("a").forEach(a => a.addEventListener("click", () => setMenu(false)));
-
-    document.addEventListener("click", (e) => {
-      if (!mobileMenu?.classList.contains("open")) return;
-      const within = mobileMenu.contains(e.target) || hamburger.contains(e.target);
-      if (!within) setMenu(false);
-    });
-
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") setMenu(false);
-    });
+    mobileMenu?.querySelectorAll("a").forEach(a => a.addEventListener("click", () => {
+      mobileMenu.classList.remove("open");
+      hamburger.classList.remove("is-open");
+      hamburger.setAttribute("aria-expanded", "false");
+    }));
   </script>
 </body>
 </html>
