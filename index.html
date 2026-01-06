@@ -72,8 +72,6 @@
       --focus:rgba(99,102,241,0.45);
       --focus-ring:0 0 0 6px rgba(99,102,241,0.12);
 
-      --s-5:22px;
-      --s-7:36px;
       --s-8:48px;
       --s-9:64px;
 
@@ -316,7 +314,7 @@
 
     /* HERO: show only hero on first screen */
     .hero{
-      min-height: calc(100svh - 92px); /* header height safe default */
+      min-height: calc(100svh - 92px);
       padding: 42px 0 32px;
       display: flex;
       flex-direction: column;
@@ -394,19 +392,6 @@
     .panel{ padding:22px; height:100%; display:flex; flex-direction:column; }
     .panel h3{ margin:0; font-size:16px; font-weight:900; letter-spacing:-0.01em; }
     .panel p{ margin:10px 0 0; color:var(--muted); font-size:13px; }
-
-    .storyGrid{ display:grid; gap:12px; margin-top:14px; }
-    .story{
-      border-radius:18px;
-      border:1px solid var(--border);
-      background:rgba(255,255,255,0.92);
-      padding:14px;
-      box-shadow:var(--shadow-xs);
-      transition:transform .45s var(--ease), box-shadow .45s var(--ease);
-    }
-    .story:hover{ transform:translateY(-2px); box-shadow:var(--shadow-sm); }
-    .story .k{ font-weight:950; font-size:13px; letter-spacing:-0.01em; }
-    .story .d{ margin-top:6px; color:var(--muted); font-size:13px; line-height:1.45; }
 
     .service{ padding:18px; }
     .service h3{ margin:0; font-size:15px; font-weight:900; letter-spacing:-0.01em; }
@@ -611,7 +596,7 @@
       html{ scroll-behavior:auto; }
       .bg-wash{ animation:none; }
       .reveal{ transition:none; opacity:1; transform:none; }
-      .btn, .card, nav a, .logo-img, .stepCard, .trustCard, .useStep, .story, .channel{ transition:none; }
+      .btn, .card, nav a, .logo-img, .stepCard, .trustCard, .useStep, .channel{ transition:none; }
       .btn.primary::after, .card::after{ display:none; }
       .scrollHint{ animation:none; }
     }
@@ -692,49 +677,21 @@
         </div>
       </div>
 
-      <!-- Hero: short & simple (no duplication of "How it works") -->
+      <!-- SIMPLE: What we do / What you get (no pointers) -->
       <div class="grid" style="margin-top:12px;">
         <div class="card panel col6 reveal">
           <h3>What we do</h3>
-          <p>A premium concierge that handles research, comparisons, and negotiation — so you buy confidently.</p>
-
-          <div class="storyGrid" style="margin-top:14px;">
-            <div class="story">
-              <div class="k">Shortlist</div>
-              <div class="d">2–5 best options with clean trade-offs.</div>
-            </div>
-            <div class="story">
-              <div class="k">Best net value</div>
-              <div class="d">Online + offline deals, plus exchange & offers.</div>
-            </div>
-            <div class="story">
-              <div class="k">After purchase support</div>
-              <div class="d">Warranty/service follow-ups when needed.</div>
-            </div>
-          </div>
-
+          <p>
+            We do the research, shortlist the best options, and negotiate across sellers — so you don’t have to.
+          </p>
           <a class="btn primary" href="#request" style="margin-top:14px; width:100%;">Start a request →</a>
         </div>
 
         <div class="card panel col6 reveal delay-1">
           <h3>What you get</h3>
-          <p>A clear recommendation, better total value, and support after you buy.</p>
-
-          <div class="storyGrid" style="margin-top:14px;">
-            <div class="story">
-              <div class="k">Right product</div>
-              <div class="d">Matched to your needs and budget.</div>
-            </div>
-            <div class="story">
-              <div class="k">Less risk</div>
-              <div class="d">Seller + warranty clarity before you pay.</div>
-            </div>
-            <div class="story">
-              <div class="k">One point of contact</div>
-              <div class="d">For follow-ups and escalation if required.</div>
-            </div>
-          </div>
-
+          <p>
+            A clear recommendation, better total value, and support after purchase when it matters.
+          </p>
           <a class="btn" href="#usecases" style="margin-top:14px; width:100%;">See use cases →</a>
         </div>
       </div>
