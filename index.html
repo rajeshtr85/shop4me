@@ -778,8 +778,10 @@
   .sidePanel, .sideOpen{ transition:none; }
 }
 
-
-
+/* Slightly narrower main layout (keeps your design intact) */
+:root{
+  --max: 1040px; /* was 1160px */
+}
     
   </style>
 </head>
@@ -1322,17 +1324,21 @@
     }
 
     function toggleByScroll(){
-      if (!sidePanel || !sideOpen) return;
-      // show after user scrolls a bit (so it doesn't distract on hero)
-      const y = window.scrollY || document.documentElement.scrollTop || 0;
-      if (y < 240){
-        sidePanel.classList.remove("is-on");
-        sideOpen.classList.remove("is-on");
-        return;
-      }
-      if (shouldAutoShow()) showPanel();
-      else hidePanel();
-    }
+  if (!sidePanel || !sideOpen) return;
+
+  const y = window.scrollY || document.documentElement.scrollTop || 0;
+
+  // Only show AFTER user starts scrolling (y > 0)
+  if (y <= 0){
+    sidePanel.classList.remove("is-on");
+    sideOpen.classList.remove("is-on");
+    return;
+  }
+
+  // After scrolling starts: open panel (unless user closed it)
+  if (shouldAutoShow()) showPanel();
+  else hidePanel();
+}
 
     sideClose?.addEventListener("click", hidePanel);
     sideOpen?.addEventListener("click", () => {
