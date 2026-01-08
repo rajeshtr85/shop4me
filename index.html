@@ -634,17 +634,64 @@
     }
 
 
-.zoho-embed{
-  width:100%;
-  margin-top:0;
-  border-radius:16px;
-  overflow:hidden;
-  background:rgba(255,255,255,0.94);
-  border:1px solid var(--border);
+/* Flush panel for embeds */
+.panel--flush{
+  padding:0;
 }
-.zoho-embed iframe{
+
+/* Zoho embed styled like a native premium panel */
+.panel--flush .zoho-embed{
+  position:relative;
+  border-radius:calc(var(--radius-xl) - 1px);
+  overflow:hidden;
+
+  /* keep a subtle inner boundary without double borders */
+  box-shadow:inset 0 0 0 1px rgba(15,23,42,0.10);
+
+  /* match your card highlight wash */
+  background:
+    linear-gradient(180deg, rgba(2,6,23,0.04), rgba(255,255,255,0.92));
+}
+
+/* Make the iframe truly edge-to-edge */
+.panel--flush .zoho-embed iframe{
   display:block;
   width:100%;
+  border:0;
+  background:transparent;
+}
+
+/* Premium loading sheen (like your card shimmer) */
+.panel--flush .zoho-embed::after{
+  content:"";
+  position:absolute;
+  inset:-40% -60%;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+  transform:translateX(-70%) rotate(12deg);
+  opacity:.55;
+  pointer-events:none;
+  transition:opacity .45s var(--ease);
+  animation:zohoShine 1.25s var(--ease) infinite;
+}
+
+@keyframes zohoShine{
+  0%{ transform:translateX(-70%) rotate(12deg); }
+  100%{ transform:translateX(70%) rotate(12deg); }
+}
+
+.panel--flush .zoho-embed.loaded::after{
+  opacity:0;
+  animation:none;
+}
+
+/* Focus treatment when user tabs into the iframe */
+.panel--flush .zoho-embed:focus-within{
+  box-shadow:inset 0 0 0 1px var(--focus), var(--focus-ring);
+}
+
+/* Optional: slightly taller on small screens (Zoho forms often expand vertically) */
+@media (max-width: 860px){
+  .panel--flush .zoho-embed iframe{ height: 1100px; }
 }
 
     
@@ -1008,21 +1055,19 @@
 
 
         
-<div class="card panel col12 reveal">
-  <div class="zoho-embed">
+<div class="card panel panel--flush col12 reveal">
+  <div class="zoho-embed" id="zohoEmbed">
     <iframe
       aria-label="Shop4Me_Web_Request"
       src="https://forms.zohopublic.in/rajeshsho1/form/Shop4MeWebRequest/formperma/YyiOA_vTJzMA1vDMHJY_C_V-A0W1pm6XG_-G3h-VD04"
       width="100%"
       height="900"
       frameborder="0"
-      style="border:none;"
       loading="lazy"
       title="Shop4Me Request Form"
     ></iframe>
   </div>
 </div>
-
 
         
       </div>
@@ -1118,6 +1163,14 @@
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") setMenu(false);
     });
+
+
+// Zoho embed: remove loading sheen once iframe is ready
+const zohoFrame = document.querySelector("#zohoEmbed iframe");
+zohoFrame?.addEventListener("load", () => {
+  document.getElementById("zohoEmbed")?.classList.add("loaded");
+});
+    
     
   </script>
 </body>
