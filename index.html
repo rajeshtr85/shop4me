@@ -860,6 +860,54 @@
 .zoho-inline .zf-fmFooter{
   border-top: 0 !important;
 }
+
+
+/* Success modal */
+.s4m-modal{
+  position:fixed;
+  inset:0;
+  display:none;
+  z-index:9999;
+}
+
+.s4m-modal.show{ display:block; }
+
+.s4m-backdrop{
+  position:absolute;
+  inset:0;
+  background:rgba(2,6,23,0.55);
+  backdrop-filter: blur(6px);
+}
+
+.s4m-dialog{
+  position:relative;
+  max-width:520px;
+  margin: min(16vh, 140px) auto 0;
+  background: rgba(255,255,255,0.96);
+  border: 1px solid rgba(15,23,42,0.12);
+  border-radius: 22px;
+  box-shadow: 0 18px 60px rgba(2,6,23,0.22);
+  padding: 18px;
+}
+
+.s4m-dialog h3{
+  margin:0;
+  font-size:18px;
+  font-weight:950;
+  letter-spacing:-0.01em;
+}
+
+.s4m-dialog p{
+  margin:10px 0 0;
+  color: var(--muted);
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.s4m-dialog .btn{
+  margin-top:14px;
+  width:100%;
+}
     
   </style>
 </head>
@@ -1231,7 +1279,7 @@
                     enctype='multipart/form-data'
                     id='form'>
                 <input type="hidden" name="zf_referrer_name" value="">
-                <input type="hidden" name="zf_redirect_url" value="">
+                <input type="hidden" name="zf_redirect_url" value="https://shop4me.in/#request?submitted=1">
                 <input type="hidden" name="zc_gad" value="">
 
                 <div class="zf-templateWrapper">
@@ -1475,6 +1523,17 @@ zohoFrame?.addEventListener("load", () => {
   });
 </script>
 
+  <!-- Success Modal -->
+<div class="s4m-modal" id="s4mSuccess" aria-hidden="true">
+  <div class="s4m-backdrop" data-close></div>
+
+  <div class="s4m-dialog" role="dialog" aria-modal="true" aria-labelledby="s4mSuccessTitle">
+    <h3 id="s4mSuccessTitle">Request received ✅</h3>
+    <p>Thanks! We’ll review your requirement and get back with options and next steps.</p>
+
+    <button class="btn primary" type="button" id="s4mCloseSuccess">Close</button>
+  </div>
+</div>
   
 </body>
 </html>
