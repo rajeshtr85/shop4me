@@ -50,6 +50,10 @@
   }
   </script>
 
+  <!-- Zoho inline form dependencies (ROOT) -->
+  <link rel="stylesheet" href="form.css" />
+  <script src="validation.js"></script>
+  
   <style>
     :root{
       --bg:#ffffff;
@@ -634,77 +638,139 @@
     }
 
 
-/* Flush panel for embeds */
-.panel--flush { padding: 0; }
+    /* -------------------- ZOHO INLINE FORM: premium skin + responsive -------------------- */
+    .panel--flush{ padding:0; }
 
-/* Zoho embed styled like a native premium panel */
-.panel--flush .zoho-embed{
-  position: relative;
-  border-radius: calc(var(--radius-xl) - 1px);
-  overflow: hidden;
+    .zoho-inline{
+      background:#fff;
+      border-radius:calc(var(--radius-xl) - 1px);
+      overflow:hidden;
+      box-shadow:inset 0 0 0 1px rgba(15,23,42,0.10);
+    }
 
-  /* subtle boundary */
-  box-shadow: inset 0 0 0 1px rgba(15,23,42,0.10);
+    .zoho-inline *{ box-sizing:border-box; }
 
-  /* Pick ONE background: keep it clean white */
-  background: #fff;
-}
+    .zoho-inline .zf-templateWidth,
+    .zoho-inline .zf-templateWrapper{
+      width:100%;
+      max-width:none;
+      margin:0;
+      padding:0;
+      border:none;
+      background:transparent;
+      box-shadow:none;
+    }
 
-/* iOS-safe responsive iframe */
-.panel--flush .zoho-embed iframe{
-  display: block;
-  border: 0;
-  background: transparent;
+    /* Header area */
+    .zoho-inline .zf-tempHeadBdr{ padding:22px 22px 0; }
+    .zoho-inline .zf-frmTitle{
+      margin:0;
+      font-size:18px;
+      font-weight:950;
+      letter-spacing:-0.02em;
+    }
 
-  /* iOS Safari fix */
-  width: 1px;
-  min-width: 100%;
-  max-width: 100%;
+    /* Body padding */
+    .zoho-inline .zfgrid_Wrapper{ padding:22px; }
 
-  /* Default height (desktop/tablet) */
-  height: 900px;
-}
+    /* Two-column grid desktop -> stack mobile */
+    .zoho-inline .zftwoColumn{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap:12px;
+      align-items:start;
+    }
+    .zoho-inline .zfCol{ display:grid; gap:12px; min-width:0; }
 
-/* Premium loading sheen (optional) */
-.panel--flush .zoho-embed::after{
-  content:"";
-  position:absolute;
-  inset:-40% -60%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
-  transform: translateX(-70%) rotate(12deg);
-  opacity:.55;
-  pointer-events:none;
-  transition: opacity .45s var(--ease);
-  animation: zohoShine 1.25s var(--ease) infinite;
-}
+    /* Field wrapper cards */
+    .zoho-inline .zf-tempFrmWrapper{
+      border:1px solid rgba(15,23,42,0.10);
+      background:rgba(255,255,255,0.92);
+      border-radius:18px;
+      padding:12px;
+      box-shadow:var(--shadow-xs);
+      transition:transform .25s var(--ease), box-shadow .25s var(--ease);
+    }
+    .zoho-inline .zf-tempFrmWrapper:hover{
+      transform:translateY(-1px);
+      box-shadow:var(--shadow-sm);
+    }
 
-@keyframes zohoShine{
-  0%{ transform: translateX(-70%) rotate(12deg); }
-  100%{ transform: translateX(70%) rotate(12deg); }
-}
+    /* Labels */
+    .zoho-inline .zf-labelName{
+      display:block;
+      font-size:13px;
+      font-weight:900;
+      letter-spacing:-0.01em;
+      color:rgba(2,6,23,0.86);
+      margin:0 0 8px;
+    }
+    .zoho-inline .zf-important{ color:rgba(236,72,153,0.95); }
 
-.panel--flush .zoho-embed.loaded::after{
-  opacity: 0;
-  animation: none;
-}
+    /* Inputs */
+    .zoho-inline input[type="text"],
+    .zoho-inline textarea{
+      width:100%;
+      border-radius:16px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,0.94);
+      padding:12px 12px;
+      font:inherit;
+      font-size:13px;
+      color:var(--text);
+      outline:none;
+      transition:box-shadow .2s var(--ease), border-color .2s var(--ease);
+    }
+    .zoho-inline input[type="text"]{ height:44px; }
+    .zoho-inline textarea{ min-height:140px; resize:vertical; }
 
-/* Focus treatment when user tabs into the iframe */
-.panel--flush .zoho-embed:focus-within{
-  box-shadow: inset 0 0 0 1px var(--focus), var(--focus-ring);
-}
+    .zoho-inline input[type="text"]:focus,
+    .zoho-inline textarea:focus{
+      border-color:var(--focus);
+      box-shadow:var(--focus-ring);
+    }
 
-/* Mobile responsiveness (important breakpoint) */
-@media (max-width: 860px){
-  .panel--flush .zoho-embed iframe{
-    height: clamp(820px, 88svh, 1300px);
-  }
-}
+    .zoho-inline .zf-instruction{
+      margin:8px 0 0;
+      font-size:12.5px;
+      color:rgba(82,88,102,0.95);
+    }
+    .zoho-inline .zf-errorMessage{
+      margin:8px 0 0;
+      font-size:12.5px;
+      color:rgba(220,38,38,0.95);
+      font-weight:800;
+    }
 
-@media (max-width: 420px){
-  .panel--flush .zoho-embed iframe{
-    height: clamp(900px, 92svh, 1500px);
-  }
-}
+    /* Submit area */
+    .zoho-inline .zf-fmFooter{ padding:0 22px 22px; }
+    .zoho-inline .zf-submitColor{
+      width:100%;
+      height:44px;
+      border-radius:14px;
+      border:1px solid rgba(2,6,23,0.94);
+      background:rgba(2,6,23,0.94);
+      color:#fff;
+      font-weight:850;
+      cursor:pointer;
+      box-shadow:var(--shadow-xs);
+      transition:transform .25s var(--ease), box-shadow .25s var(--ease), background .25s var(--ease);
+    }
+    .zoho-inline .zf-submitColor:hover{
+      transform:translateY(-1px);
+      box-shadow:var(--shadow-sm);
+      background:rgba(2,6,23,1);
+    }
+
+    @media (max-width: 980px){
+      .zoho-inline .zf-tempHeadBdr{ padding:18px 18px 0; }
+      .zoho-inline .zfgrid_Wrapper{ padding:18px; }
+      .zoho-inline .zf-fmFooter{ padding:0 18px 18px; }
+    }
+    @media (max-width: 860px){
+      .zoho-inline .zftwoColumn{ grid-template-columns: 1fr; }
+      .zoho-inline textarea{ min-height:170px; }
+    }
     
 
     
@@ -1058,31 +1124,121 @@
       </div>
     </section>
 
-    <!-- REQUEST (separate row/section) -->
+    <!-- REQUEST -->
     <section class="section" id="request">
       <div class="eyebrow reveal">Request</div>
       <h2 class="h2 reveal delay-1">Send a request</h2>
       <p class="lead reveal delay-2">Tell us what you want to buy — we’ll respond with options and a plan.</p>
 
       <div class="grid">
+        <div class="card panel panel--flush col12 reveal">
+          <div class="zoho-inline">
+            <!-- ZOHO INLINE FORM (NO IFRAME) -->
+            <!-- Change or deletion of the name attributes in the input tag will lead to empty values on record submission-->
+            <div class="zf-templateWidth">
+              <form action='https://forms.zohopublic.in/rajeshsho1/form/Shop4MeWebRequest/formperma/_Mn_E_DDxL9ArfujL33UQKBsH1udtFlrHxOjwX_o7Qg/htmlRecords/submit'
+                    name='form'
+                    method='POST'
+                    onSubmit='javascript:document.charset="UTF-8"; return zf_ValidateAndSubmit();'
+                    accept-charset='UTF-8'
+                    enctype='multipart/form-data'
+                    id='form'>
+                <input type="hidden" name="zf_referrer_name" value="">
+                <input type="hidden" name="zf_redirect_url" value="">
+                <input type="hidden" name="zc_gad" value="">
 
+                <div class="zf-templateWrapper">
 
-        
-<div class="card panel panel--flush col12 reveal">
-  <div class="zoho-embed" id="zohoEmbed">
-    <iframe
-      aria-label="Shop4Me_Web_Request"
-      src="https://forms.zohopublic.in/rajeshsho1/form/Shop4MeWebRequest/formperma/YyiOA_vTJzMA1vDMHJY_C_V-A0W1pm6XG_-G3h-VD04"
-      width="100%"
-      height="760"
-      frameborder="0"
-      loading="lazy"
-      title="Shop4Me Request Form"
-    ></iframe>
-  </div>
-</div>
+                  <ul class="zf-tempHeadBdr">
+                    <li class="zf-tempHeadContBdr">
+                      <h2 class="zf-frmTitle"><em>Request Form</em></h2>
+                      <p class="zf-frmDesc"></p>
+                      <div class="zf-clearBoth"></div>
+                    </li>
+                  </ul>
 
-        
+                  <div class="zf-subContWrap zf-topAlign">
+                    <ul>
+                      <div class="zfgrid_Wrapper">
+                        <div class="zftwoColumn zfMultiColGrid">
+
+                          <div class="zfCol">
+                            <div class="zf-tempFrmWrapper zf-small">
+                              <label class="zf-labelName">Full name <em class="zf-important"> *</em></label>
+                              <div class="zf-tempContDiv">
+                                <span><input type="text" name="SingleLine" checktype="c1" value="" maxlength="255" fieldType="1" placeholder="" /></span>
+                                <p id="SingleLine_error" class="zf-errorMessage" style="display:none;">Invalid value</p>
+                              </div>
+                              <div class="zf-clearBoth"></div>
+                            </div>
+
+                            <div class="zf-tempFrmWrapper zf-small">
+                              <label class="zf-labelName">Phone / WhatsApp <em class="zf-important"> *</em></label>
+                              <div class="zf-tempContDiv">
+                                <span><input type="text" name="Number" checktype="c2" value="" maxlength="18" fieldType="3" placeholder="" /></span>
+                                <p id="Number_error" class="zf-errorMessage" style="display:none;">Invalid value</p>
+                              </div>
+                              <div class="zf-clearBoth"></div>
+                            </div>
+
+                            <div class="zf-tempFrmWrapper zf-large">
+                              <label class="zf-labelName">City <em class="zf-important"> *</em></label>
+                              <div class="zf-tempContDiv">
+                                <span><input type="text" name="SingleLine4" checktype="c1" value="" maxlength="255" fieldType="1" placeholder="" /></span>
+                                <p id="SingleLine4_error" class="zf-errorMessage" style="display:none;">Invalid value</p>
+                              </div>
+                              <div class="zf-clearBoth"></div>
+                            </div>
+                          </div>
+
+                          <div class="zfCol">
+                            <div class="zf-tempFrmWrapper zf-large">
+                              <label class="zf-labelName">What do you want to buy? <em class="zf-important"> *</em></label>
+                              <div class="zf-tempContDiv">
+                                <span><textarea name="MultiLine" checktype="c1" maxlength="65535" placeholder=""></textarea></span>
+                                <p id="MultiLine_error" class="zf-errorMessage" style="display:none;">Invalid value</p>
+                                <p class="zf-instruction">Product specification if any.</p>
+                              </div>
+                              <div class="zf-clearBoth"></div>
+                            </div>
+
+                            <div class="zf-tempFrmWrapper zf-large">
+                              <label class="zf-labelName">Budget</label>
+                              <div class="zf-tempContDiv">
+                                <span><input type="text" name="SingleLine3" checktype="c1" value="" maxlength="255" fieldType="1" placeholder="" /></span>
+                                <p id="SingleLine3_error" class="zf-errorMessage" style="display:none;">Invalid value</p>
+                                <p class="zf-instruction">15,000 - 25,000</p>
+                              </div>
+                              <div class="zf-clearBoth"></div>
+                            </div>
+                          </div>
+
+                        </div>
+                      </div>
+                    </ul>
+
+                    <ul>
+                      <li class="zf-fmFooter">
+                        <button class="zf-submitColor" type="submit">Submit</button>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <!-- Required Zoho field arrays (must remain) -->
+            <script type="text/javascript">
+              var dateAndMonthRegexFormateArray = zf_SetDateAndMonthRegexBasedOnDateFormate('dd-MMM-yyyy');
+              var zf_DateRegex = new RegExp(dateAndMonthRegexFormateArray[0]);
+              var zf_MonthYearRegex = new RegExp(dateAndMonthRegexFormateArray[1]);
+              var zf_MandArray = [ "SingleLine", "Number", "SingleLine4", "MultiLine" ];
+              var zf_FieldArray = [ "SingleLine", "Number", "SingleLine4", "MultiLine", "SingleLine3" ];
+              var isSalesIQIntegrationEnabled = false;
+              var salesIQFieldsArray = [];
+            </script>
+          </div>
+        </div>
       </div>
     </section>
   </main>
