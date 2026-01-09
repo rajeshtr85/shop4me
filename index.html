@@ -822,6 +822,7 @@
 @media (min-width: 861px){
   /* Ensure columns can be height-managed */
   .zoho-inline .zftwoColumn.zfMultiColGrid{ align-items: stretch !important; }
+  min-height: 220px !important;
 
   /* Right column becomes a real vertical flex stack */
   .zoho-inline .zfCol{
@@ -853,6 +854,11 @@
     min-height: 0 !important;
     resize: vertical;
   }
+}
+
+    /* Remove separator above submit */
+.zoho-inline .zf-fmFooter{
+  border-top: 0 !important;
 }
     
   </style>
