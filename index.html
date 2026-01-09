@@ -1274,12 +1274,13 @@
               <form action='https://forms.zohopublic.in/rajeshsho1/form/Shop4MeWebRequest/formperma/_Mn_E_DDxL9ArfujL33UQKBsH1udtFlrHxOjwX_o7Qg/htmlRecords/submit'
                     name='form'
                     method='POST'
+                    target="zohoSubmitFrame"
                     onSubmit='javascript:document.charset="UTF-8"; return zf_ValidateAndSubmit();'
                     accept-charset='UTF-8'
                     enctype='multipart/form-data'
                     id='form'>
                 <input type="hidden" name="zf_referrer_name" value="">
-                <input type="hidden" name="zf_redirect_url" value="https://shop4me.in/?submitted=1#request">
+                <input type="hidden" name="zf_redirect_url" value="">
                 <input type="hidden" name="zc_gad" value="">
 
                 <div class="zf-templateWrapper">
@@ -1470,7 +1471,6 @@
 
 
 // Zoho embed: remove loading sheen once iframe is ready
-const zohoFrame = document.querySelector("#zohoEmbed iframe");
 zohoFrame?.addEventListener("load", () => {
   document.getElementById("zohoEmbed")?.classList.add("loaded");
 });  
@@ -1523,6 +1523,76 @@ zohoFrame?.addEventListener("load", () => {
   });
 </script>
 
+
+<script>
+  (function(){
+    const form = document.getElementById("form");
+    const frame = document.getElementById("zohoSubmitFrame");
+    const modal = document.getElementById("s4mSuccess");
+    const closeBtn = document.getElementById("s4mCloseSuccess");
+
+    if(!form || !frame || !modal) return;
+
+    let pending = false;
+
+    function openModal(){
+      modal.classList.add("show");
+      modal.setAttribute("aria-hidden","false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeModal(){
+      modal.classList.remove("show");
+      modal.setAttribute("aria-hidden","true");
+      document.body.style.overflow = "";
+    }
+
+    // Close interactions
+    closeBtn?.addEventListener("click", closeModal);
+    modal.querySelectorAll("[data-close]").forEach(el => el.addEventListener("click", closeModal));
+    document.addEventListener("keydown", (e) => { if(e.key === "Escape") closeModal(); });
+
+    // On submit (after Zoho validation passes)
+    form.addEventListener("submit", () => {
+      pending = true;
+
+      // Optional: disable submit button during submit
+      const btn = form.querySelector(".zf-submitColor");
+      if(btn){
+        btn.disabled = true;
+        btn.dataset.prevText = btn.textContent;
+        btn.textContent = "Submitting…";
+      }
+    });
+
+    // When hidden iframe loads, submission completed
+    frame.addEventListener("load", () => {
+      if(!pending) return; // ignore initial load
+      pending = false;
+
+      // Re-enable button
+      const btn = form.querySelector(".zf-submitColor");
+      if(btn){
+        btn.disabled = false;
+        btn.textContent = btn.dataset.prevText || "Submit";
+      }
+
+      // Reset + show success
+      form.reset();
+      openModal();
+    });
+  })();
+</script>
+  
+
+<!-- Hidden iframe to prevent redirect after Zoho submit -->
+<iframe
+  name="zohoSubmitFrame"
+  id="zohoSubmitFrame"
+  title="Zoho submit target"
+  style="position:absolute; left:-9999px; width:1px; height:1px; border:0;"
+></iframe>
+  
   <!-- Success Modal -->
 <div class="s4m-modal" id="s4mSuccess" aria-hidden="true">
   <div class="s4m-backdrop" data-close></div>
