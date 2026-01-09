@@ -768,17 +768,30 @@
       .zoho-inline textarea{ min-height:170px; }
     }
     
-/* Remove bullets + default spacing inside Zoho inline form */
-.zoho-inline ul,
-.zoho-inline li{
+/* Remove bullets, but DON'T kill all li padding globally */
+.zoho-inline ul{
   list-style: none !important;
   margin: 0 !important;
   padding: 0 !important;
 }
+.zoho-inline li{
+  list-style: none !important;
+}
 
-/* Extra-safe: kill marker bullets in modern browsers */
+/* Extra-safe: remove marker */
 .zoho-inline li::marker{
   content: "" !important;
+}
+
+    /* Add inner breathing room so submit isn't glued to bottom */
+.zoho-inline .zf-templateWrapper{
+  padding: 22px 22px 26px !important;
+}
+
+/* Footer spacing */
+.zoho-inline .zf-fmFooter{
+  margin-top: 14px !important;
+  padding-top: 12px !important;
 }
     
   </style>
