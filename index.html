@@ -754,14 +754,6 @@
 }
 .zoho-inline input[type="text"]{ height:44px; }
 
-/* KEY: Make textarea height match left stack on desktop */
-@media (min-width: 861px){
-  .zoho-inline textarea[name="MultiLine"]{
-    height: 180px !important;      /* tuned to visually match 3 left fields */
-    min-height: 180px !important;
-    resize: vertical;
-  }
-}
 
 /* Mobile: make it taller for usability */
 @media (max-width: 860px){
@@ -1469,7 +1461,7 @@
     });
  
   </script>
-
+  
 <script>
   function syncZohoColumns() {
     const wrap = document.querySelector(".zoho-inline");
@@ -1517,85 +1509,6 @@
   });
 </script>
 
-  <script>
-  // shared flag (accessible by the iframe load handler)
-  window.__s4mPending = false;
-
-  function s4mSubmitHook(){
-    document.charset = "UTF-8";
-
-    const form = document.getElementById("form");
-    const btn = form?.querySelector(".zf-submitColor");
-
-    window.__s4mPending = true;
-    if(btn){
-      btn.disabled = true;
-      btn.dataset.prevText = btn.textContent;
-      btn.textContent = "Submitting…";
-    }
-
-     const ok = zf_ValidateAndSubmit();
-
-    // if validation failed, revert UI immediately
-    if(!ok){
-      window.__s4mPending = false;
-      if(btn){
-        btn.disabled = false;
-        btn.textContent = btn.dataset.prevText || "Submit";
-      }
-    }
-
-    return ok;
-  }
-</script>
-
-<script>
-  (function(){
-    const form = document.getElementById("form");
-    const frame = document.getElementById("zohoSubmitFrame");
-    const modal = document.getElementById("s4mSuccess");
-    const closeBtn = document.getElementById("s4mCloseSuccess");
-
-    if(!form || !frame || !modal) return;
-
-    function openModal(){
-      modal.classList.add("show");
-      modal.setAttribute("aria-hidden","false");
-      document.body.style.overflow = "hidden";
-    }
-
-    function closeModal(){
-      modal.classList.remove("show");
-      modal.setAttribute("aria-hidden","true");
-      document.body.style.overflow = "";
-    }
-
-    // Close interactions
-    closeBtn?.addEventListener("click", closeModal);
-    modal.querySelectorAll("[data-close]").forEach(el => el.addEventListener("click", closeModal));
-    document.addEventListener("keydown", (e) => { if(e.key === "Escape") closeModal(); });
-
-    // When hidden iframe loads, submission completed
-    frame.addEventListener("load", () => {
-      if(!window.__s4mPending) return; // ignore initial load
-      window.__s4mPending = false;
-
-      // Re-enable button
-      const btn = form.querySelector(".zf-submitColor");
-      if(btn){
-        btn.disabled = false;
-        btn.textContent = btn.dataset.prevText || "Submit";
-        delete btn.dataset.prevText;
-      }
-
-      // Reset + show success
-      form.reset();
-      openModal();
-    });
-  })();
-</script>
-  
-
 <!-- Hidden iframe to prevent redirect after Zoho submit -->
 <iframe
   name="zohoSubmitFrame"
@@ -1603,8 +1516,8 @@
   title="Zoho submit target"
   style="position:absolute; left:-9999px; width:1px; height:1px; border:0;"
 ></iframe>
-  
-  <!-- Success Modal -->
+
+<!-- Success Modal -->
 <div class="s4m-modal" id="s4mSuccess" aria-hidden="true">
   <div class="s4m-backdrop" data-close></div>
 
@@ -1615,6 +1528,112 @@
     <button class="btn primary" type="button" id="s4mCloseSuccess">Close</button>
   </div>
 </div>
+
+<script>
+  window.__s4mPending = false;
+
+  function s4mSubmitHook(){
+    document.charset = "UTF-8";
+
+    const form = document.getElementById("form");
+    const btn  = form?.querySelector(".zf-submitColor");
+
+    // disable button
+    if(btn){
+      btn.disabled = true;
+      btn.dataset.prevText = btn.textContent;
+      btn.textContent = "Submitting…";
+    }
+
+    const ok = zf_ValidateAndSubmit();
+
+    // if validation fails, revert immediately
+    if(!ok){
+      window.__s4mPending = false;
+      if(btn){
+        btn.disabled = false;
+        btn.textContent = btn.dataset.prevText || "Submit";
+      }
+      return false;
+    }
+
+    // mark pending only when validation passed and submit started
+    window.__s4mPending = true;
+
+    // ✅ FAILSAFE: prevent stuck UI forever
+    if(window.__s4mFailSafeT) clearTimeout(window.__s4mFailSafeT);
+   window.__s4mFailSafeT = setTimeout(() => {
+  if(!window.__s4mPending) return;
+  window.__s4mPending = false;
+
+  const form = document.getElementById("form");
+  const b = form?.querySelector(".zf-submitColor");
+  if(b){
+    b.disabled = false;
+    b.textContent = b.dataset.prevText || "Submit";
+  }
+
+  // If iframe load didn't fire but submission likely happened, show success anyway
+  form?.reset();
+  document.getElementById("s4mSuccess")?.classList.add("show");
+  document.body.style.overflow = "hidden";
+}, 12000);
+
+    return true;
+  }
+</script>
+
+<script>
+  (function(){
+    const form  = document.getElementById("form");
+    const frame = document.getElementById("zohoSubmitFrame");
+
+    if(!form || !frame) return;
+
+    const modal = document.getElementById("s4mSuccess");
+    const closeBtn = document.getElementById("s4mCloseSuccess");
+
+    function openModal(){
+      if(!modal) return;
+      modal.classList.add("show");
+      modal.setAttribute("aria-hidden","false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeModal(){
+      if(!modal) return;
+      modal.classList.remove("show");
+      modal.setAttribute("aria-hidden","true");
+      document.body.style.overflow = "";
+    }
+
+    // close interactions
+    if(modal){
+      closeBtn?.addEventListener("click", closeModal);
+      modal.querySelectorAll("[data-close]").forEach(el => el.addEventListener("click", closeModal));
+      document.addEventListener("keydown", (e) => { if(e.key === "Escape") closeModal(); });
+    }
+
+    // When hidden iframe loads, submission completed
+    frame.addEventListener("load", () => {
+      if(!window.__s4mPending) return; // ignore initial load
+      window.__s4mPending = false;
+
+      if(window.__s4mFailSafeT) clearTimeout(window.__s4mFailSafeT);
+
+      const btn = form.querySelector(".zf-submitColor");
+      if(btn){
+        btn.disabled = false;
+        btn.textContent = btn.dataset.prevText || "Submit";
+        delete btn.dataset.prevText;
+      }
+
+      form.reset();
+      openModal();
+    });
+  })();
+</script>
+  
   
 </body>
 </html>
