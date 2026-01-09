@@ -817,6 +817,43 @@
   .zoho-inline .zf-subContWrap{ padding:18px !important; }
   .zoho-inline .zf-fmFooter{ padding:14px 18px 18px !important; }
 }
+
+    /* Desktop: force perfect bottom alignment by making textarea card flexible */
+@media (min-width: 861px){
+  /* Ensure columns can be height-managed */
+  .zoho-inline .zftwoColumn.zfMultiColGrid{ align-items: stretch !important; }
+
+  /* Right column becomes a real vertical flex stack */
+  .zoho-inline .zfCol{
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    height: auto; /* JS will set explicit height */
+  }
+
+  /* Make MultiLine (textarea) wrapper expandable */
+  .zoho-inline .zf-tempFrmWrapper.zf-grow{
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 auto !important;
+    min-height: 0 !important; /* important so textarea can shrink */
+  }
+
+  /* Let textarea fill remaining space inside its wrapper */
+  .zoho-inline .zf-tempFrmWrapper.zf-grow .zf-tempContDiv{
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+  }
+
+  .zoho-inline textarea[name="MultiLine"]{
+    flex: 1 1 auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    resize: vertical;
+  }
+}
     
   </style>
 </head>
@@ -1382,9 +1419,56 @@
 const zohoFrame = document.querySelector("#zohoEmbed iframe");
 zohoFrame?.addEventListener("load", () => {
   document.getElementById("zohoEmbed")?.classList.add("loaded");
-});
-    
-    
+});  
   </script>
+
+<script>
+  function syncZohoColumns() {
+    const wrap = document.querySelector(".zoho-inline");
+    if (!wrap) return;
+
+    const cols = wrap.querySelectorAll(".zfCol");
+    if (cols.length < 2) return;
+
+    const leftCol = cols[0];
+    const rightCol = cols[1];
+
+    // Desktop only
+    if (window.innerWidth < 861) {
+      rightCol.style.height = "";
+      // remove grow class on mobile (not required but keeps clean)
+      const t = wrap.querySelector('textarea[name="MultiLine"]');
+      const w = t?.closest(".zf-tempFrmWrapper");
+      w?.classList.remove("zf-grow");
+      return;
+    }
+
+    // Mark textarea card as flexible
+    const textarea = wrap.querySelector('textarea[name="MultiLine"]');
+    const textareaWrap = textarea?.closest(".zf-tempFrmWrapper");
+    textareaWrap?.classList.add("zf-grow");
+
+    // Force right column height to match left column
+    const leftH = Math.round(leftCol.getBoundingClientRect().height);
+    rightCol.style.height = leftH + "px";
+  }
+
+  // Run after layout settles
+  window.addEventListener("load", () => {
+    requestAnimationFrame(() => {
+      syncZohoColumns();
+      // Run a second time in case fonts/styles load late
+      setTimeout(syncZohoColumns, 150);
+    });
+  });
+
+  window.addEventListener("resize", () => {
+    // cheap debounce
+    clearTimeout(window.__zohoSyncT);
+    window.__zohoSyncT = setTimeout(syncZohoColumns, 120);
+  });
+</script>
+
+  
 </body>
 </html>
