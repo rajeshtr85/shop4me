@@ -925,6 +925,7 @@
             <li><a href="#faq">FAQ</a></li>
             <li><a href="#contact">Contact</a></li>
             <li><a href="#request">Request</a></li>
+            <li><button class="btn" id="authBtn" type="button">Sign in</button></li>
           </ul>
         </nav>
 
@@ -944,6 +945,7 @@
         <a href="#faq">FAQ</a>
         <a href="#contact">Contact</a>
         <a href="#request">Request</a>
+        <button class="btn" id="authBtnMobile" type="button" style="width:100%; margin-top:10px;">Sign in</button>
       </div>
     </div>
   </header>
@@ -1634,6 +1636,67 @@
   })();
 </script>
   
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+  import {
+    getAuth,
+    GoogleAuthProvider,
+    signInWithPopup,
+    signInWithRedirect,
+    getRedirectResult,
+    onAuthStateChanged,
+    signOut
+  } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+
+  // ✅ PASTE YOUR firebaseConfig HERE (exactly as you copied)
+  const firebaseConfig = {
+  apiKey: "AIzaSyAi9Sh8cVBpiMPar0-B22od03ZXNp5lBoc",
+  authDomain: "shop4me-d2bb1.firebaseapp.com",
+  projectId: "shop4me-d2bb1",
+  storageBucket: "shop4me-d2bb1.firebasestorage.app",
+  messagingSenderId: "469081092222",
+  appId: "1:469081092222:web:66a2f92ec49a6ada6c682f",
+  measurementId: "G-VBSX1QFPHB"
+};
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+
+  const btnDesktop = document.getElementById("authBtn");
+  const btnMobile  = document.getElementById("authBtnMobile");
+
+  async function handleAuthClick() {
+    try {
+      if (auth.currentUser) {
+        await signOut(auth);
+        return;
+      }
+      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      if (isMobile) await signInWithRedirect(auth, provider);
+      else await signInWithPopup(auth, provider);
+    } catch (e) {
+      console.error(e);
+      alert(e?.message || "Sign-in error");
+    }
+  }
+
+  btnDesktop?.addEventListener("click", handleAuthClick);
+  btnMobile?.addEventListener("click", handleAuthClick);
+
+  // complete redirect sign-in (mobile)
+  try { await getRedirectResult(auth); } catch {}
+
+  onAuthStateChanged(auth, (user) => {
+    const label = user
+      ? `Sign out (${(user.displayName || "User").split(" ")[0]})`
+      : "Sign in";
+    if (btnDesktop) btnDesktop.textContent = label;
+    if (btnMobile) btnMobile.textContent = label;
+  });
+</script>
+
   
 </body>
 </html>
