@@ -638,189 +638,184 @@
     }
 
 
-    /* -------------------- ZOHO INLINE FORM: premium skin + responsive -------------------- */
-    .panel--flush{ padding:0; }
+    /* -------------------- ZOHO INLINE FORM: premium skin + responsive (FINAL) -------------------- */
+.panel--flush{ padding:0; }
 
-    .zoho-inline{
-      background:#fff;
-      border-radius:calc(var(--radius-xl) - 1px);
-      overflow:hidden;
-      box-shadow:inset 0 0 0 1px rgba(15,23,42,0.10);
-    }
-
-    .zoho-inline *{ box-sizing:border-box; }
-
-    .zoho-inline .zf-templateWidth,
-    .zoho-inline .zf-templateWrapper{
-      width:100%;
-      max-width:none;
-      margin:0;
-      padding:0;
-      border:none;
-      background:transparent;
-      box-shadow:none;
-    }
-
-   /* Hide Zoho internal header (since your page already has headings) */
-.zoho-inline .zf-tempHeadBdr{
-  display: none !important;
+.zoho-inline{
+  background:#fff;
+  border-radius:calc(var(--radius-xl) - 1px);
+  overflow:hidden;
+  box-shadow:inset 0 0 0 1px rgba(15,23,42,0.10);
 }
 
-    /* Body padding */
-    .zoho-inline .zfgrid_Wrapper{ padding:22px; }
+.zoho-inline,
+.zoho-inline *{ box-sizing:border-box; }
 
-    /* Two-column grid desktop -> stack mobile */
-    .zoho-inline .zftwoColumn{
-      display:grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap:12px;
-      align-items:start;
-    }
-    .zoho-inline .zfCol{ display:grid; gap:12px; min-width:0; }
-
-    /* Field wrapper cards */
-    .zoho-inline .zf-tempFrmWrapper{
-      border:1px solid rgba(15,23,42,0.10);
-      background:rgba(255,255,255,0.92);
-      border-radius:18px;
-      padding:12px;
-      box-shadow:var(--shadow-xs);
-      transition:transform .25s var(--ease), box-shadow .25s var(--ease);
-    }
-    .zoho-inline .zf-tempFrmWrapper:hover{
-      transform:translateY(-1px);
-      box-shadow:var(--shadow-sm);
-    }
-
-    /* Labels */
-    .zoho-inline .zf-labelName{
-      display:block;
-      font-size:13px;
-      font-weight:900;
-      letter-spacing:-0.01em;
-      color:rgba(2,6,23,0.86);
-      margin:0 0 8px;
-    }
-    .zoho-inline .zf-important{ color:rgba(236,72,153,0.95); }
-
-    /* Inputs */
-    .zoho-inline input[type="text"],
-    .zoho-inline textarea{
-      width:100%;
-      border-radius:16px;
-      border:1px solid var(--border);
-      background:rgba(255,255,255,0.94);
-      padding:12px 12px;
-      font:inherit;
-      font-size:13px;
-      color:var(--text);
-      outline:none;
-      transition:box-shadow .2s var(--ease), border-color .2s var(--ease);
-    }
-    .zoho-inline input[type="text"]{ height:44px; }
-    .zoho-inline textarea{ min-height:140px; resize:vertical; }
-
-    .zoho-inline input[type="text"]:focus,
-    .zoho-inline textarea:focus{
-      border-color:var(--focus);
-      box-shadow:var(--focus-ring);
-    }
-
-    .zoho-inline .zf-instruction{
-      margin:8px 0 0;
-      font-size:12.5px;
-      color:rgba(82,88,102,0.95);
-    }
-    .zoho-inline .zf-errorMessage{
-      margin:8px 0 0;
-      font-size:12.5px;
-      color:rgba(220,38,38,0.95);
-      font-weight:800;
-    }
-
-    /* Submit area */
-    .zoho-inline .zf-fmFooter{ padding:0 22px 22px; }
-    .zoho-inline .zf-submitColor{
-      width:100%;
-      height:44px;
-      border-radius:14px;
-      border:1px solid rgba(2,6,23,0.94);
-      background:rgba(2,6,23,0.94);
-      color:#fff;
-      font-weight:850;
-      cursor:pointer;
-      box-shadow:var(--shadow-xs);
-      transition:transform .25s var(--ease), box-shadow .25s var(--ease), background .25s var(--ease);
-    }
-    .zoho-inline .zf-submitColor:hover{
-      transform:translateY(-1px);
-      box-shadow:var(--shadow-sm);
-      background:rgba(2,6,23,1);
-    }
-
-    @media (max-width: 980px){
-      .zoho-inline .zf-tempHeadBdr{ padding:18px 18px 0; }
-      .zoho-inline .zfgrid_Wrapper{ padding:18px; }
-      .zoho-inline .zf-fmFooter{ padding:0 18px 18px; }
-    }
-    @media (max-width: 860px){
-      .zoho-inline .zftwoColumn{ grid-template-columns: 1fr; }
-      .zoho-inline textarea{ min-height:170px; }
-    }
-    
-/* Remove bullets, but DON'T kill all li padding globally */
+/* Kill list bullets without nuking layout spacing */
 .zoho-inline ul{
-  list-style: none !important;
-  margin: 0 !important;
-  padding: 0 !important;
+  list-style:none !important;
+  margin:0 !important;
+  padding:0 !important;
 }
 .zoho-inline li{
-  list-style: none !important;
+  list-style:none !important;
+  margin:0 !important;
 }
+.zoho-inline li::marker{ content:"" !important; }
 
-/* Extra-safe: remove marker */
-.zoho-inline li::marker{
-  content: "" !important;
-}
+/* Remove Zoho internal header */
+.zoho-inline .zf-tempHeadBdr{ display:none !important; }
 
-    /* Add inner breathing room so submit isn't glued to bottom */
+/* Remove Zoho fixed widths/backgrounds */
+.zoho-inline .zf-templateWidth,
 .zoho-inline .zf-templateWrapper{
-  padding: 22px 22px 26px !important;
+  width:100% !important;
+  max-width:none !important;
+  margin:0 !important;
+  padding:0 !important;
+  border:none !important;
+  background:transparent !important;
+  box-shadow:none !important;
 }
 
-/* Footer spacing */
-.zoho-inline .zf-fmFooter{
-  margin-top: 14px !important;
-  padding-top: 12px !important;
+/* Main inner padding (ONE place only) */
+.zoho-inline .zf-subContWrap{
+  padding:22px !important;
 }
 
-
-/* Make Zoho's two-column layout behave like a real grid (aligned rows) */
+/* Two-column grid on desktop, stack on mobile */
 @media (min-width: 861px){
   .zoho-inline .zftwoColumn.zfMultiColGrid{
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    gap: 18px 18px !important;
-    align-items: start !important;
+    display:grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap:18px !important;
+    align-items:stretch !important; /* makes both columns equal height */
   }
-
-  /* Remove Zoho float/width behaviours that cause uneven columns */
-  .zoho-inline .zftwoColumn.zfMultiColGrid .zfCol{
-    width: auto !important;
-    float: none !important;
-    margin: 0 !important;
+}
+@media (max-width: 860px){
+  .zoho-inline .zftwoColumn.zfMultiColGrid{
+    display:grid !important;
+    grid-template-columns: 1fr !important;
+    gap:12px !important;
   }
+}
 
-  /* Normalize spacing so each field block looks identical */
-  .zoho-inline .zf-tempFrmWrapper{
-    margin: 0 0 18px 0 !important;
-  }
+/* Ensure Zoho doesn't float columns */
+.zoho-inline .zfCol{
+  width:auto !important;
+  float:none !important;
+  margin:0 !important;
+  min-width:0 !important;
 
-  /* Make textarea block match the visual rhythm */
-  .zoho-inline textarea{
-    min-height: 210px !important;  /* tune this if you want more/less */
+  display:flex !important;
+  flex-direction:column !important;
+  gap:12px !important;
+  height:100% !important; /* important for equal height */
+}
+
+/* Field wrapper cards */
+.zoho-inline .zf-tempFrmWrapper{
+  border:1px solid rgba(15,23,42,0.10) !important;
+  background:rgba(255,255,255,0.92) !important;
+  border-radius:18px !important;
+  padding:12px !important;
+  box-shadow:var(--shadow-xs) !important;
+  transition:transform .25s var(--ease), box-shadow .25s var(--ease);
+}
+.zoho-inline .zf-tempFrmWrapper:hover{
+  transform:translateY(-1px);
+  box-shadow:var(--shadow-sm);
+}
+
+/* Labels */
+.zoho-inline .zf-labelName{
+  display:block;
+  font-size:13px;
+  font-weight:900;
+  letter-spacing:-0.01em;
+  color:rgba(2,6,23,0.86);
+  margin:0 0 8px;
+}
+.zoho-inline .zf-important{ color:rgba(236,72,153,0.95); }
+
+/* Inputs */
+.zoho-inline input[type="text"],
+.zoho-inline textarea{
+  width:100%;
+  border-radius:16px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,0.94);
+  padding:12px;
+  font:inherit;
+  font-size:13px;
+  color:var(--text);
+  outline:none;
+  transition:box-shadow .2s var(--ease), border-color .2s var(--ease);
+}
+.zoho-inline input[type="text"]{ height:44px; }
+
+/* KEY: Make textarea height match left stack on desktop */
+@media (min-width: 861px){
+  .zoho-inline textarea[name="MultiLine"]{
+    height: 180px !important;      /* tuned to visually match 3 left fields */
+    min-height: 180px !important;
     resize: vertical;
   }
+}
+
+/* Mobile: make it taller for usability */
+@media (max-width: 860px){
+  .zoho-inline textarea[name="MultiLine"]{
+    min-height: 200px !important;
+  }
+}
+
+.zoho-inline input[type="text"]:focus,
+.zoho-inline textarea:focus{
+  border-color:var(--focus);
+  box-shadow:var(--focus-ring);
+}
+
+/* Instruction + errors */
+.zoho-inline .zf-instruction{
+  margin:8px 0 0;
+  font-size:12.5px;
+  color:rgba(82,88,102,0.95);
+}
+.zoho-inline .zf-errorMessage{
+  margin:8px 0 0;
+  font-size:12.5px;
+  color:rgba(220,38,38,0.95);
+  font-weight:800;
+}
+
+/* Submit area */
+.zoho-inline .zf-fmFooter{
+  padding:14px 22px 22px !important; /* breathing room + not flush */
+  border-top:1px solid rgba(15,23,42,0.10);
+}
+.zoho-inline .zf-submitColor{
+  width:100%;
+  height:44px;
+  border-radius:14px;
+  border:1px solid rgba(2,6,23,0.94);
+  background:rgba(2,6,23,0.94);
+  color:#fff;
+  font-weight:850;
+  cursor:pointer;
+  box-shadow:var(--shadow-xs);
+  transition:transform .25s var(--ease), box-shadow .25s var(--ease), background .25s var(--ease);
+}
+.zoho-inline .zf-submitColor:hover{
+  transform:translateY(-1px);
+  box-shadow:var(--shadow-sm);
+  background:rgba(2,6,23,1);
+}
+
+/* Tablet padding */
+@media (max-width: 980px){
+  .zoho-inline .zf-subContWrap{ padding:18px !important; }
+  .zoho-inline .zf-fmFooter{ padding:14px 18px 18px !important; }
 }
     
   </style>
