@@ -661,14 +661,10 @@
       box-shadow:none;
     }
 
-    /* Header area */
-    .zoho-inline .zf-tempHeadBdr{ padding:22px 22px 0; }
-    .zoho-inline .zf-frmTitle{
-      margin:0;
-      font-size:18px;
-      font-weight:950;
-      letter-spacing:-0.02em;
-    }
+   /* Hide Zoho internal header (since your page already has headings) */
+.zoho-inline .zf-tempHeadBdr{
+  display: none !important;
+}
 
     /* Body padding */
     .zoho-inline .zfgrid_Wrapper{ padding:22px; }
