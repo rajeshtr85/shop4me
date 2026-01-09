@@ -822,7 +822,6 @@
 @media (min-width: 861px){
   /* Ensure columns can be height-managed */
   .zoho-inline .zftwoColumn.zfMultiColGrid{ align-items: stretch !important; }
-  min-height: 280px !important;
 
   /* Right column becomes a real vertical flex stack */
   .zoho-inline .zfCol{
@@ -1275,7 +1274,7 @@
                     name='form'
                     method='POST'
                     target="zohoSubmitFrame"
-                    onSubmit='javascript:document.charset="UTF-8"; return zf_ValidateAndSubmit();'
+                    onSubmit="return s4mSubmitHook();"
                     accept-charset='UTF-8'
                     enctype='multipart/form-data'
                     id='form'>
@@ -1468,12 +1467,7 @@
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") setMenu(false);
     });
-
-
-// Zoho embed: remove loading sheen once iframe is ready
-zohoFrame?.addEventListener("load", () => {
-  document.getElementById("zohoEmbed")?.classList.add("loaded");
-});  
+ 
   </script>
 
 <script>
@@ -1523,6 +1517,37 @@ zohoFrame?.addEventListener("load", () => {
   });
 </script>
 
+  <script>
+  // shared flag (accessible by the iframe load handler)
+  window.__s4mPending = false;
+
+  function s4mSubmitHook(){
+    document.charset = "UTF-8";
+
+    const form = document.getElementById("form");
+    const btn = form?.querySelector(".zf-submitColor");
+
+    window.__s4mPending = true;
+    if(btn){
+      btn.disabled = true;
+      btn.dataset.prevText = btn.textContent;
+      btn.textContent = "Submitting…";
+    }
+
+     const ok = zf_ValidateAndSubmit();
+
+    // if validation failed, revert UI immediately
+    if(!ok){
+      window.__s4mPending = false;
+      if(btn){
+        btn.disabled = false;
+        btn.textContent = btn.dataset.prevText || "Submit";
+      }
+    }
+
+    return ok;
+  }
+</script>
 
 <script>
   (function(){
@@ -1532,8 +1557,6 @@ zohoFrame?.addEventListener("load", () => {
     const closeBtn = document.getElementById("s4mCloseSuccess");
 
     if(!form || !frame || !modal) return;
-
-    let pending = false;
 
     function openModal(){
       modal.classList.add("show");
@@ -1552,29 +1575,17 @@ zohoFrame?.addEventListener("load", () => {
     modal.querySelectorAll("[data-close]").forEach(el => el.addEventListener("click", closeModal));
     document.addEventListener("keydown", (e) => { if(e.key === "Escape") closeModal(); });
 
-    // On submit (after Zoho validation passes)
-    form.addEventListener("submit", () => {
-      pending = true;
-
-      // Optional: disable submit button during submit
-      const btn = form.querySelector(".zf-submitColor");
-      if(btn){
-        btn.disabled = true;
-        btn.dataset.prevText = btn.textContent;
-        btn.textContent = "Submitting…";
-      }
-    });
-
     // When hidden iframe loads, submission completed
     frame.addEventListener("load", () => {
-      if(!pending) return; // ignore initial load
-      pending = false;
+      if(!window.__s4mPending) return; // ignore initial load
+      window.__s4mPending = false;
 
       // Re-enable button
       const btn = form.querySelector(".zf-submitColor");
       if(btn){
         btn.disabled = false;
         btn.textContent = btn.dataset.prevText || "Submit";
+        delete btn.dataset.prevText;
       }
 
       // Reset + show success
