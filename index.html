@@ -793,6 +793,35 @@
   margin-top: 14px !important;
   padding-top: 12px !important;
 }
+
+
+/* Make Zoho's two-column layout behave like a real grid (aligned rows) */
+@media (min-width: 861px){
+  .zoho-inline .zftwoColumn.zfMultiColGrid{
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 18px 18px !important;
+    align-items: start !important;
+  }
+
+  /* Remove Zoho float/width behaviours that cause uneven columns */
+  .zoho-inline .zftwoColumn.zfMultiColGrid .zfCol{
+    width: auto !important;
+    float: none !important;
+    margin: 0 !important;
+  }
+
+  /* Normalize spacing so each field block looks identical */
+  .zoho-inline .zf-tempFrmWrapper{
+    margin: 0 0 18px 0 !important;
+  }
+
+  /* Make textarea block match the visual rhythm */
+  .zoho-inline textarea{
+    min-height: 210px !important;  /* tune this if you want more/less */
+    resize: vertical;
+  }
+}
     
   </style>
 </head>
