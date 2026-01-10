@@ -1066,52 +1066,6 @@
   width:100%;
 }
 
-/* -------------------- SUB MENUBAR (tabs) -------------------- */
-.subnav{
-  position:sticky;
-  top:92px; /* header height-ish; adjust if needed */
-  z-index:45;
-  background:linear-gradient(to bottom, rgba(255,255,255,0.92), rgba(255,255,255,0.72));
-  backdrop-filter: blur(14px);
-  border-bottom:1px solid var(--border);
-}
-
-@media (min-width: 980px){
-  .subnav{ top:96px; }
-}
-
-.subnav-inner{
-  display:flex;
-  gap:10px;
-  padding:10px var(--pad);
-}
-
-.subtab{
-  height:40px;
-  padding:0 14px;
-  border-radius:999px;
-  border:1px solid var(--border);
-  background:rgba(255,255,255,0.90);
-  box-shadow:var(--shadow-xs);
-  font-weight:900;
-  font-size:13px;
-  color:rgba(2,6,23,0.86);
-  cursor:pointer;
-  transition:transform .25s var(--ease), box-shadow .25s var(--ease), background .25s var(--ease);
-}
-
-.subtab:hover{
-  transform:translateY(-1px);
-  box-shadow:var(--shadow-sm);
-  background:rgba(255,255,255,0.98);
-}
-
-.subtab.is-active{
-  background:rgba(2,6,23,0.94);
-  border-color:rgba(2,6,23,0.94);
-  color:#fff;
-}
-
 /* -------------------- USER PAGE UI -------------------- */
 .userPageTop{
   display:flex;
@@ -1225,6 +1179,10 @@
                 </div>
               </div>
               <div class="userDivider"></div>
+
+              <!-- ✅ User page option in dropdown -->
+              <button class="userAction" id="userPageBtn" type="button" role="menuitem">User page</button>
+
               <button class="userAction danger" id="signOutBtn" type="button" role="menuitem">Sign out</button>
             </div>
 
@@ -1255,20 +1213,7 @@
     </div>
   </header>
 
-  <!-- Sub menubar (tabs) — visible only after login -->
-  <div class="subnav" id="subnav" hidden>
-    <div class="wrap subnav-inner" role="tablist" aria-label="App pages">
-      <button class="subtab is-active" id="tabHome" role="tab" aria-selected="true" aria-controls="appHome" type="button">
-        Home
-      </button>
-      <button class="subtab" id="tabUser" role="tab" aria-selected="false" aria-controls="appUser" type="button">
-        User
-      </button>
-    </div>
-  </div>
-
-  
-  <main class="wrap" id="appHome" role="tabpanel" aria-labelledby="tabHome">
+  <main class="wrap" id="appHome">
     <!-- HERO -->
     <section class="hero" id="home">
       <h1 class="reveal">A premium shopping concierge for better deals — and less stress.</h1>
@@ -1690,7 +1635,7 @@
   </main>
 
   <!-- USER PAGE (visible only after login, content for now: user details + blank area) -->
-  <main class="wrap" id="appUser" role="tabpanel" aria-labelledby="tabUser" hidden>
+  <main class="wrap" id="appUser" hidden>
     <section class="section">
       <div class="eyebrow reveal">User</div>
       <h2 class="h2 reveal delay-1">Your account</h2>
@@ -2026,10 +1971,8 @@
   const userEmail    = document.getElementById("userEmail");
   const signInBtn    = document.getElementById("signInBtn");
   const signOutBtn   = document.getElementById("signOutBtn");
+  const userPageBtn  = document.getElementById("userPageBtn");
 
-  const subnav   = document.getElementById("subnav");
-  const tabHome  = document.getElementById("tabHome");
-  const tabUser  = document.getElementById("tabUser");
   const appHome  = document.getElementById("appHome");
   const appUser  = document.getElementById("appUser");
 
@@ -2054,6 +1997,32 @@
     if(e.key === "Escape") setUserMenu(false);
   });
 
+  function showHome(){
+    if(appHome) appHome.hidden = false;
+    if(appUser) appUser.hidden = true;
+  }
+
+  function showUserPage(){
+    if(appHome) appHome.hidden = true;
+    if(appUser) appUser.hidden = false;
+    setUserMenu(false);
+  }
+
+  // Ensure any normal nav click brings back Home (so anchors work)
+  function wireHomeLinks(){
+    const links = document.querySelectorAll('nav a, #mobileMenu a, a.brand');
+    links.forEach(a => {
+      a.addEventListener("click", () => {
+        showHome();
+      });
+    });
+  }
+  wireHomeLinks();
+
+  userPageBtn?.addEventListener("click", () => {
+    showUserPage();
+  });
+
   function setSignedOutUI(){
     if(userAvatar){
       userAvatar.innerHTML = `
@@ -2064,6 +2033,9 @@
     if(userLabel) userLabel.textContent = "User";
     if(userCard)  userCard.style.display  = "none";
     if(guestCard) guestCard.style.display = "block";
+
+    showHome();
+    setUserMenu(false);
   }
 
   function setSignedInUI(user){
@@ -2087,19 +2059,26 @@
 
     if(guestCard) guestCard.style.display = "none";
     if(userCard)  userCard.style.display  = "block";
-  }
 
-  function setActiveTab(which){
-    const isHome = which === "home";
-    tabHome?.classList.toggle("is-active", isHome);
-    tabUser?.classList.toggle("is-active", !isHome);
-    tabHome?.setAttribute("aria-selected", isHome ? "true" : "false");
-    tabUser?.setAttribute("aria-selected", !isHome ? "true" : "false");
-    if(appHome) appHome.hidden = !isHome;
-    if(appUser) appUser.hidden = isHome;
+    // ✅ close dropdown after sign-in
+    setUserMenu(false);
+
+    // fill user page details too
+    if(userPageName)  userPageName.textContent  = name;
+    if(userPageEmail) userPageEmail.textContent = email || "—";
+
+    if(userPagePic){
+      if(photo){
+        userPagePic.src = photo;
+        userPagePic.style.display = "block";
+      }else{
+        userPagePic.removeAttribute("src");
+        userPagePic.style.display = "none";
+      }
+    }
+
+    showHome();
   }
-  tabHome?.addEventListener("click", () => setActiveTab("home"));
-  tabUser?.addEventListener("click", () => setActiveTab("user"));
 
   // ---------- Persist + Redirect result completion ----------
   try {
@@ -2120,9 +2099,14 @@
   // ---------- Sign-in: POPUP first, fallback to redirect ----------
   async function doSignIn(){
     try{
+      // ✅ close dropdown immediately when clicking sign-in
+      setUserMenu(false);
+
       // try popup first
       try{
         await signInWithPopup(auth, provider);
+        // ✅ ensure dropdown stays closed after sign-in
+        setUserMenu(false);
         return;
       }catch(_){
         // fallback to redirect
@@ -2138,6 +2122,7 @@
     try{
       await signOut(auth);
       setUserMenu(false);
+      showHome();
     }catch(e){
       alert(e?.message || "Sign-out error");
     }
@@ -2150,29 +2135,8 @@
   onAuthStateChanged(auth, (user) => {
     if(user){
       setSignedInUI(user);
-      if(subnav) subnav.hidden = false;
-
-      const name  = user?.displayName || "User";
-      const email = user?.email || "";
-      const photo = user?.photoURL || "";
-
-      if(userPageName)  userPageName.textContent  = name;
-      if(userPageEmail) userPageEmail.textContent = email || "—";
-
-      if(userPagePic){
-        if(photo){
-          userPagePic.src = photo;
-          userPagePic.style.display = "block";
-        }else{
-          userPagePic.removeAttribute("src");
-          userPagePic.style.display = "none";
-        }
-      }
-      setActiveTab("home");
     }else{
       setSignedOutUI();
-      if(subnav) subnav.hidden = true;
-      setActiveTab("home");
     }
   });
 </script>
