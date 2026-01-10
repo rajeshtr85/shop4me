@@ -1997,29 +1997,7 @@
     browserLocalPersistence
   } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
-  // ---------- Debug overlay ----------
-  const dbg = document.createElement("div");
-  dbg.style.cssText = `
-    position:fixed; z-index:999999; left:10px; right:10px; bottom:10px;
-    background:rgba(0,0,0,.85); color:#fff; padding:10px 12px; border-radius:12px;
-    font:12px/1.35 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial;
-    max-height:40vh; overflow:auto;
-  `;
-  dbg.innerHTML = `<b>Auth debug</b><div id="dbglog">boot…</div>`;
-  document.addEventListener("DOMContentLoaded", () => document.body.appendChild(dbg));
-
-  const log = (...args) => {
-    const el = dbg.querySelector("#dbglog");
-    const line = args.map(a => (typeof a === "string" ? a : JSON.stringify(a))).join(" ");
-    el.innerHTML += `<div>• ${line}</div>`;
-  };
-
-  window.addEventListener("error", (e) => log("window.error:", e.message));
-  window.addEventListener("unhandledrejection", (e) =>
-    log("unhandledrejection:", e?.reason?.message || String(e.reason))
-  );
-
-  // ---------- Firebase ----------
+  // Firebase config
   const firebaseConfig = {
     apiKey: "AIzaSyAi9Sh8cVBpiMPar0-B22od03ZXNp5lBoc",
     authDomain: "shop4me-d2bb1.firebaseapp.com",
@@ -2032,95 +2010,204 @@
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
+  auth.useDeviceLanguage();
+
+  // Keep login across reloads (important on mobile)
+  try {
+    await setPersistence(auth, browserLocalPersistence);
+  } catch (_) {}
+
   const provider = new GoogleAuthProvider();
   provider.setCustomParameters({ prompt: "select_account" });
 
-  await setPersistence(auth, browserLocalPersistence);
+  /* Dropdown elements */
+  const userMenu     = document.getElementById("userMenu");
+  const userBtn      = document.getElementById("userBtn");
 
-  const REDIRECT_FLAG = "s4m_redirect_started";
+  const userAvatar   = document.getElementById("userAvatar");
+  const userLabel    = document.getElementById("userLabel");
 
-  function setBtnLabel(user) {
-    const btnDesktop = document.getElementById("authBtn");
-    const btnMobile  = document.getElementById("authBtnMobile");
-    const label = user
-      ? `Sign out (${(user.displayName || "User").split(" ")[0]})`
-      : "Sign in";
-    if (btnDesktop) btnDesktop.textContent = label;
-    if (btnMobile) btnMobile.textContent = label;
+  const userCard     = document.getElementById("userCard");
+  const guestCard    = document.getElementById("guestCard");
+
+  const userPic      = document.getElementById("userPic");
+  const userFull     = document.getElementById("userFull");
+  const userEmail    = document.getElementById("userEmail");
+
+  const signInBtn    = document.getElementById("signInBtn");
+  const signOutBtn   = document.getElementById("signOutBtn");
+
+  /* App pages + subnav */
+  const subnav   = document.getElementById("subnav");
+  const tabHome  = document.getElementById("tabHome");
+  const tabUser  = document.getElementById("tabUser");
+  const appHome  = document.getElementById("appHome");
+  const appUser  = document.getElementById("appUser");
+
+  /* User page fields */
+  const userPagePic   = document.getElementById("userPagePic");
+  const userPageName  = document.getElementById("userPageName");
+  const userPageEmail = document.getElementById("userPageEmail");
+
+  /* Dropdown open/close */
+  function setUserMenu(open){
+    if(!userMenu || !userBtn) return;
+    userMenu.classList.toggle("open", open);
+    userBtn.setAttribute("aria-expanded", open ? "true" : "false");
   }
 
-  async function doSignIn() {
-    log("Sign-in clicked");
-    try {
-      // Popup first (best UX if it works)
-      try {
-        const r = await signInWithPopup(auth, provider);
-        log("popup success:", r?.user?.email || "no-email");
+  userBtn?.addEventListener("click", (e) => {
+    e.stopPropagation();
+    setUserMenu(!userMenu.classList.contains("open"));
+  });
+
+  document.addEventListener("click", (e) => {
+    if(!userMenu?.classList.contains("open")) return;
+    const within = userMenu.contains(e.target);
+    if(!within) setUserMenu(false);
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if(e.key === "Escape") setUserMenu(false);
+  });
+
+  /* Tabs */
+  function setActiveTab(which){
+    const isHome = which === "home";
+
+    tabHome?.classList.toggle("is-active", isHome);
+    tabUser?.classList.toggle("is-active", !isHome);
+
+    tabHome?.setAttribute("aria-selected", isHome ? "true" : "false");
+    tabUser?.setAttribute("aria-selected", !isHome ? "true" : "false");
+
+    if(appHome) appHome.hidden = !isHome;
+    if(appUser) appUser.hidden = isHome;
+  }
+
+  tabHome?.addEventListener("click", () => setActiveTab("home"));
+  tabUser?.addEventListener("click", () => setActiveTab("user"));
+
+  /* UI updater */
+  function setSignedOutUI(){
+    if(userAvatar){
+      userAvatar.innerHTML = `
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Z"/>
+        </svg>
+      `;
+    }
+    if(userLabel) userLabel.textContent = "User";
+
+    if(userCard)  userCard.style.display  = "none";
+    if(guestCard) guestCard.style.display = "block";
+  }
+
+  function setSignedInUI(user){
+    const name  = user?.displayName || "User";
+    const email = user?.email || "";
+    const photo = user?.photoURL || "";
+
+    if(userAvatar){
+      userAvatar.innerHTML = photo
+        ? `<img src="${photo}" alt="" />`
+        : `
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Z"/>
+          </svg>
+        `;
+    }
+
+    if(userLabel) userLabel.textContent = (name.split(" ")[0] || "User");
+
+    if(userPic){
+      userPic.src = photo || "";
+      userPic.style.display = photo ? "block" : "none";
+    }
+
+    if(userFull)  userFull.textContent  = name;
+    if(userEmail) userEmail.textContent = email;
+
+    if(guestCard) guestCard.style.display = "none";
+    if(userCard)  userCard.style.display  = "block";
+  }
+
+  /* Sign-in/out handlers */
+  function isMobileUA(){
+    return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  }
+
+  async function doSignIn(){
+    try{
+      // If already signed in, treat click as sign out
+      if (auth.currentUser) {
+        await signOut(auth);
+        setUserMenu(false);
         return;
-      } catch (popupErr) {
-        log("popup failed:", popupErr?.code || "", popupErr?.message || "");
-        // Fallback to redirect
-        localStorage.setItem(REDIRECT_FLAG, "1");
-        log("falling back to redirect…");
+      }
+
+      if (isMobileUA()) {
+        await signInWithRedirect(auth, provider);
+        return;
+      }
+
+      // Desktop: popup, fallback to redirect if blocked
+      try {
+        await signInWithPopup(auth, provider);
+      } catch (e) {
         await signInWithRedirect(auth, provider);
       }
-    } catch (e) {
-      log("doSignIn ERROR:", e.code, e.message);
+    } catch (e){
+      console.error(e);
       alert(e?.message || "Sign-in error");
     }
   }
 
-  async function doSignOut() {
-    log("Sign-out clicked");
-    try {
+  async function doSignOut(){
+    try{
       await signOut(auth);
-      log("signed out");
-    } catch (e) {
-      log("signOut ERROR:", e.code, e.message);
+      setUserMenu(false);
+    } catch(e){
+      console.error(e);
       alert(e?.message || "Sign-out error");
     }
   }
 
-  function attachHandlers() {
-    const btnDesktop = document.getElementById("authBtn");
-    const btnMobile  = document.getElementById("authBtnMobile");
+  signInBtn?.addEventListener("click", doSignIn);
+  signOutBtn?.addEventListener("click", doSignOut);
 
-    log("Found authBtn:", !!btnDesktop, "authBtnMobile:", !!btnMobile);
+  // Complete redirect sign-in (mobile)
+  try { await getRedirectResult(auth); } catch (_) {}
 
-    const handler = async () => {
-      if (auth.currentUser) await doSignOut();
-      else await doSignIn();
-    };
-
-    btnDesktop?.addEventListener("click", handler);
-    btnMobile?.addEventListener("click", handler);
-  }
-
-  document.addEventListener("DOMContentLoaded", attachHandlers);
-
-  // Finish redirect if returning from Google sign-in
-  try {
-    log("URL:", location.href);
-    log("UA:", navigator.userAgent);
-    log("redirectStarted flag:", localStorage.getItem(REDIRECT_FLAG) === "1");
-
-    const res = await getRedirectResult(auth);
-    log("getRedirectResult:", res ? "HAS_RESULT" : "null");
-    if (res?.user) log("redirect user:", res.user.email || "no-email");
-
-    localStorage.removeItem(REDIRECT_FLAG);
-  } catch (e) {
-    log("getRedirectResult ERROR:", e.code, e.message);
-    localStorage.removeItem(REDIRECT_FLAG);
-  }
-
+  /* React to auth state */
   onAuthStateChanged(auth, (user) => {
-    log("onAuthStateChanged:", user ? "SIGNED_IN" : "SIGNED_OUT");
-    setBtnLabel(user);
+    if(user){
+      setSignedInUI(user);
 
-    // If we tried redirect but still signed out -> storage/cookies or domain mismatch
-    if (!user && localStorage.getItem(REDIRECT_FLAG) === "1") {
-      log("⚠️ redirect attempted but still signed out (cookie/storage/domain issue)");
+      if(subnav) subnav.hidden = false;
+
+      const name  = user?.displayName || "User";
+      const email = user?.email || "";
+      const photo = user?.photoURL || "";
+
+      if(userPageName)  userPageName.textContent  = name;
+      if(userPageEmail) userPageEmail.textContent = email || "—";
+
+      if(userPagePic){
+        if(photo){
+          userPagePic.src = photo;
+          userPagePic.style.display = "block";
+        }else{
+          userPagePic.removeAttribute("src");
+          userPagePic.style.display = "none";
+        }
+      }
+
+      setActiveTab("home");
+    }else{
+      setSignedOutUI();
+      if(subnav) subnav.hidden = true;
+      setActiveTab("home");
     }
   });
 </script>
