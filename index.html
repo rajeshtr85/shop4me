@@ -193,6 +193,172 @@
 
     .nav-cta{ display:flex; align-items:center; justify-content:flex-end; }
 
+    /* -------------------- USER DROPDOWN -------------------- */
+    .userMenu{
+      position:relative;
+      margin-left: 10px;
+      flex:0 0 auto;
+    }
+
+    .userBtn{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      height:44px;
+      padding:0 10px 0 8px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,0.90);
+      box-shadow:var(--shadow-xs);
+      cursor:pointer;
+      transition:transform .25s var(--ease), box-shadow .25s var(--ease), background .25s var(--ease);
+    }
+
+    .userBtn:hover{
+      transform:translateY(-1px);
+      box-shadow:var(--shadow-sm);
+      background:rgba(255,255,255,0.98);
+    }
+
+    .userAvatar{
+      width:34px;
+      height:34px;
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:rgba(2,6,23,0.06);
+      border:1px solid var(--border);
+      overflow:hidden;
+      flex:0 0 auto;
+    }
+
+    .userAvatar img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .userAvatar svg{
+      width:18px;
+      height:18px;
+      fill:rgba(2,6,23,0.75);
+    }
+
+    .userLabel{
+      font-weight:900;
+      font-size:13px;
+      color:rgba(2,6,23,0.86);
+      white-space:nowrap;
+      max-width:140px;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .chev{
+      width:18px;
+      height:18px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:rgba(2,6,23,0.70);
+    }
+
+    .userDropdown{
+      position:absolute;
+      right:0;
+      top: calc(100% + 10px);
+      min-width: 270px;
+      border-radius:18px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,0.96);
+      box-shadow:0 18px 60px rgba(2,6,23,0.18);
+      padding:10px;
+      display:none;
+      transform-origin: top right;
+      z-index: 80;
+    }
+
+    .userMenu.open .userDropdown{
+      display:block;
+      animation: menuIn .18s var(--ease) forwards;
+    }
+
+    .userCard{
+      padding: 6px;
+    }
+
+    .userCardTop{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      padding: 6px 6px 10px;
+    }
+
+    .userPic{
+      width:42px;
+      height:42px;
+      border-radius:16px;
+      border:1px solid var(--border);
+      background:rgba(2,6,23,0.06);
+      object-fit:cover;
+      flex:0 0 auto;
+    }
+
+    .userMeta{ min-width:0; }
+    .userFull{
+      font-weight:950;
+      letter-spacing:-0.01em;
+      font-size:13px;
+      color:rgba(2,6,23,0.92);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width: 190px;
+    }
+    .userEmail{
+      margin-top:2px;
+      font-size:12.5px;
+      color:rgba(82,88,102,0.95);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width: 190px;
+    }
+
+    .userDivider{
+      height:1px;
+      background:rgba(15,23,42,0.10);
+      margin: 6px 6px 10px;
+    }
+
+    .userAction{
+      width:100%;
+      height:44px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,0.92);
+      font-weight:900;
+      cursor:pointer;
+      transition:transform .25s var(--ease), box-shadow .25s var(--ease), background .25s var(--ease);
+    }
+
+    .userAction:hover{
+      transform:translateY(-1px);
+      box-shadow:var(--shadow-sm);
+      background:rgba(255,255,255,0.98);
+    }
+
+    .userAction.danger{
+      border-color:rgba(2,6,23,0.14);
+    }
+
+    @media (max-width: 520px){
+      .userLabel{ display:none; }
+      .userBtn{ padding-right:8px; }
+    }
+
     /* Hamburger */
     .hamburger{
       display:none;
@@ -632,7 +798,7 @@
       html{ scroll-behavior:auto; }
       .bg-wash{ animation:none; }
       .reveal{ transition:none; opacity:1; transform:none; }
-      .btn, .card, nav a, .logo-img, .stepCard, .trustCard, .useStep, .channel{ transition:none; }
+      .btn, .card, nav a, .logo-img, .stepCard, .trustCard, .useStep, .channel, .userBtn, .userAction{ transition:none; }
       .btn.primary::after, .card::after{ display:none; }
       .scrollHint{ animation:none; }
     }
@@ -925,9 +1091,48 @@
             <li><a href="#faq">FAQ</a></li>
             <li><a href="#contact">Contact</a></li>
             <li><a href="#request">Request</a></li>
-            <li><button class="btn" id="authBtn" type="button">Sign in</button></li>
           </ul>
         </nav>
+
+        <!-- User dropdown (Desktop + Mobile shared) -->
+        <div class="userMenu" id="userMenu">
+          <button class="userBtn" id="userBtn" type="button" aria-haspopup="menu" aria-expanded="false">
+            <!-- Signed-out icon -->
+            <span class="userAvatar" id="userAvatar">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Z"/>
+              </svg>
+            </span>
+
+            <span class="userLabel" id="userLabel">User</span>
+
+            <span class="chev" aria-hidden="true">
+              <svg viewBox="0 0 20 20">
+                <path d="M5.5 7.5 10 12l4.5-4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </button>
+
+          <div class="userDropdown" id="userDropdown" role="menu" aria-label="Account">
+            <!-- Signed-in details -->
+            <div class="userCard" id="userCard" style="display:none;">
+              <div class="userCardTop">
+                <img class="userPic" id="userPic" alt="User photo" />
+                <div class="userMeta">
+                  <div class="userFull" id="userFull">User</div>
+                  <div class="userEmail" id="userEmail">user@email.com</div>
+                </div>
+              </div>
+              <div class="userDivider"></div>
+              <button class="userAction danger" id="signOutBtn" type="button" role="menuitem">Sign out</button>
+            </div>
+
+            <!-- Signed-out menu -->
+            <div class="userCard" id="guestCard">
+              <button class="userAction" id="signInBtn" type="button" role="menuitem">Sign in with Google</button>
+            </div>
+          </div>
+        </div>
 
         <div class="nav-cta">
           <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
@@ -945,7 +1150,6 @@
         <a href="#faq">FAQ</a>
         <a href="#contact">Contact</a>
         <a href="#request">Request</a>
-        <button class="btn" id="authBtnMobile" type="button" style="width:100%; margin-top:10px;">Sign in</button>
       </div>
     </div>
   </header>
@@ -1664,36 +1868,118 @@
   const auth = getAuth(app);
   const provider = new GoogleAuthProvider();
 
-  const btnDesktop = document.getElementById("authBtn");
-  const btnMobile  = document.getElementById("authBtnMobile");
+  /* Dropdown elements */
+  const userMenu     = document.getElementById("userMenu");
+  const userBtn      = document.getElementById("userBtn");
+  const userDropdown = document.getElementById("userDropdown");
 
-  async function handleAuthClick() {
-    try {
-      if (auth.currentUser) {
-        await signOut(auth);
-        return;
-      }
+  const userAvatar   = document.getElementById("userAvatar");
+  const userLabel    = document.getElementById("userLabel");
+
+  const userCard     = document.getElementById("userCard");
+  const guestCard    = document.getElementById("guestCard");
+
+  const userPic      = document.getElementById("userPic");
+  const userFull     = document.getElementById("userFull");
+  const userEmail    = document.getElementById("userEmail");
+
+  const signInBtn    = document.getElementById("signInBtn");
+  const signOutBtn   = document.getElementById("signOutBtn");
+
+  /* Dropdown open/close */
+  function setUserMenu(open){
+    if(!userMenu || !userBtn) return;
+    userMenu.classList.toggle("open", open);
+    userBtn.setAttribute("aria-expanded", open ? "true" : "false");
+  }
+
+  userBtn?.addEventListener("click", (e) => {
+    e.stopPropagation();
+    setUserMenu(!userMenu.classList.contains("open"));
+  });
+
+  document.addEventListener("click", (e) => {
+    if(!userMenu?.classList.contains("open")) return;
+    const within = userMenu.contains(e.target);
+    if(!within) setUserMenu(false);
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if(e.key === "Escape") setUserMenu(false);
+  });
+
+  /* Sign-in/out handlers */
+  async function doSignIn(){
+    try{
       const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
       if (isMobile) await signInWithRedirect(auth, provider);
       else await signInWithPopup(auth, provider);
-    } catch (e) {
+    } catch (e){
       console.error(e);
       alert(e?.message || "Sign-in error");
     }
   }
 
-  btnDesktop?.addEventListener("click", handleAuthClick);
-  btnMobile?.addEventListener("click", handleAuthClick);
+  async function doSignOut(){
+    try{
+      await signOut(auth);
+      setUserMenu(false);
+    } catch(e){
+      console.error(e);
+      alert(e?.message || "Sign-out error");
+    }
+  }
 
-  // complete redirect sign-in (mobile)
+  signInBtn?.addEventListener("click", doSignIn);
+  signOutBtn?.addEventListener("click", doSignOut);
+
+  /* Complete redirect sign-in (mobile) */
   try { await getRedirectResult(auth); } catch {}
 
+  /* UI updater */
+  function setSignedOutUI(){
+    // avatar = icon
+    userAvatar.innerHTML = `
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Z"/>
+      </svg>
+    `;
+    userLabel.textContent = "User";
+
+    userCard.style.display = "none";
+    guestCard.style.display = "block";
+  }
+
+  function setSignedInUI(user){
+    const name  = user?.displayName || "User";
+    const email = user?.email || "";
+    const photo = user?.photoURL || "";
+
+    // avatar = photo
+    userAvatar.innerHTML = photo
+      ? `<img src="${photo}" alt="" />`
+      : `
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Z"/>
+        </svg>
+      `;
+
+    userLabel.textContent = (name.split(" ")[0] || "User");
+
+    userPic.src = photo || "";
+    userPic.style.display = photo ? "block" : "none";
+
+    userFull.textContent = name;
+    userEmail.textContent = email;
+
+    guestCard.style.display = "none";
+    userCard.style.display = "block";
+  }
+
+  /* React to auth state */
   onAuthStateChanged(auth, (user) => {
-    const label = user
-      ? `Sign out (${(user.displayName || "User").split(" ")[0]})`
-      : "Sign in";
-    if (btnDesktop) btnDesktop.textContent = label;
-    if (btnMobile) btnMobile.textContent = label;
+    if(user) setSignedInUI(user);
+    else setSignedOutUI();
   });
 </script>
 
