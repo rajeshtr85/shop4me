@@ -53,7 +53,7 @@
   <!-- Zoho inline form dependencies (ROOT) -->
   <link rel="stylesheet" href="form.css" />
   <script src="validation.js"></script>
-  
+
   <style>
     :root{
       --bg:#ffffff;
@@ -333,10 +333,10 @@
       margin: 6px 6px 10px;
     }
 
-    /* ✅ NEW: action stack to create clean spacing between "User Page" + "Sign out" */
+    /* ✅ action stack spacing between "User Page" + "Sign out" */
     .userActions{
       display:grid;
-      gap:10px;            /* <-- this is the space you asked for */
+      gap:10px;
       padding: 0 6px 6px;
     }
 
@@ -810,324 +810,380 @@
       .scrollHint{ animation:none; }
     }
 
-
     /* -------------------- ZOHO INLINE FORM: premium skin + responsive (FINAL) -------------------- */
-.panel--flush{ padding:0; }
+    .panel--flush{ padding:0; }
 
-.zoho-inline{
-  background:#fff;
-  border-radius:calc(var(--radius-xl) - 1px);
-  overflow:hidden;
-  box-shadow:inset 0 0 0 1px rgba(15,23,42,0.10);
-}
+    .zoho-inline{
+      background:#fff;
+      border-radius:calc(var(--radius-xl) - 1px);
+      overflow:hidden;
+      box-shadow:inset 0 0 0 1px rgba(15,23,42,0.10);
+    }
 
-.zoho-inline,
-.zoho-inline *{ box-sizing:border-box; }
+    .zoho-inline,
+    .zoho-inline *{ box-sizing:border-box; }
 
-/* Kill list bullets without nuking layout spacing */
-.zoho-inline ul{
-  list-style:none !important;
-  margin:0 !important;
-  padding:0 !important;
-}
-.zoho-inline li{
-  list-style:none !important;
-  margin:0 !important;
-}
-.zoho-inline li::marker{ content:"" !important; }
+    /* Kill list bullets without nuking layout spacing */
+    .zoho-inline ul{
+      list-style:none !important;
+      margin:0 !important;
+      padding:0 !important;
+    }
+    .zoho-inline li{
+      list-style:none !important;
+      margin:0 !important;
+    }
+    .zoho-inline li::marker{ content:"" !important; }
 
-/* Remove Zoho internal header */
-.zoho-inline .zf-tempHeadBdr{ display:none !important; }
+    /* Remove Zoho internal header */
+    .zoho-inline .zf-tempHeadBdr{ display:none !important; }
 
-/* Remove Zoho fixed widths/backgrounds */
-.zoho-inline .zf-templateWidth,
-.zoho-inline .zf-templateWrapper{
-  width:100% !important;
-  max-width:none !important;
-  margin:0 !important;
-  padding:0 !important;
-  border:none !important;
-  background:transparent !important;
-  box-shadow:none !important;
-}
+    /* Remove Zoho fixed widths/backgrounds */
+    .zoho-inline .zf-templateWidth,
+    .zoho-inline .zf-templateWrapper{
+      width:100% !important;
+      max-width:none !important;
+      margin:0 !important;
+      padding:0 !important;
+      border:none !important;
+      background:transparent !important;
+      box-shadow:none !important;
+    }
 
-/* Main inner padding (ONE place only) */
-.zoho-inline .zf-subContWrap{
-  padding:22px !important;
-}
+    /* Main inner padding (ONE place only) */
+    .zoho-inline .zf-subContWrap{
+      padding:22px !important;
+    }
 
-/* Two-column grid on desktop, stack on mobile */
-@media (min-width: 861px){
-  .zoho-inline .zftwoColumn.zfMultiColGrid{
-    display:grid !important;
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap:18px !important;
-    align-items:stretch !important; /* makes both columns equal height */
-  }
-}
-@media (max-width: 860px){
-  .zoho-inline .zftwoColumn.zfMultiColGrid{
-    display:grid !important;
-    grid-template-columns: 1fr !important;
-    gap:12px !important;
-  }
-}
+    /* Two-column grid on desktop, stack on mobile */
+    @media (min-width: 861px){
+      .zoho-inline .zftwoColumn.zfMultiColGrid{
+        display:grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap:18px !important;
+        align-items:stretch !important;
+      }
+    }
+    @media (max-width: 860px){
+      .zoho-inline .zftwoColumn.zfMultiColGrid{
+        display:grid !important;
+        grid-template-columns: 1fr !important;
+        gap:12px !important;
+      }
+    }
 
-/* Ensure Zoho doesn't float columns */
-.zoho-inline .zfCol{
-  width:auto !important;
-  float:none !important;
-  margin:0 !important;
-  min-width:0 !important;
+    /* Ensure Zoho doesn't float columns */
+    .zoho-inline .zfCol{
+      width:auto !important;
+      float:none !important;
+      margin:0 !important;
+      min-width:0 !important;
 
-  display:flex !important;
-  flex-direction:column !important;
-  gap:12px !important;
-  height:100% !important; /* important for equal height */
-}
+      display:flex !important;
+      flex-direction:column !important;
+      gap:12px !important;
+      height:100% !important;
+    }
 
-/* Field wrapper cards */
-.zoho-inline .zf-tempFrmWrapper{
-  border:1px solid rgba(15,23,42,0.10) !important;
-  background:rgba(255,255,255,0.92) !important;
-  border-radius:18px !important;
-  padding:12px !important;
-  box-shadow:var(--shadow-xs) !important;
-  transition:transform .25s var(--ease), box-shadow .25s var(--ease);
-}
-.zoho-inline .zf-tempFrmWrapper:hover{
-  transform:translateY(-1px);
-  box-shadow:var(--shadow-sm);
-}
+    /* Field wrapper cards */
+    .zoho-inline .zf-tempFrmWrapper{
+      border:1px solid rgba(15,23,42,0.10) !important;
+      background:rgba(255,255,255,0.92) !important;
+      border-radius:18px !important;
+      padding:12px !important;
+      box-shadow:var(--shadow-xs) !important;
+      transition:transform .25s var(--ease), box-shadow .25s var(--ease);
+    }
+    .zoho-inline .zf-tempFrmWrapper:hover{
+      transform:translateY(-1px);
+      box-shadow:var(--shadow-sm);
+    }
 
-/* Labels */
-.zoho-inline .zf-labelName{
-  display:block;
-  font-size:13px;
-  font-weight:900;
-  letter-spacing:-0.01em;
-  color:rgba(2,6,23,0.86);
-  margin:0 0 8px;
-}
-.zoho-inline .zf-important{ color:rgba(236,72,153,0.95); }
+    /* Labels */
+    .zoho-inline .zf-labelName{
+      display:block;
+      font-size:13px;
+      font-weight:900;
+      letter-spacing:-0.01em;
+      color:rgba(2,6,23,0.86);
+      margin:0 0 8px;
+    }
+    .zoho-inline .zf-important{ color:rgba(236,72,153,0.95); }
 
-/* Inputs */
-.zoho-inline input[type="text"],
-.zoho-inline textarea{
-  width:100%;
-  border-radius:16px;
-  border:1px solid var(--border);
-  background:rgba(255,255,255,0.94);
-  padding:12px;
-  font:inherit;
-  font-size:13px;
-  color:var(--text);
-  outline:none;
-  transition:box-shadow .2s var(--ease), border-color .2s var(--ease);
-}
-.zoho-inline input[type="text"]{ height:44px; }
+    /* Inputs */
+    .zoho-inline input[type="text"],
+    .zoho-inline textarea{
+      width:100%;
+      border-radius:16px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,0.94);
+      padding:12px;
+      font:inherit;
+      font-size:13px;
+      color:var(--text);
+      outline:none;
+      transition:box-shadow .2s var(--ease), border-color .2s var(--ease);
+    }
+    .zoho-inline input[type="text"]{ height:44px; }
 
+    @media (max-width: 860px){
+      .zoho-inline textarea[name="MultiLine"]{
+        min-height: 200px !important;
+      }
+    }
 
-/* Mobile: make it taller for usability */
-@media (max-width: 860px){
-  .zoho-inline textarea[name="MultiLine"]{
-    min-height: 200px !important;
-  }
-}
+    .zoho-inline input[type="text"]:focus,
+    .zoho-inline textarea:focus{
+      border-color:var(--focus);
+      box-shadow:var(--focus-ring);
+    }
 
-.zoho-inline input[type="text"]:focus,
-.zoho-inline textarea:focus{
-  border-color:var(--focus);
-  box-shadow:var(--focus-ring);
-}
+    /* Instruction + errors */
+    .zoho-inline .zf-instruction{
+      margin:8px 0 0;
+      font-size:12.5px;
+      color:rgba(82,88,102,0.95);
+    }
+    .zoho-inline .zf-errorMessage{
+      margin:8px 0 0;
+      font-size:12.5px;
+      color:rgba(220,38,38,0.95);
+      font-weight:800;
+    }
 
-/* Instruction + errors */
-.zoho-inline .zf-instruction{
-  margin:8px 0 0;
-  font-size:12.5px;
-  color:rgba(82,88,102,0.95);
-}
-.zoho-inline .zf-errorMessage{
-  margin:8px 0 0;
-  font-size:12.5px;
-  color:rgba(220,38,38,0.95);
-  font-weight:800;
-}
+    /* Submit area */
+    .zoho-inline .zf-fmFooter{
+      padding:14px 22px 22px !important;
+      border-top:1px solid rgba(15,23,42,0.10);
+    }
+    .zoho-inline .zf-submitColor{
+      width:100%;
+      height:44px;
+      border-radius:14px;
+      border:1px solid rgba(2,6,23,0.94);
+      background:rgba(2,6,23,0.94);
+      color:#fff;
+      font-weight:850;
+      cursor:pointer;
+      box-shadow:var(--shadow-xs);
+      transition:transform .25s var(--ease), box-shadow .25s var(--ease), background .25s var(--ease);
+    }
+    .zoho-inline .zf-submitColor:hover{
+      transform:translateY(-1px);
+      box-shadow:var(--shadow-sm);
+      background:rgba(2,6,23,1);
+    }
 
-/* Submit area */
-.zoho-inline .zf-fmFooter{
-  padding:14px 22px 22px !important; /* breathing room + not flush */
-  border-top:1px solid rgba(15,23,42,0.10);
-}
-.zoho-inline .zf-submitColor{
-  width:100%;
-  height:44px;
-  border-radius:14px;
-  border:1px solid rgba(2,6,23,0.94);
-  background:rgba(2,6,23,0.94);
-  color:#fff;
-  font-weight:850;
-  cursor:pointer;
-  box-shadow:var(--shadow-xs);
-  transition:transform .25s var(--ease), box-shadow .25s var(--ease), background .25s var(--ease);
-}
-.zoho-inline .zf-submitColor:hover{
-  transform:translateY(-1px);
-  box-shadow:var(--shadow-sm);
-  background:rgba(2,6,23,1);
-}
-
-/* Tablet padding */
-@media (max-width: 980px){
-  .zoho-inline .zf-subContWrap{ padding:18px !important; }
-  .zoho-inline .zf-fmFooter{ padding:14px 18px 18px !important; }
-}
+    /* Tablet padding */
+    @media (max-width: 980px){
+      .zoho-inline .zf-subContWrap{ padding:18px !important; }
+      .zoho-inline .zf-fmFooter{ padding:14px 18px 18px !important; }
+    }
 
     /* Desktop: force perfect bottom alignment by making textarea card flexible */
-@media (min-width: 861px){
-  /* Ensure columns can be height-managed */
-  .zoho-inline .zftwoColumn.zfMultiColGrid{ align-items: stretch !important; }
+    @media (min-width: 861px){
+      .zoho-inline .zftwoColumn.zfMultiColGrid{ align-items: stretch !important; }
 
-  /* Right column becomes a real vertical flex stack */
-  .zoho-inline .zfCol{
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 12px !important;
-    height: auto; /* JS will set explicit height */
-  }
+      .zoho-inline .zfCol{
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 12px !important;
+        height: auto;
+      }
 
-  /* Make MultiLine (textarea) wrapper expandable */
-  .zoho-inline .zf-tempFrmWrapper.zf-grow{
-    display: flex !important;
-    flex-direction: column !important;
-    flex: 1 1 auto !important;
-    min-height: 0 !important; /* important so textarea can shrink */
-  }
+      .zoho-inline .zf-tempFrmWrapper.zf-grow{
+        display: flex !important;
+        flex-direction: column !important;
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+      }
 
-  /* Let textarea fill remaining space inside its wrapper */
-  .zoho-inline .zf-tempFrmWrapper.zf-grow .zf-tempContDiv{
-    display: flex !important;
-    flex-direction: column !important;
-    flex: 1 1 auto !important;
-    min-height: 0 !important;
-  }
+      .zoho-inline .zf-tempFrmWrapper.zf-grow .zf-tempContDiv{
+        display: flex !important;
+        flex-direction: column !important;
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+      }
 
-  .zoho-inline textarea[name="MultiLine"]{
-    flex: 1 1 auto !important;
-    height: auto !important;
-    min-height: 0 !important;
-    resize: vertical;
-  }
-}
+      .zoho-inline textarea[name="MultiLine"]{
+        flex: 1 1 auto !important;
+        height: auto !important;
+        min-height: 0 !important;
+        resize: vertical;
+      }
+    }
 
     /* Remove separator above submit */
-.zoho-inline .zf-fmFooter{
-  border-top: 0 !important;
-}
+    .zoho-inline .zf-fmFooter{
+      border-top: 0 !important;
+    }
 
+    /* Success modal */
+    .s4m-modal{
+      position:fixed;
+      inset:0;
+      display:none;
+      z-index:9999;
+    }
 
-/* Success modal */
-.s4m-modal{
-  position:fixed;
-  inset:0;
-  display:none;
-  z-index:9999;
-}
+    .s4m-modal.show{ display:block; }
 
-.s4m-modal.show{ display:block; }
+    .s4m-backdrop{
+      position:absolute;
+      inset:0;
+      background:rgba(2,6,23,0.55);
+      backdrop-filter: blur(6px);
+    }
 
-.s4m-backdrop{
-  position:absolute;
-  inset:0;
-  background:rgba(2,6,23,0.55);
-  backdrop-filter: blur(6px);
-}
+    .s4m-dialog{
+      position:relative;
+      max-width:520px;
+      margin: min(16vh, 140px) auto 0;
+      background: rgba(255,255,255,0.96);
+      border: 1px solid rgba(15,23,42,0.12);
+      border-radius: 22px;
+      box-shadow: 0 18px 60px rgba(2,6,23,0.22);
+      padding: 18px;
+    }
 
-.s4m-dialog{
-  position:relative;
-  max-width:520px;
-  margin: min(16vh, 140px) auto 0;
-  background: rgba(255,255,255,0.96);
-  border: 1px solid rgba(15,23,42,0.12);
-  border-radius: 22px;
-  box-shadow: 0 18px 60px rgba(2,6,23,0.22);
-  padding: 18px;
-}
+    .s4m-dialog h3{
+      margin:0;
+      font-size:18px;
+      font-weight:950;
+      letter-spacing:-0.01em;
+    }
 
-.s4m-dialog h3{
-  margin:0;
-  font-size:18px;
-  font-weight:950;
-  letter-spacing:-0.01em;
-}
+    .s4m-dialog p{
+      margin:10px 0 0;
+      color: var(--muted);
+      font-size: 13.5px;
+      line-height: 1.5;
+    }
 
-.s4m-dialog p{
-  margin:10px 0 0;
-  color: var(--muted);
-  font-size: 13.5px;
-  line-height: 1.5;
-}
+    .s4m-dialog .btn{
+      margin-top:14px;
+      width:100%;
+    }
 
-.s4m-dialog .btn{
-  margin-top:14px;
-  width:100%;
-}
+    /* -------------------- USER PAGE UI -------------------- */
+    .userPageTop{
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
 
-/* -------------------- USER PAGE UI -------------------- */
-.userPageTop{
-  display:flex;
-  align-items:center;
-  gap:14px;
-}
+    .userPagePic{
+      width:64px;
+      height:64px;
+      border-radius:18px;
+      border:1px solid var(--border);
+      background:rgba(2,6,23,0.06);
+      object-fit:cover;
+      display:none;
+    }
 
-.userPagePic{
-  width:64px;
-  height:64px;
-  border-radius:18px;
-  border:1px solid var(--border);
-  background:rgba(2,6,23,0.06);
-  object-fit:cover;
-  display:none;
-}
+    .userPageMeta{ min-width:0; }
+    .userPageName{
+      font-weight:950;
+      letter-spacing:-0.02em;
+      font-size:16px;
+      color:rgba(2,6,23,0.92);
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+    .userPageEmail{
+      margin-top:4px;
+      font-size:13px;
+      color:rgba(82,88,102,0.95);
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
 
-.userPageMeta{ min-width:0; }
-.userPageName{
-  font-weight:950;
-  letter-spacing:-0.02em;
-  font-size:16px;
-  color:rgba(2,6,23,0.92);
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-}
-.userPageEmail{
-  margin-top:4px;
-  font-size:13px;
-  color:rgba(82,88,102,0.95);
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-}
+    .userBlank{
+      border:1px dashed rgba(15,23,42,0.20);
+      border-radius:18px;
+      padding:16px;
+      background:rgba(255,255,255,0.70);
+    }
 
-.userBlank{
-  border:1px dashed rgba(15,23,42,0.20);
-  border-radius:18px;
-  padding:16px;
-  background:rgba(255,255,255,0.70);
-}
+    .userBlankTitle{
+      font-weight:950;
+      font-size:14px;
+      letter-spacing:-0.01em;
+    }
 
-.userBlankTitle{
-  font-weight:950;
-  font-size:14px;
-  letter-spacing:-0.01em;
-}
+    .userBlankText{
+      margin-top:6px;
+      color:var(--muted);
+      font-size:13px;
+    }
 
-.userBlankText{
-  margin-top:6px;
-  color:var(--muted);
-  font-size:13px;
-}
-    
+    /* ✅ NEW: WELCOME HEARTBEAT TOAST (Rajesh only) */
+    .welcomeToast{
+      position: fixed;
+      top: 110px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 120;
+      pointer-events: none;
+    }
+    @media (min-width: 980px){
+      .welcomeToast{ top: 118px; }
+    }
+    .welcomeInner{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding: 12px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.96);
+      box-shadow: 0 18px 60px rgba(2,6,23,0.18);
+      font-weight: 950;
+      font-size: 13px;
+      color: rgba(2,6,23,0.88);
+      opacity: 0;
+      transform: translateY(-10px) scale(0.98);
+    }
+    .welcomeHeart{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      background: rgba(236,72,153,0.12);
+      border: 1px solid rgba(236,72,153,0.18);
+      font-size: 16px;
+      line-height: 1;
+    }
+    .welcomeToast.show .welcomeInner{
+      animation: welcomeIn .25s var(--ease) forwards, welcomeOut .35s var(--ease) forwards;
+      animation-delay: 0s, 2.2s;
+    }
+    .welcomeToast.show .welcomeHeart{
+      animation: heartBeat 1.0s var(--ease) infinite;
+    }
+    @keyframes welcomeIn{
+      from{ opacity:0; transform: translateY(-10px) scale(0.98); }
+      to  { opacity:1; transform: translateY(0) scale(1); }
+    }
+    @keyframes welcomeOut{
+      to{ opacity:0; transform: translateY(-8px) scale(0.99); }
+    }
+    @keyframes heartBeat{
+      0%, 100%{ transform: scale(1); }
+      20%{ transform: scale(1.12); }
+      40%{ transform: scale(1); }
+      60%{ transform: scale(1.10); }
+      80%{ transform: scale(1); }
+    }
+    @media (prefers-reduced-motion: reduce){
+      .welcomeToast.show .welcomeInner{ animation: none; opacity:1; transform:none; }
+      .welcomeToast.show .welcomeHeart{ animation: none; }
+    }
   </style>
 </head>
 
@@ -1187,8 +1243,7 @@
               </div>
               <div class="userDivider"></div>
 
-              <!-- ✅ User page option in dropdown -->
-             <div class="userActions">
+              <div class="userActions">
                 <button class="userAction" id="userPageBtn" type="button" role="menuitem">User Page</button>
                 <button class="userAction danger" id="signOutBtn" type="button" role="menuitem">Sign Out</button>
               </div>
@@ -1235,7 +1290,6 @@
         <a class="btn" href="#usecases">See use cases</a>
       </div>
 
-      <!-- SIMPLE: What we do / What you get (no pointers) -->
       <div class="grid" style="margin-top:12px;">
         <div class="card panel col6 reveal">
           <h3>What we do</h3>
@@ -1484,7 +1538,7 @@
       </div>
     </section>
 
-    <!-- CONTACT (separate row/section) -->
+    <!-- CONTACT -->
     <section class="section" id="contact">
       <div class="eyebrow reveal">Contact</div>
       <h2 class="h2 reveal delay-1">Reach us on your preferred channel</h2>
@@ -1532,7 +1586,6 @@
         <div class="card panel col12 reveal">
           <div class="zoho-inline">
             <!-- ZOHO INLINE FORM (NO IFRAME) -->
-            <!-- Change or deletion of the name attributes in the input tag will lead to empty values on record submission-->
             <div class="zf-templateWidth">
               <form action='https://forms.zohopublic.in/rajeshsho1/form/Shop4MeWebRequest/formperma/_Mn_E_DDxL9ArfujL33UQKBsH1udtFlrHxOjwX_o7Qg/htmlRecords/submit'
                     name='form'
@@ -1626,7 +1679,6 @@
               </form>
             </div>
 
-            <!-- Required Zoho field arrays (must remain) -->
             <script type="text/javascript">
               var dateAndMonthRegexFormateArray = zf_SetDateAndMonthRegexBasedOnDateFormate('dd-MMM-yyyy');
               var zf_DateRegex = new RegExp(dateAndMonthRegexFormateArray[0]);
@@ -1642,7 +1694,7 @@
     </section>
   </main>
 
-  <!-- USER PAGE (visible only after login, content for now: user details + blank area) -->
+  <!-- USER PAGE -->
   <main class="wrap" id="appUser" hidden>
     <section class="section">
       <div class="eyebrow reveal">User</div>
@@ -1661,7 +1713,6 @@
 
           <div class="userDivider" style="margin:16px 0;"></div>
 
-          <!-- Blank area for future -->
           <div class="userBlank">
             <div class="userBlankTitle">Coming soon</div>
             <div class="userBlankText">This space is reserved for future user features.</div>
@@ -1672,47 +1723,50 @@
   </main>
 
   <footer>
-     <div class="wrap footer-row">
+    <div class="wrap footer-row">
       <div class="footer-left">© 2026 Shop4Me</div>
 
       <div class="footer-icons" aria-label="Reach us">
-        <!-- WhatsApp -->
-  <a class="footer-icon" href="https://wa.me/" target="_blank" rel="noopener" aria-label="WhatsApp">
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M20.52 3.48A11.9 11.9 0 0 0 12.03 0C5.43 0 .06 5.37.06 11.97c0 2.11.55 4.18 1.6 6.01L0 24l6.19-1.63a11.94 11.94 0 0 0 5.84 1.49h.01c6.6 0 11.97-5.37 11.97-11.97 0-3.19-1.24-6.19-3.49-8.41ZM12.04 21.9h-.01a9.93 9.93 0 0 1-5.05-1.39l-.36-.21-3.67.96.98-3.58-.24-.37a9.93 9.93 0 0 1-1.53-5.28c0-5.49 4.47-9.96 9.97-9.96 2.66 0 5.16 1.04 7.04 2.92a9.9 9.9 0 0 1 2.93 7.04c0 5.49-4.47 9.96-9.97 9.96Zm5.78-7.9c-.31-.16-1.82-.9-2.1-1.01-.28-.1-.49-.16-.69.16-.2.31-.79 1.01-.97 1.22-.18.2-.36.23-.67.08-.31-.16-1.3-.48-2.48-1.53-.92-.82-1.54-1.84-1.72-2.15-.18-.31-.02-.48.13-.64.14-.14.31-.36.47-.54.16-.18.2-.31.31-.52.1-.2.05-.39-.03-.54-.08-.16-.69-1.66-.95-2.28-.25-.6-.5-.52-.69-.53h-.59c-.2 0-.52.08-.79.39-.27.31-1.04 1.02-1.04 2.49 0 1.47 1.07 2.89 1.22 3.09.16.2 2.1 3.21 5.08 4.5.71.31 1.26.49 1.69.62.71.23 1.36.2 1.87.12.57-.09 1.82-.74 2.08-1.46.26-.72.26-1.33.18-1.46-.08-.13-.28-.2-.59-.36Z"/>
-    </svg>
-  </a>
+        <a class="footer-icon" href="https://wa.me/" target="_blank" rel="noopener" aria-label="WhatsApp">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20.52 3.48A11.9 11.9 0 0 0 12.03 0C5.43 0 .06 5.37.06 11.97c0 2.11.55 4.18 1.6 6.01L0 24l6.19-1.63a11.94 11.94 0 0 0 5.84 1.49h.01c6.6 0 11.97-5.37 11.97-11.97 0-3.19-1.24-6.19-3.49-8.41ZM12.04 21.9h-.01a9.93 9.93 0 0 1-5.05-1.39l-.36-.21-3.67.96.98-3.58-.24-.37a9.93 9.93 0 0 1-1.53-5.28c0-5.49 4.47-9.96 9.97-9.96 2.66 0 5.16 1.04 7.04 2.92a9.9 9.9 0 0 1 2.93 7.04c0 5.49-4.47 9.96-9.97 9.96Zm5.78-7.9c-.31-.16-1.82-.9-2.1-1.01-.28-.1-.49-.16-.69.16-.2.31-.79 1.01-.97 1.22-.18.2-.36.23-.67.08-.31-.16-1.3-.48-2.48-1.53-.92-.82-1.54-1.84-1.72-2.15-.18-.31-.02-.48.13-.64.14-.14.31-.36.47-.54.16-.18.2-.31.31-.52.1-.2.05-.39-.03-.54-.08-.16-.69-1.66-.95-2.28-.25-.6-.5-.52-.69-.53h-.59c-.2 0-.52.08-.79.39-.27.31-1.04 1.02-1.04 2.49 0 1.47 1.07 2.89 1.22 3.09.16.2 2.1 3.21 5.08 4.5.71.31 1.26.49 1.69.62.71.23 1.36.2 1.87.12.57-.09 1.82-.74 2.08-1.46.26-.72.26-1.33.18-1.46-.08-.13-.28-.2-.59-.36Z"/>
+          </svg>
+        </a>
 
-  <!-- Email -->
-  <a class="footer-icon" href="mailto:hello@shop4me.in" aria-label="Email">
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4-8 5L4 8V6l8 5 8-5v2Z"/>
-    </svg>
-  </a>
+        <a class="footer-icon" href="mailto:hello@shop4me.in" aria-label="Email">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4-8 5L4 8V6l8 5 8-5v2Z"/>
+          </svg>
+        </a>
 
-  <!-- Facebook -->
-  <a class="footer-icon" href="#" target="_blank" rel="noopener" aria-label="Facebook">
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M22 12a10 10 0 1 0-11.6 9.9v-7h-2.1V12h2.1V9.8c0-2.1 1.3-3.3 3.2-3.3.9 0 1.9.2 1.9.2v2.1h-1.1c-1.1 0-1.4.7-1.4 1.4V12h2.4l-.4 2.9h-2v7A10 10 0 0 0 22 12Z"/>
-    </svg>
-  </a>
+        <a class="footer-icon" href="#" target="_blank" rel="noopener" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M22 12a10 10 0 1 0-11.6 9.9v-7h-2.1V12h2.1V9.8c0-2.1 1.3-3.3 3.2-3.3.9 0 1.9.2 1.9.2v2.1h-1.1c-1.1 0-1.4.7-1.4 1.4V12h2.4l-.4 2.9h-2v7A10 10 0 0 0 22 12Z"/>
+          </svg>
+        </a>
 
-  <!-- Instagram -->
-  <a class="footer-icon" href="#" target="_blank" rel="noopener" aria-label="Instagram">
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9A5.5 5.5 0 0 1 16.5 22h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm6.25-2.55a1.15 1.15 0 1 1-2.3 0 1.15 1.15 0 0 1 2.3 0Z"/>
-    </svg>
-  </a>
+        <a class="footer-icon" href="#" target="_blank" rel="noopener" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9A5.5 5.5 0 0 1 16.5 22h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm6.25-2.55a1.15 1.15 0 1 1-2.3 0 1.15 1.15 0 0 1 2.3 0Z"/>
+          </svg>
+        </a>
 
-  <!-- LinkedIn -->
-  <a class="footer-icon" href="#" target="_blank" rel="noopener" aria-label="LinkedIn">
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M20.4 20.4h-3.6v-5.6c0-1.3 0-3-1.9-3s-2.2 1.4-2.2 2.9v5.7H9.1V9h3.4v1.6h.1c.5-.9 1.7-1.9 3.5-1.9 3.7 0 4.3 2.4 4.3 5.5v6.2ZM5.1 7.4a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2Zm-1.8 13h3.6V9H3.3v11.4Z"/>
-    </svg>
-  </a>
+        <a class="footer-icon" href="#" target="_blank" rel="noopener" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20.4 20.4h-3.6v-5.6c0-1.3 0-3-1.9-3s-2.2 1.4-2.2 2.9v5.7H9.1V9h3.4v1.6h.1c.5-.9 1.7-1.9 3.5-1.9 3.7 0 4.3 2.4 4.3 5.5v6.2ZM5.1 7.4a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2Zm-1.8 13h3.6V9H3.3v11.4Z"/>
+          </svg>
+        </a>
       </div>
     </div>
   </footer>
+
+  <!-- ✅ NEW: Welcome Toast (Rajesh only) -->
+  <div class="welcomeToast" id="welcomeToast" aria-live="polite" aria-atomic="true" hidden>
+    <div class="welcomeInner">
+      <span class="welcomeHeart" aria-hidden="true">❤</span>
+      <span class="welcomeMsg" id="welcomeMsg">Welcome!</span>
+    </div>
+  </div>
 
   <script>
     // Scroll progress
@@ -1760,394 +1814,404 @@
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") setMenu(false);
     });
- 
   </script>
-  
-<script>
-  function syncZohoColumns() {
-    const wrap = document.querySelector(".zoho-inline");
-    if (!wrap) return;
 
-    const cols = wrap.querySelectorAll(".zfCol");
-    if (cols.length < 2) return;
+  <script>
+    function syncZohoColumns() {
+      const wrap = document.querySelector(".zoho-inline");
+      if (!wrap) return;
 
-    const leftCol = cols[0];
-    const rightCol = cols[1];
+      const cols = wrap.querySelectorAll(".zfCol");
+      if (cols.length < 2) return;
 
-    // Desktop only
-    if (window.innerWidth < 861) {
-      rightCol.style.height = "";
-      // remove grow class on mobile (not required but keeps clean)
-      const t = wrap.querySelector('textarea[name="MultiLine"]');
-      const w = t?.closest(".zf-tempFrmWrapper");
-      w?.classList.remove("zf-grow");
-      return;
-    }
+      const leftCol = cols[0];
+      const rightCol = cols[1];
 
-    // Mark textarea card as flexible
-    const textarea = wrap.querySelector('textarea[name="MultiLine"]');
-    const textareaWrap = textarea?.closest(".zf-tempFrmWrapper");
-    textareaWrap?.classList.add("zf-grow");
-
-    // Force right column height to match left column
-    const leftH = Math.round(leftCol.getBoundingClientRect().height);
-    rightCol.style.height = leftH + "px";
-  }
-
-  // Run after layout settles
-  window.addEventListener("load", () => {
-    requestAnimationFrame(() => {
-      syncZohoColumns();
-      // Run a second time in case fonts/styles load late
-      setTimeout(syncZohoColumns, 150);
-    });
-  });
-
-  window.addEventListener("resize", () => {
-    // cheap debounce
-    clearTimeout(window.__zohoSyncT);
-    window.__zohoSyncT = setTimeout(syncZohoColumns, 120);
-  });
-</script>
-
-<!-- Hidden iframe to prevent redirect after Zoho submit -->
-<iframe
-  name="zohoSubmitFrame"
-  id="zohoSubmitFrame"
-  title="Zoho submit target"
-  style="position:absolute; left:-9999px; width:1px; height:1px; border:0;"
-></iframe>
-
-<!-- Success Modal -->
-<div class="s4m-modal" id="s4mSuccess" aria-hidden="true">
-  <div class="s4m-backdrop" data-close></div>
-
-  <div class="s4m-dialog" role="dialog" aria-modal="true" aria-labelledby="s4mSuccessTitle">
-    <h3 id="s4mSuccessTitle">Request received ✅</h3>
-    <p>Thanks! We’ll review your requirement and get back with options and next steps.</p>
-
-    <button class="btn primary" type="button" id="s4mCloseSuccess">Close</button>
-  </div>
-</div>
-
-<script>
-  window.__s4mPending = false;
-
-  function s4mSubmitHook(){
-    document.charset = "UTF-8";
-
-    const form = document.getElementById("form");
-    const btn  = form?.querySelector(".zf-submitColor");
-
-    // disable button
-    if(btn){
-      btn.disabled = true;
-      btn.dataset.prevText = btn.textContent;
-      btn.textContent = "Submitting…";
-    }
-
-    const ok = zf_ValidateAndSubmit();
-
-    // if validation fails, revert immediately
-    if(!ok){
-      window.__s4mPending = false;
-      if(btn){
-        btn.disabled = false;
-        btn.textContent = btn.dataset.prevText || "Submit";
-      }
-      return false;
-    }
-
-    // mark pending only when validation passed and submit started
-    window.__s4mPending = true;
-
-    // ✅ FAILSAFE: prevent stuck UI forever
-    if(window.__s4mFailSafeT) clearTimeout(window.__s4mFailSafeT);
-   window.__s4mFailSafeT = setTimeout(() => {
-  if(!window.__s4mPending) return;
-  window.__s4mPending = false;
-
-  const form = document.getElementById("form");
-  const b = form?.querySelector(".zf-submitColor");
-  if(b){
-    b.disabled = false;
-    b.textContent = b.dataset.prevText || "Submit";
-  }
-
-  // If iframe load didn't fire but submission likely happened, show success anyway
-  form?.reset();
-  document.getElementById("s4mSuccess")?.classList.add("show");
-  document.body.style.overflow = "hidden";
-}, 12000);
-
-    return true;
-  }
-</script>
-
-<script>
-  (function(){
-    const form  = document.getElementById("form");
-    const frame = document.getElementById("zohoSubmitFrame");
-
-    if(!form || !frame) return;
-
-    const modal = document.getElementById("s4mSuccess");
-    const closeBtn = document.getElementById("s4mCloseSuccess");
-
-    function openModal(){
-      if(!modal) return;
-      modal.classList.add("show");
-      modal.setAttribute("aria-hidden","false");
-      document.body.style.overflow = "hidden";
-    }
-
-    function closeModal(){
-      if(!modal) return;
-      modal.classList.remove("show");
-      modal.setAttribute("aria-hidden","true");
-      document.body.style.overflow = "";
-    }
-
-    // close interactions
-    if(modal){
-      closeBtn?.addEventListener("click", closeModal);
-      modal.querySelectorAll("[data-close]").forEach(el => el.addEventListener("click", closeModal));
-      document.addEventListener("keydown", (e) => { if(e.key === "Escape") closeModal(); });
-    }
-
-    // When hidden iframe loads, submission completed
-    frame.addEventListener("load", () => {
-      if(!window.__s4mPending) return; // ignore initial load
-      window.__s4mPending = false;
-
-      if(window.__s4mFailSafeT) clearTimeout(window.__s4mFailSafeT);
-
-      const btn = form.querySelector(".zf-submitColor");
-      if(btn){
-        btn.disabled = false;
-        btn.textContent = btn.dataset.prevText || "Submit";
-        delete btn.dataset.prevText;
+      if (window.innerWidth < 861) {
+        rightCol.style.height = "";
+        const t = wrap.querySelector('textarea[name="MultiLine"]');
+        const w = t?.closest(".zf-tempFrmWrapper");
+        w?.classList.remove("zf-grow");
+        return;
       }
 
-      form.reset();
-      openModal();
-    });
-  })();
-</script>
-  
+      const textarea = wrap.querySelector('textarea[name="MultiLine"]');
+      const textareaWrap = textarea?.closest(".zf-tempFrmWrapper");
+      textareaWrap?.classList.add("zf-grow");
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-  import {
-    getAuth,
-    GoogleAuthProvider,
-    signInWithPopup,
-    signInWithRedirect,
-    getRedirectResult,
-    onAuthStateChanged,
-    signOut,
-    setPersistence,
-    browserLocalPersistence
-  } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+      const leftH = Math.round(leftCol.getBoundingClientRect().height);
+      rightCol.style.height = leftH + "px";
+    }
 
-  // ---------- Firebase ----------
-  const firebaseConfig = {
-    apiKey: "AIzaSyAi9Sh8cVBpiMPar0-B22od03ZXNp5lBoc",
-    authDomain: "shop4me-d2bb1.firebaseapp.com",
-    projectId: "shop4me-d2bb1",
-    storageBucket: "shop4me-d2bb1.firebasestorage.app",
-    messagingSenderId: "469081092222",
-    appId: "1:469081092222:web:66a2f92ec49a6ada6c682f",
-    measurementId: "G-VBSX1QFPHB"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-
-  const provider = new GoogleAuthProvider();
-  provider.setCustomParameters({ prompt: "select_account" });
-
-  // ---------- YOUR ELEMENTS ----------
-  const userMenu     = document.getElementById("userMenu");
-  const userBtn      = document.getElementById("userBtn");
-  const userAvatar   = document.getElementById("userAvatar");
-  const userLabel    = document.getElementById("userLabel");
-  const userCard     = document.getElementById("userCard");
-  const guestCard    = document.getElementById("guestCard");
-  const userPic      = document.getElementById("userPic");
-  const userFull     = document.getElementById("userFull");
-  const userEmail    = document.getElementById("userEmail");
-  const signInBtn    = document.getElementById("signInBtn");
-  const signOutBtn   = document.getElementById("signOutBtn");
-  const userPageBtn  = document.getElementById("userPageBtn");
-
-  const appHome  = document.getElementById("appHome");
-  const appUser  = document.getElementById("appUser");
-
-  const userPagePic   = document.getElementById("userPagePic");
-  const userPageName  = document.getElementById("userPageName");
-  const userPageEmail = document.getElementById("userPageEmail");
-
-  function setUserMenu(open){
-    if(!userMenu || !userBtn) return;
-    userMenu.classList.toggle("open", open);
-    userBtn.setAttribute("aria-expanded", open ? "true" : "false");
-  }
-  userBtn?.addEventListener("click", (e) => {
-    e.stopPropagation();
-    setUserMenu(!userMenu.classList.contains("open"));
-  });
-  document.addEventListener("click", (e) => {
-    if(!userMenu?.classList.contains("open")) return;
-    if(!userMenu.contains(e.target)) setUserMenu(false);
-  });
-  document.addEventListener("keydown", (e) => {
-    if(e.key === "Escape") setUserMenu(false);
-  });
-
-  function showHome(){
-    if(appHome) appHome.hidden = false;
-    if(appUser) appUser.hidden = true;
-  }
-
-  function showUserPage(){
-    if(appHome) appHome.hidden = true;
-    if(appUser) appUser.hidden = false;
-    setUserMenu(false);
-  }
-
-  // Ensure any normal nav click brings back Home (so anchors work)
-  function wireHomeLinks(){
-    const links = document.querySelectorAll('nav a, #mobileMenu a, a.brand');
-    links.forEach(a => {
-      a.addEventListener("click", () => {
-        showHome();
+    window.addEventListener("load", () => {
+      requestAnimationFrame(() => {
+        syncZohoColumns();
+        setTimeout(syncZohoColumns, 150);
       });
     });
-  }
-  wireHomeLinks();
 
-  userPageBtn?.addEventListener("click", () => {
-    showUserPage();
-  });
+    window.addEventListener("resize", () => {
+      clearTimeout(window.__zohoSyncT);
+      window.__zohoSyncT = setTimeout(syncZohoColumns, 120);
+    });
+  </script>
 
-  function setSignedOutUI(){
-    if(userAvatar){
-      userAvatar.innerHTML = `
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Z"/>
-        </svg>`;
-    }
-    if(userLabel) userLabel.textContent = "User";
-    if(userCard)  userCard.style.display  = "none";
-    if(guestCard) guestCard.style.display = "block";
+  <iframe
+    name="zohoSubmitFrame"
+    id="zohoSubmitFrame"
+    title="Zoho submit target"
+    style="position:absolute; left:-9999px; width:1px; height:1px; border:0;"
+  ></iframe>
 
-    showHome();
-    setUserMenu(false);
-  }
+  <div class="s4m-modal" id="s4mSuccess" aria-hidden="true">
+    <div class="s4m-backdrop" data-close></div>
 
-  function setSignedInUI(user){
-    const name  = user?.displayName || "User";
-    const email = user?.email || "";
-    const photo = user?.photoURL || "";
+    <div class="s4m-dialog" role="dialog" aria-modal="true" aria-labelledby="s4mSuccessTitle">
+      <h3 id="s4mSuccessTitle">Request received ✅</h3>
+      <p>Thanks! We’ll review your requirement and get back with options and next steps.</p>
 
-    if(userAvatar){
-      userAvatar.innerHTML = photo ? `<img src="${photo}" alt="" />` : `
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Z"/>
-        </svg>`;
-    }
-    if(userLabel) userLabel.textContent = (name.split(" ")[0] || "User");
-    if(userPic){
-      userPic.src = photo || "";
-      userPic.style.display = photo ? "block" : "none";
-    }
-    if(userFull)  userFull.textContent  = name;
-    if(userEmail) userEmail.textContent = email;
+      <button class="btn primary" type="button" id="s4mCloseSuccess">Close</button>
+    </div>
+  </div>
 
-    if(guestCard) guestCard.style.display = "none";
-    if(userCard)  userCard.style.display  = "block";
+  <script>
+    window.__s4mPending = false;
 
-    // ✅ close dropdown after sign-in
-    setUserMenu(false);
+    function s4mSubmitHook(){
+      document.charset = "UTF-8";
 
-    // fill user page details too
-    if(userPageName)  userPageName.textContent  = name;
-    if(userPageEmail) userPageEmail.textContent = email || "—";
+      const form = document.getElementById("form");
+      const btn  = form?.querySelector(".zf-submitColor");
 
-    if(userPagePic){
-      if(photo){
-        userPagePic.src = photo;
-        userPagePic.style.display = "block";
-      }else{
-        userPagePic.removeAttribute("src");
-        userPagePic.style.display = "none";
+      if(btn){
+        btn.disabled = true;
+        btn.dataset.prevText = btn.textContent;
+        btn.textContent = "Submitting…";
       }
-    }
 
-    showHome();
-  }
+      const ok = zf_ValidateAndSubmit();
 
-  // ---------- Persist + Redirect result completion ----------
-  try {
-    await setPersistence(auth, browserLocalPersistence);
-  } catch (_) {}
-
-  // Track whether we started a redirect
-  const REDIRECT_FLAG = "s4m_redirect_started";
-
-  // Finish redirect if returning from firebase handler
-  try{
-    await getRedirectResult(auth);
-    localStorage.removeItem(REDIRECT_FLAG);
-  }catch(_){
-    localStorage.removeItem(REDIRECT_FLAG);
-  }
-
-  // ---------- Sign-in: POPUP first, fallback to redirect ----------
-  async function doSignIn(){
-    try{
-      // ✅ close dropdown immediately when clicking sign-in
-      setUserMenu(false);
-
-      // try popup first
-      try{
-        await signInWithPopup(auth, provider);
-        // ✅ ensure dropdown stays closed after sign-in
-        setUserMenu(false);
-        return;
-      }catch(_){
-        // fallback to redirect
-        localStorage.setItem(REDIRECT_FLAG, "1");
-        await signInWithRedirect(auth, provider);
+      if(!ok){
+        window.__s4mPending = false;
+        if(btn){
+          btn.disabled = false;
+          btn.textContent = btn.dataset.prevText || "Submit";
+        }
+        return false;
       }
-    }catch(e){
-      alert(e?.message || "Sign-in error");
-    }
-  }
 
-  async function doSignOut(){
-    try{
-      await signOut(auth);
+      window.__s4mPending = true;
+
+      if(window.__s4mFailSafeT) clearTimeout(window.__s4mFailSafeT);
+      window.__s4mFailSafeT = setTimeout(() => {
+        if(!window.__s4mPending) return;
+        window.__s4mPending = false;
+
+        const form = document.getElementById("form");
+        const b = form?.querySelector(".zf-submitColor");
+        if(b){
+          b.disabled = false;
+          b.textContent = b.dataset.prevText || "Submit";
+        }
+
+        form?.reset();
+        document.getElementById("s4mSuccess")?.classList.add("show");
+        document.body.style.overflow = "hidden";
+      }, 12000);
+
+      return true;
+    }
+  </script>
+
+  <script>
+    (function(){
+      const form  = document.getElementById("form");
+      const frame = document.getElementById("zohoSubmitFrame");
+
+      if(!form || !frame) return;
+
+      const modal = document.getElementById("s4mSuccess");
+      const closeBtn = document.getElementById("s4mCloseSuccess");
+
+      function openModal(){
+        if(!modal) return;
+        modal.classList.add("show");
+        modal.setAttribute("aria-hidden","false");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeModal(){
+        if(!modal) return;
+        modal.classList.remove("show");
+        modal.setAttribute("aria-hidden","true");
+        document.body.style.overflow = "";
+      }
+
+      if(modal){
+        closeBtn?.addEventListener("click", closeModal);
+        modal.querySelectorAll("[data-close]").forEach(el => el.addEventListener("click", closeModal));
+        document.addEventListener("keydown", (e) => { if(e.key === "Escape") closeModal(); });
+      }
+
+      frame.addEventListener("load", () => {
+        if(!window.__s4mPending) return;
+        window.__s4mPending = false;
+
+        if(window.__s4mFailSafeT) clearTimeout(window.__s4mFailSafeT);
+
+        const btn = form.querySelector(".zf-submitColor");
+        if(btn){
+          btn.disabled = false;
+          btn.textContent = btn.dataset.prevText || "Submit";
+          delete btn.dataset.prevText;
+        }
+
+        form.reset();
+        openModal();
+      });
+    })();
+  </script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import {
+      getAuth,
+      GoogleAuthProvider,
+      signInWithPopup,
+      signInWithRedirect,
+      getRedirectResult,
+      onAuthStateChanged,
+      signOut,
+      setPersistence,
+      browserLocalPersistence
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+
+    // ---------- Firebase ----------
+    const firebaseConfig = {
+      apiKey: "AIzaSyAi9Sh8cVBpiMPar0-B22od03ZXNp5lBoc",
+      authDomain: "shop4me-d2bb1.firebaseapp.com",
+      projectId: "shop4me-d2bb1",
+      storageBucket: "shop4me-d2bb1.firebasestorage.app",
+      messagingSenderId: "469081092222",
+      appId: "1:469081092222:web:66a2f92ec49a6ada6c682f",
+      measurementId: "G-VBSX1QFPHB"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: "select_account" });
+
+    // ---------- YOUR ELEMENTS ----------
+    const userMenu     = document.getElementById("userMenu");
+    const userBtn      = document.getElementById("userBtn");
+    const userAvatar   = document.getElementById("userAvatar");
+    const userLabel    = document.getElementById("userLabel");
+    const userCard     = document.getElementById("userCard");
+    const guestCard    = document.getElementById("guestCard");
+    const userPic      = document.getElementById("userPic");
+    const userFull     = document.getElementById("userFull");
+    const userEmail    = document.getElementById("userEmail");
+    const signInBtn    = document.getElementById("signInBtn");
+    const signOutBtn   = document.getElementById("signOutBtn");
+    const userPageBtn  = document.getElementById("userPageBtn");
+
+    const appHome  = document.getElementById("appHome");
+    const appUser  = document.getElementById("appUser");
+
+    const userPagePic   = document.getElementById("userPagePic");
+    const userPageName  = document.getElementById("userPageName");
+    const userPageEmail = document.getElementById("userPageEmail");
+
+    // ✅ NEW: Welcome toast elements
+    const welcomeToast = document.getElementById("welcomeToast");
+    const welcomeMsg   = document.getElementById("welcomeMsg");
+    const WELCOME_EMAIL = "rajeshtr85@gmail.com";
+    const WELCOME_FLAG  = "s4m_welcome_shown"; // session-only
+
+    function showWelcomeToast(firstName){
+      if(!welcomeToast || !welcomeMsg) return;
+
+      // show once per tab session
+      if(sessionStorage.getItem(WELCOME_FLAG) === "1") return;
+      sessionStorage.setItem(WELCOME_FLAG, "1");
+
+      welcomeMsg.textContent = `Welcome, ${firstName || "Rajesh"}!`;
+
+      welcomeToast.hidden = false;
+      welcomeToast.classList.remove("show");
+      void welcomeToast.offsetWidth; // restart animation
+      welcomeToast.classList.add("show");
+
+      clearTimeout(window.__s4mWelcomeT);
+      window.__s4mWelcomeT = setTimeout(() => {
+        welcomeToast.classList.remove("show");
+        welcomeToast.hidden = true;
+      }, 2700);
+    }
+
+    function setUserMenu(open){
+      if(!userMenu || !userBtn) return;
+      userMenu.classList.toggle("open", open);
+      userBtn.setAttribute("aria-expanded", open ? "true" : "false");
+    }
+    userBtn?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      setUserMenu(!userMenu.classList.contains("open"));
+    });
+    document.addEventListener("click", (e) => {
+      if(!userMenu?.classList.contains("open")) return;
+      if(!userMenu.contains(e.target)) setUserMenu(false);
+    });
+    document.addEventListener("keydown", (e) => {
+      if(e.key === "Escape") setUserMenu(false);
+    });
+
+    function showHome(){
+      if(appHome) appHome.hidden = false;
+      if(appUser) appUser.hidden = true;
+    }
+
+    function showUserPage(){
+      if(appHome) appHome.hidden = true;
+      if(appUser) appUser.hidden = false;
       setUserMenu(false);
+    }
+
+    function wireHomeLinks(){
+      const links = document.querySelectorAll('nav a, #mobileMenu a, a.brand');
+      links.forEach(a => {
+        a.addEventListener("click", () => {
+          showHome();
+        });
+      });
+    }
+    wireHomeLinks();
+
+    userPageBtn?.addEventListener("click", () => {
+      showUserPage();
+    });
+
+    function setSignedOutUI(){
+      if(userAvatar){
+        userAvatar.innerHTML = `
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Z"/>
+          </svg>`;
+      }
+      if(userLabel) userLabel.textContent = "User";
+      if(userCard)  userCard.style.display  = "none";
+      if(guestCard) guestCard.style.display = "block";
+
       showHome();
-    }catch(e){
-      alert(e?.message || "Sign-out error");
+      setUserMenu(false);
     }
-  }
 
-  signInBtn?.addEventListener("click", doSignIn);
-  signOutBtn?.addEventListener("click", doSignOut);
+    function setSignedInUI(user){
+      const name  = user?.displayName || "User";
+      const email = user?.email || "";
+      const photo = user?.photoURL || "";
 
-  // ---------- Auth state ----------
-  onAuthStateChanged(auth, (user) => {
-    if(user){
-      setSignedInUI(user);
-    }else{
-      setSignedOutUI();
+      if(userAvatar){
+        userAvatar.innerHTML = photo ? `<img src="${photo}" alt="" />` : `
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Z"/>
+          </svg>`;
+      }
+      if(userLabel) userLabel.textContent = (name.split(" ")[0] || "User");
+      if(userPic){
+        userPic.src = photo || "";
+        userPic.style.display = photo ? "block" : "none";
+      }
+      if(userFull)  userFull.textContent  = name;
+      if(userEmail) userEmail.textContent = email;
+
+      if(guestCard) guestCard.style.display = "none";
+      if(userCard)  userCard.style.display  = "block";
+
+      // close dropdown after sign-in
+      setUserMenu(false);
+
+      // fill user page details too
+      if(userPageName)  userPageName.textContent  = name;
+      if(userPageEmail) userPageEmail.textContent = email || "—";
+
+      if(userPagePic){
+        if(photo){
+          userPagePic.src = photo;
+          userPagePic.style.display = "block";
+        }else{
+          userPagePic.removeAttribute("src");
+          userPagePic.style.display = "none";
+        }
+      }
+
+      // ✅ NEW: Heartbeat welcome for Rajesh
+      const emailLower = (email || "").toLowerCase();
+      if(emailLower === WELCOME_EMAIL){
+        showWelcomeToast(name.split(" ")[0] || "Rajesh");
+      }
+
+      showHome();
     }
-  });
-</script>
-  
+
+    // ---------- Persist + Redirect result completion ----------
+    try {
+      await setPersistence(auth, browserLocalPersistence);
+    } catch (_) {}
+
+    const REDIRECT_FLAG = "s4m_redirect_started";
+
+    try{
+      await getRedirectResult(auth);
+      localStorage.removeItem(REDIRECT_FLAG);
+    }catch(_){
+      localStorage.removeItem(REDIRECT_FLAG);
+    }
+
+    // ---------- Sign-in: POPUP first, fallback to redirect ----------
+    async function doSignIn(){
+      try{
+        setUserMenu(false);
+
+        try{
+          await signInWithPopup(auth, provider);
+          setUserMenu(false);
+          return;
+        }catch(_){
+          localStorage.setItem(REDIRECT_FLAG, "1");
+          await signInWithRedirect(auth, provider);
+        }
+      }catch(e){
+        alert(e?.message || "Sign-in error");
+      }
+    }
+
+    async function doSignOut(){
+      try{
+        // ✅ allow welcome to show again next sign-in (optional but nicer)
+        sessionStorage.removeItem(WELCOME_FLAG);
+
+        await signOut(auth);
+        setUserMenu(false);
+        showHome();
+      }catch(e){
+        alert(e?.message || "Sign-out error");
+      }
+    }
+
+    signInBtn?.addEventListener("click", doSignIn);
+    signOutBtn?.addEventListener("click", doSignOut);
+
+    // ---------- Auth state ----------
+    onAuthStateChanged(auth, (user) => {
+      if(user){
+        setSignedInUI(user);
+      }else{
+        setSignedOutUI();
+      }
+    });
+  </script>
 </body>
 </html>
