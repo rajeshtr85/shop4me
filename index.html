@@ -2037,7 +2037,7 @@
       if(sessionStorage.getItem(WELCOME_FLAG) === "1") return;
       sessionStorage.setItem(WELCOME_FLAG, "1");
 
-      welcomeMsg.textContent = `Welcome, ${firstName || "Rajesh"}!`;
+      welcomeMsg.textContent = `Welcome, ${firstName || "Baby!!!"}!`;
 
       welcomeToast.hidden = false;
       welcomeToast.classList.remove("show");
@@ -2048,7 +2048,7 @@
       window.__s4mWelcomeT = setTimeout(() => {
         welcomeToast.classList.remove("show");
         welcomeToast.hidden = true;
-      }, 2700);
+      }, 3500);
     }
 
     function setUserMenu(open){
