@@ -1997,7 +1997,27 @@
     browserLocalPersistence
   } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
-  // Firebase config
+  // ---------- Debug overlay (visible on mobile) ----------
+  const dbg = document.createElement("div");
+  dbg.style.cssText = `
+    position:fixed; z-index:999999; left:10px; right:10px; bottom:10px;
+    background:rgba(0,0,0,.85); color:#fff; padding:10px 12px; border-radius:12px;
+    font:12px/1.35 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial;
+    max-height:40vh; overflow:auto;
+  `;
+  dbg.innerHTML = `<b>Auth debug</b><div id="dbglog">boot…</div>`;
+  document.body.appendChild(dbg);
+
+  const logEl = dbg.querySelector("#dbglog");
+  function log(...args){
+    const line = args.map(a => (typeof a === "string" ? a : JSON.stringify(a))).join(" ");
+    logEl.innerHTML += `<div>• ${line}</div>`;
+  }
+
+  window.addEventListener("error", (e) => log("window.error:", e.message));
+  window.addEventListener("unhandledrejection", (e) => log("unhandledrejection:", e?.reason?.message || String(e.reason)));
+
+  // ---------- Firebase ----------
   const firebaseConfig = {
     apiKey: "AIzaSyAi9Sh8cVBpiMPar0-B22od03ZXNp5lBoc",
     authDomain: "shop4me-d2bb1.firebaseapp.com",
@@ -2012,123 +2032,58 @@
   const auth = getAuth(app);
 
   const provider = new GoogleAuthProvider();
-  provider.setCustomParameters({
-    prompt: "select_account"
-  });
+  provider.setCustomParameters({ prompt: "select_account" });
 
-  /* Dropdown elements */
+  // ---------- YOUR ELEMENTS ----------
   const userMenu     = document.getElementById("userMenu");
   const userBtn      = document.getElementById("userBtn");
-  const userDropdown = document.getElementById("userDropdown");
-
   const userAvatar   = document.getElementById("userAvatar");
   const userLabel    = document.getElementById("userLabel");
-
   const userCard     = document.getElementById("userCard");
   const guestCard    = document.getElementById("guestCard");
-
   const userPic      = document.getElementById("userPic");
   const userFull     = document.getElementById("userFull");
   const userEmail    = document.getElementById("userEmail");
-
   const signInBtn    = document.getElementById("signInBtn");
   const signOutBtn   = document.getElementById("signOutBtn");
 
-  /* App pages + subnav */
   const subnav   = document.getElementById("subnav");
   const tabHome  = document.getElementById("tabHome");
   const tabUser  = document.getElementById("tabUser");
   const appHome  = document.getElementById("appHome");
   const appUser  = document.getElementById("appUser");
 
-  /* User page fields */
   const userPagePic   = document.getElementById("userPagePic");
   const userPageName  = document.getElementById("userPageName");
   const userPageEmail = document.getElementById("userPageEmail");
-
-  /* Helpers */
-  const isMobileUA = () => /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
   function setUserMenu(open){
     if(!userMenu || !userBtn) return;
     userMenu.classList.toggle("open", open);
     userBtn.setAttribute("aria-expanded", open ? "true" : "false");
   }
-
   userBtn?.addEventListener("click", (e) => {
     e.stopPropagation();
     setUserMenu(!userMenu.classList.contains("open"));
   });
-
   document.addEventListener("click", (e) => {
     if(!userMenu?.classList.contains("open")) return;
-    const within = userMenu.contains(e.target);
-    if(!within) setUserMenu(false);
+    if(!userMenu.contains(e.target)) setUserMenu(false);
   });
-
   document.addEventListener("keydown", (e) => {
     if(e.key === "Escape") setUserMenu(false);
   });
 
-  async function doSignIn(){
-    try{
-      // Make auth survive redirect on mobile (especially iOS Safari)
-      await setPersistence(auth, browserLocalPersistence);
-
-      if (isMobileUA()) {
-        await signInWithRedirect(auth, provider);
-      } else {
-        await signInWithPopup(auth, provider);
-      }
-    } catch (e){
-      console.error("Sign-in error:", e);
-      alert(e?.message || "Sign-in error");
-    }
-  }
-
-  async function doSignOut(){
-    try{
-      await signOut(auth);
-      setUserMenu(false);
-    } catch(e){
-      console.error("Sign-out error:", e);
-      alert(e?.message || "Sign-out error");
-    }
-  }
-
-  signInBtn?.addEventListener("click", doSignIn);
-  signOutBtn?.addEventListener("click", doSignOut);
-
-  // IMPORTANT: finish mobile redirect sign-in safely (no top-level await)
-  (async () => {
-    try {
-      await setPersistence(auth, browserLocalPersistence);
-
-      const res = await getRedirectResult(auth);
-      if (res?.user) {
-        console.log("✅ Redirect sign-in success:", res.user.email);
-      } else {
-        console.log("ℹ️ No redirect result (normal if not just returned).");
-      }
-    } catch (e) {
-      // DO NOT swallow this: this is what tells us why mobile fails
-      console.error("❌ Redirect result error:", e?.code, e?.message, e);
-      alert(`Login redirect failed: ${e?.code || ""}\n${e?.message || ""}`);
-    }
-  })();
-
   function setSignedOutUI(){
-    if (userAvatar) {
+    if(userAvatar){
       userAvatar.innerHTML = `
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Z"/>
-        </svg>
-      `;
+        </svg>`;
     }
-    if (userLabel) userLabel.textContent = "User";
-
-    if (userCard)  userCard.style.display  = "none";
-    if (guestCard) guestCard.style.display = "block";
+    if(userLabel) userLabel.textContent = "User";
+    if(userCard)  userCard.style.display  = "none";
+    if(guestCard) guestCard.style.display = "block";
   }
 
   function setSignedInUI(user){
@@ -2136,51 +2091,103 @@
     const email = user?.email || "";
     const photo = user?.photoURL || "";
 
-    if (userAvatar) {
-      userAvatar.innerHTML = photo
-        ? `<img src="${photo}" alt="" />`
-        : `
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Z"/>
-          </svg>
-        `;
+    if(userAvatar){
+      userAvatar.innerHTML = photo ? `<img src="${photo}" alt="" />` : `
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Z"/>
+        </svg>`;
     }
-
-    if (userLabel) userLabel.textContent = (name.split(" ")[0] || "User");
-
-    if (userPic) {
+    if(userLabel) userLabel.textContent = (name.split(" ")[0] || "User");
+    if(userPic){
       userPic.src = photo || "";
       userPic.style.display = photo ? "block" : "none";
     }
+    if(userFull)  userFull.textContent  = name;
+    if(userEmail) userEmail.textContent = email;
 
-    if (userFull)  userFull.textContent  = name;
-    if (userEmail) userEmail.textContent = email;
-
-    if (guestCard) guestCard.style.display = "none";
-    if (userCard)  userCard.style.display  = "block";
+    if(guestCard) guestCard.style.display = "none";
+    if(userCard)  userCard.style.display  = "block";
   }
 
   function setActiveTab(which){
     const isHome = which === "home";
-
     tabHome?.classList.toggle("is-active", isHome);
     tabUser?.classList.toggle("is-active", !isHome);
-
     tabHome?.setAttribute("aria-selected", isHome ? "true" : "false");
     tabUser?.setAttribute("aria-selected", !isHome ? "true" : "false");
-
     if(appHome) appHome.hidden = !isHome;
     if(appUser) appUser.hidden = isHome;
   }
-
   tabHome?.addEventListener("click", () => setActiveTab("home"));
   tabUser?.addEventListener("click", () => setActiveTab("user"));
 
-  // React to auth state
+  // ---------- Key: Persist + Redirect result completion ----------
+  await setPersistence(auth, browserLocalPersistence);
+  log("URL:", location.href);
+  log("UA:", navigator.userAgent);
+
+  // Track whether we started a redirect
+  const REDIRECT_FLAG = "s4m_redirect_started";
+  const redirectStarted = localStorage.getItem(REDIRECT_FLAG) === "1";
+  log("redirectStarted flag:", redirectStarted);
+
+  // Finish redirect if returning from firebase handler
+  try{
+    const res = await getRedirectResult(auth);
+    log("getRedirectResult:", res ? "HAS_RESULT" : "null");
+    if(res?.user){
+      log("redirect user:", res.user.email || "no-email");
+    }
+    localStorage.removeItem(REDIRECT_FLAG);
+  }catch(e){
+    log("getRedirectResult ERROR:", e.code, e.message);
+    localStorage.removeItem(REDIRECT_FLAG);
+  }
+
+  // ---------- Sign-in: POPUP first, fallback to redirect ----------
+  async function doSignIn(){
+    try{
+      log("Sign-in clicked");
+
+      // try popup first (often works better on mobile than redirect-state restoring)
+      try{
+        const r = await signInWithPopup(auth, provider);
+        log("popup success:", r?.user?.email || "no-email");
+        return;
+      }catch(popupErr){
+        log("popup failed:", popupErr?.code || "", popupErr?.message || "");
+
+        // fallback to redirect
+        localStorage.setItem(REDIRECT_FLAG, "1");
+        log("falling back to redirect…");
+        await signInWithRedirect(auth, provider);
+      }
+    }catch(e){
+      log("doSignIn ERROR:", e.code, e.message);
+      alert(e?.message || "Sign-in error");
+    }
+  }
+
+  async function doSignOut(){
+    try{
+      await signOut(auth);
+      log("signed out");
+      setUserMenu(false);
+    }catch(e){
+      log("signOut ERROR:", e.code, e.message);
+      alert(e?.message || "Sign-out error");
+    }
+  }
+
+  signInBtn?.addEventListener("click", doSignIn);
+  signOutBtn?.addEventListener("click", doSignOut);
+
+  // ---------- Auth state ----------
   onAuthStateChanged(auth, (user) => {
+    log("onAuthStateChanged:", user ? "SIGNED_IN" : "SIGNED_OUT");
+
     if(user){
       setSignedInUI(user);
-
       if(subnav) subnav.hidden = false;
 
       const name  = user?.displayName || "User";
@@ -2199,12 +2206,16 @@
           userPagePic.style.display = "none";
         }
       }
-
       setActiveTab("home");
-    } else {
+    }else{
       setSignedOutUI();
       if(subnav) subnav.hidden = true;
       setActiveTab("home");
+
+      // If we KNOW we tried redirect and came back, but still signed out:
+      if(localStorage.getItem(REDIRECT_FLAG) === "1"){
+        log("⚠️ Came back from redirect but still signed out => storage/cookies blocked OR domain mismatch.");
+      }
     }
   });
 </script>
