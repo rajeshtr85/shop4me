@@ -1120,6 +1120,61 @@
       font-size:13px;
     }
 
+    /* ✅ NEW: Affiliate strip generator */
+    .affGrid{
+      margin-top:14px;
+      display:grid;
+      gap:12px;
+    }
+    .affField{
+      border:1px solid rgba(15,23,42,0.10);
+      background:rgba(255,255,255,0.92);
+      border-radius:18px;
+      padding:12px;
+      box-shadow:var(--shadow-xs);
+    }
+    .affLabel{
+      display:block;
+      font-size:13px;
+      font-weight:900;
+      letter-spacing:-0.01em;
+      color:rgba(2,6,23,0.86);
+      margin:0 0 8px;
+    }
+    .affHint{
+      margin-top:8px;
+      font-size:12.5px;
+      color:rgba(82,88,102,0.95);
+    }
+    .affActions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .affPreview{
+      border:1px dashed rgba(15,23,42,0.20);
+      border-radius:16px;
+      padding:12px;
+      background:rgba(255,255,255,0.70);
+      overflow:hidden;
+    }
+    .affEmpty{
+      font-size:13px;
+      color:var(--muted);
+      font-weight:800;
+    }
+    .affWarn{
+      margin-top:10px;
+      font-size:12.5px;
+      color:rgba(82,88,102,0.95);
+    }
+    .affError{
+      margin-top:10px;
+      font-size:12.5px;
+      color:rgba(220,38,38,0.95);
+      font-weight:900;
+    }
+
     /* ✅ NEW: WELCOME HEARTBEAT TOAST (Rajesh only) */
     .welcomeToast{
       position: fixed;
@@ -1718,6 +1773,50 @@
             <div class="userBlankText">This space is reserved for future user features.</div>
           </div>
         </div>
+
+        <!-- ✅ NEW: Affiliate strip generator card -->
+        <div class="card panel col12 reveal">
+          <div class="eyebrow" style="margin-bottom:10px;">Affiliate Tool</div>
+          <h3 style="margin:0;font-size:16px;font-weight:950;letter-spacing:-0.01em;">Generate Amazon Product Strip</h3>
+          <p style="margin:10px 0 0;color:var(--muted);font-size:13px;">
+            Paste an Amazon product URL → we extract ASIN → generate your affiliate link + strip HTML (no price/images).
+          </p>
+
+          <div class="affGrid">
+            <div class="affField">
+              <label class="affLabel" for="affUrl">Amazon Product URL</label>
+              <input id="affUrl" type="text" placeholder="https://www.amazon.in/dp/B0XXXXXXX" />
+              <div class="affHint">We’ll auto-extract ASIN from /dp/ASIN or /gp/product/ASIN.</div>
+            </div>
+
+            <div class="affField">
+              <label class="affLabel" for="affTitle">Product title (optional)</label>
+              <input id="affTitle" type="text" placeholder="e.g., Apple AirPods Pro (2nd Gen)" />
+              <div class="affHint">Used only for display text in the strip.</div>
+            </div>
+
+            <div class="affActions">
+              <button class="btn primary" type="button" id="affGenerateBtn">Generate Strip</button>
+              <button class="btn" type="button" id="affCopyBtn">Copy HTML</button>
+            </div>
+
+            <div class="affField">
+              <div class="affLabel">Preview</div>
+              <div class="affPreview" id="affPreview">
+                <div class="affEmpty">Your product strip preview will appear here.</div>
+              </div>
+              <div class="affWarn">
+                Tip: For compliance + accuracy, avoid showing price/ratings unless you use Amazon’s approved widgets/API.
+              </div>
+            </div>
+
+            <div class="affField">
+              <label class="affLabel" for="affHtml">HTML snippet</label>
+              <textarea id="affHtml" rows="7" readonly placeholder="Generated HTML will appear here..."></textarea>
+              <div class="affError" id="affError" style="display:none;"></div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   </main>
@@ -2023,6 +2122,118 @@
     const userPagePic   = document.getElementById("userPagePic");
     const userPageName  = document.getElementById("userPageName");
     const userPageEmail = document.getElementById("userPageEmail");
+
+    // ✅ NEW: Affiliate generator elements
+    const AFF_TAG = "shop4me0e-21";
+    const affUrlInput    = document.getElementById("affUrl");
+    const affTitleInput  = document.getElementById("affTitle");
+    const affGenerateBtn = document.getElementById("affGenerateBtn");
+    const affCopyBtn     = document.getElementById("affCopyBtn");
+    const affPreview     = document.getElementById("affPreview");
+    const affHtml        = document.getElementById("affHtml");
+    const affError       = document.getElementById("affError");
+
+    function showAffError(msg){
+      if(!affError) return;
+      affError.textContent = msg || "";
+      affError.style.display = msg ? "block" : "none";
+    }
+
+    function extractAsin(urlStr){
+      const m1 = urlStr.match(/\/(?:dp|gp\/product|product)\/([A-Z0-9]{10})(?:[/?]|$)/i);
+      if(m1?.[1]) return m1[1].toUpperCase();
+
+      const m2 = urlStr.match(/([A-Z0-9]{10})(?:[/?]|$)/i);
+      if(m2?.[1]) return m2[1].toUpperCase();
+
+      return "";
+    }
+
+    function buildAffiliateUrl(asin){
+      return `https://www.amazon.in/dp/${asin}?tag=${encodeURIComponent(AFF_TAG)}`;
+    }
+
+    function buildStripHtml({ title, affiliateUrl }){
+      const safeTitle = (title || "View product on Amazon")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+
+      return `
+<div style="border:1px solid rgba(15,23,42,0.10);border-radius:14px;padding:14px;display:flex;gap:12px;align-items:center;max-width:560px;background:rgba(255,255,255,0.92);box-shadow:0 1px 0 rgba(2,6,23,0.03);">
+  <div style="flex:1;min-width:0;">
+    <div style="font-weight:900;font-size:14px;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${safeTitle}</div>
+    <div style="margin-top:6px;font-size:12.5px;color:rgba(82,88,102,0.95);">As an Amazon Associate I earn from qualifying purchases.</div>
+  </div>
+
+  <a href="${affiliateUrl}"
+     target="_blank"
+     rel="nofollow sponsored noopener"
+     style="display:inline-flex;align-items:center;justify-content:center;height:40px;padding:0 14px;border-radius:12px;background:rgba(2,6,23,0.94);color:#fff;text-decoration:none;font-weight:900;font-size:13px;white-space:nowrap;">
+    View on Amazon
+  </a>
+</div>`.trim();
+    }
+
+    function renderPreview(html){
+      if(!affPreview) return;
+      affPreview.innerHTML = html;
+    }
+
+    function generateStrip(){
+      showAffError("");
+
+      const rawUrl = (affUrlInput?.value || "").trim();
+      const title = (affTitleInput?.value || "").trim();
+
+      if(!rawUrl){
+        showAffError("Please paste an Amazon product URL.");
+        return;
+      }
+
+      let urlStr = rawUrl;
+      if(!/^https?:\/\//i.test(urlStr)) urlStr = "https://" + urlStr;
+
+      const asin = extractAsin(urlStr);
+      if(!asin){
+        showAffError("Could not detect ASIN. Please use a URL containing /dp/ASIN or /gp/product/ASIN.");
+        return;
+      }
+
+      const affiliateUrl = buildAffiliateUrl(asin);
+      const html = buildStripHtml({
+        title: title || `Amazon Product (${asin})`,
+        affiliateUrl
+      });
+
+      if(affHtml) affHtml.value = html;
+      renderPreview(html);
+    }
+
+    async function copyHtml(){
+      showAffError("");
+      const text = (affHtml?.value || "").trim();
+      if(!text){
+        showAffError("Nothing to copy yet — generate the strip first.");
+        return;
+      }
+
+      try{
+        await navigator.clipboard.writeText(text);
+        const prev = affCopyBtn?.textContent || "Copy HTML";
+        if(affCopyBtn){
+          affCopyBtn.textContent = "Copied ✅";
+          setTimeout(() => (affCopyBtn.textContent = prev), 900);
+        }
+      }catch(_){
+        showAffError("Copy failed (browser blocked clipboard). Select the HTML manually and copy.");
+      }
+    }
+
+    affGenerateBtn?.addEventListener("click", generateStrip);
+    affCopyBtn?.addEventListener("click", copyHtml);
+    affUrlInput?.addEventListener("keydown", (e) => {
+      if(e.key === "Enter") generateStrip();
+    });
 
     // ✅ NEW: Welcome toast elements
     const welcomeToast = document.getElementById("welcomeToast");
