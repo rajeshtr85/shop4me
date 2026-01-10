@@ -1065,6 +1065,107 @@
   margin-top:14px;
   width:100%;
 }
+
+/* -------------------- SUB MENUBAR (tabs) -------------------- */
+.subnav{
+  position:sticky;
+  top:92px; /* header height-ish; adjust if needed */
+  z-index:45;
+  background:linear-gradient(to bottom, rgba(255,255,255,0.92), rgba(255,255,255,0.72));
+  backdrop-filter: blur(14px);
+  border-bottom:1px solid var(--border);
+}
+
+@media (min-width: 980px){
+  .subnav{ top:96px; }
+}
+
+.subnav-inner{
+  display:flex;
+  gap:10px;
+  padding:10px var(--pad);
+}
+
+.subtab{
+  height:40px;
+  padding:0 14px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,0.90);
+  box-shadow:var(--shadow-xs);
+  font-weight:900;
+  font-size:13px;
+  color:rgba(2,6,23,0.86);
+  cursor:pointer;
+  transition:transform .25s var(--ease), box-shadow .25s var(--ease), background .25s var(--ease);
+}
+
+.subtab:hover{
+  transform:translateY(-1px);
+  box-shadow:var(--shadow-sm);
+  background:rgba(255,255,255,0.98);
+}
+
+.subtab.is-active{
+  background:rgba(2,6,23,0.94);
+  border-color:rgba(2,6,23,0.94);
+  color:#fff;
+}
+
+/* -------------------- USER PAGE UI -------------------- */
+.userPageTop{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.userPagePic{
+  width:64px;
+  height:64px;
+  border-radius:18px;
+  border:1px solid var(--border);
+  background:rgba(2,6,23,0.06);
+  object-fit:cover;
+  display:none;
+}
+
+.userPageMeta{ min-width:0; }
+.userPageName{
+  font-weight:950;
+  letter-spacing:-0.02em;
+  font-size:16px;
+  color:rgba(2,6,23,0.92);
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.userPageEmail{
+  margin-top:4px;
+  font-size:13px;
+  color:rgba(82,88,102,0.95);
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.userBlank{
+  border:1px dashed rgba(15,23,42,0.20);
+  border-radius:18px;
+  padding:16px;
+  background:rgba(255,255,255,0.70);
+}
+
+.userBlankTitle{
+  font-weight:950;
+  font-size:14px;
+  letter-spacing:-0.01em;
+}
+
+.userBlankText{
+  margin-top:6px;
+  color:var(--muted);
+  font-size:13px;
+}
     
   </style>
 </head>
@@ -1154,8 +1255,20 @@
     </div>
   </header>
 
+  <!-- Sub menubar (tabs) — visible only after login -->
+  <div class="subnav" id="subnav" hidden>
+    <div class="wrap subnav-inner" role="tablist" aria-label="App pages">
+      <button class="subtab is-active" id="tabHome" role="tab" aria-selected="true" aria-controls="appHome" type="button">
+        Home
+      </button>
+      <button class="subtab" id="tabUser" role="tab" aria-selected="false" aria-controls="appUser" type="button">
+        User
+      </button>
+    </div>
+  </div>
+
   
-  <main class="wrap">
+  <main class="wrap" id="appHome" role="tabpanel" aria-labelledby="tabHome">
     <!-- HERO -->
     <section class="hero" id="home">
       <h1 class="reveal">A premium shopping concierge for better deals — and less stress.</h1>
@@ -1576,6 +1689,35 @@
     </section>
   </main>
 
+  <!-- USER PAGE (visible only after login, content for now: user details + blank area) -->
+  <main class="wrap" id="appUser" role="tabpanel" aria-labelledby="tabUser" hidden>
+    <section class="section">
+      <div class="eyebrow reveal">User</div>
+      <h2 class="h2 reveal delay-1">Your account</h2>
+      <p class="lead reveal delay-2">User details are shown below. More content will be added later.</p>
+
+      <div class="grid">
+        <div class="card panel col12 reveal">
+          <div class="userPageTop">
+            <img class="userPagePic" id="userPagePic" alt="User photo" />
+            <div class="userPageMeta">
+              <div class="userPageName" id="userPageName">—</div>
+              <div class="userPageEmail" id="userPageEmail">—</div>
+            </div>
+          </div>
+
+          <div class="userDivider" style="margin:16px 0;"></div>
+
+          <!-- Blank area for future -->
+          <div class="userBlank">
+            <div class="userBlankTitle">Coming soon</div>
+            <div class="userBlankText">This space is reserved for future user features.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
   <footer>
      <div class="wrap footer-row">
       <div class="footer-left">© 2026 Shop4Me</div>
@@ -1886,6 +2028,18 @@
   const signInBtn    = document.getElementById("signInBtn");
   const signOutBtn   = document.getElementById("signOutBtn");
 
+  /* App pages + subnav */
+  const subnav   = document.getElementById("subnav");
+  const tabHome  = document.getElementById("tabHome");
+  const tabUser  = document.getElementById("tabUser");
+  const appHome  = document.getElementById("appHome");
+  const appUser  = document.getElementById("appUser");
+
+  /* User page fields */
+  const userPagePic   = document.getElementById("userPagePic");
+  const userPageName  = document.getElementById("userPageName");
+  const userPageEmail = document.getElementById("userPageEmail");
+
   /* Dropdown open/close */
   function setUserMenu(open){
     if(!userMenu || !userBtn) return;
@@ -1976,10 +2130,58 @@
     userCard.style.display = "block";
   }
 
+  /* Tabs */
+  function setActiveTab(which){
+    const isHome = which === "home";
+
+    tabHome?.classList.toggle("is-active", isHome);
+    tabUser?.classList.toggle("is-active", !isHome);
+
+    tabHome?.setAttribute("aria-selected", isHome ? "true" : "false");
+    tabUser?.setAttribute("aria-selected", !isHome ? "true" : "false");
+
+    if(appHome) appHome.hidden = !isHome;
+    if(appUser) appUser.hidden = isHome;
+  }
+
+  tabHome?.addEventListener("click", () => setActiveTab("home"));
+  tabUser?.addEventListener("click", () => setActiveTab("user"));
+
   /* React to auth state */
   onAuthStateChanged(auth, (user) => {
-    if(user) setSignedInUI(user);
-    else setSignedOutUI();
+    if(user){
+      setSignedInUI(user);
+
+      // show sub menubar (tabs)
+      if(subnav) subnav.hidden = false;
+
+      // fill user page details
+      const name  = user?.displayName || "User";
+      const email = user?.email || "";
+      const photo = user?.photoURL || "";
+
+      if(userPageName)  userPageName.textContent  = name;
+      if(userPageEmail) userPageEmail.textContent = email || "—";
+
+      if(userPagePic){
+        if(photo){
+          userPagePic.src = photo;
+          userPagePic.style.display = "block";
+        }else{
+          userPagePic.removeAttribute("src");
+          userPagePic.style.display = "none";
+        }
+      }
+
+      // default to Home after login
+      setActiveTab("home");
+    }else{
+      setSignedOutUI();
+
+      // hide sub menubar (tabs) + force Home
+      if(subnav) subnav.hidden = true;
+      setActiveTab("home");
+    }
   });
 </script>
 
