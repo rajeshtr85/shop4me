@@ -1992,23 +1992,29 @@
     signInWithRedirect,
     getRedirectResult,
     onAuthStateChanged,
-    signOut
+    signOut,
+    setPersistence,
+    browserLocalPersistence
   } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
-  // ✅ PASTE YOUR firebaseConfig HERE (exactly as you copied)
+  // Firebase config
   const firebaseConfig = {
-  apiKey: "AIzaSyAi9Sh8cVBpiMPar0-B22od03ZXNp5lBoc",
-  authDomain: "shop4me-d2bb1.firebaseapp.com",
-  projectId: "shop4me-d2bb1",
-  storageBucket: "shop4me-d2bb1.firebasestorage.app",
-  messagingSenderId: "469081092222",
-  appId: "1:469081092222:web:66a2f92ec49a6ada6c682f",
-  measurementId: "G-VBSX1QFPHB"
-};
+    apiKey: "AIzaSyAi9Sh8cVBpiMPar0-B22od03ZXNp5lBoc",
+    authDomain: "shop4me-d2bb1.firebaseapp.com",
+    projectId: "shop4me-d2bb1",
+    storageBucket: "shop4me-d2bb1.firebasestorage.app",
+    messagingSenderId: "469081092222",
+    appId: "1:469081092222:web:66a2f92ec49a6ada6c682f",
+    measurementId: "G-VBSX1QFPHB"
+  };
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
+
   const provider = new GoogleAuthProvider();
+  provider.setCustomParameters({
+    prompt: "select_account"
+  });
 
   /* Dropdown elements */
   const userMenu     = document.getElementById("userMenu");
@@ -2040,7 +2046,9 @@
   const userPageName  = document.getElementById("userPageName");
   const userPageEmail = document.getElementById("userPageEmail");
 
-  /* Dropdown open/close */
+  /* Helpers */
+  const isMobileUA = () => /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
   function setUserMenu(open){
     if(!userMenu || !userBtn) return;
     userMenu.classList.toggle("open", open);
@@ -2062,14 +2070,18 @@
     if(e.key === "Escape") setUserMenu(false);
   });
 
-  /* Sign-in/out handlers */
   async function doSignIn(){
     try{
-      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-      if (isMobile) await signInWithRedirect(auth, provider);
-      else await signInWithPopup(auth, provider);
+      // Make auth survive redirect on mobile (especially iOS Safari)
+      await setPersistence(auth, browserLocalPersistence);
+
+      if (isMobileUA()) {
+        await signInWithRedirect(auth, provider);
+      } else {
+        await signInWithPopup(auth, provider);
+      }
     } catch (e){
-      console.error(e);
+      console.error("Sign-in error:", e);
       alert(e?.message || "Sign-in error");
     }
   }
@@ -2079,7 +2091,7 @@
       await signOut(auth);
       setUserMenu(false);
     } catch(e){
-      console.error(e);
+      console.error("Sign-out error:", e);
       alert(e?.message || "Sign-out error");
     }
   }
@@ -2087,21 +2099,36 @@
   signInBtn?.addEventListener("click", doSignIn);
   signOutBtn?.addEventListener("click", doSignOut);
 
-  /* Complete redirect sign-in (mobile) */
-  try { await getRedirectResult(auth); } catch {}
+  // IMPORTANT: finish mobile redirect sign-in safely (no top-level await)
+  (async () => {
+    try {
+      await setPersistence(auth, browserLocalPersistence);
 
-  /* UI updater */
+      const res = await getRedirectResult(auth);
+      if (res?.user) {
+        console.log("✅ Redirect sign-in success:", res.user.email);
+      } else {
+        console.log("ℹ️ No redirect result (normal if not just returned).");
+      }
+    } catch (e) {
+      // DO NOT swallow this: this is what tells us why mobile fails
+      console.error("❌ Redirect result error:", e?.code, e?.message, e);
+      alert(`Login redirect failed: ${e?.code || ""}\n${e?.message || ""}`);
+    }
+  })();
+
   function setSignedOutUI(){
-    // avatar = icon
-    userAvatar.innerHTML = `
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Z"/>
-      </svg>
-    `;
-    userLabel.textContent = "User";
+    if (userAvatar) {
+      userAvatar.innerHTML = `
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Z"/>
+        </svg>
+      `;
+    }
+    if (userLabel) userLabel.textContent = "User";
 
-    userCard.style.display = "none";
-    guestCard.style.display = "block";
+    if (userCard)  userCard.style.display  = "none";
+    if (guestCard) guestCard.style.display = "block";
   }
 
   function setSignedInUI(user){
@@ -2109,28 +2136,30 @@
     const email = user?.email || "";
     const photo = user?.photoURL || "";
 
-    // avatar = photo
-    userAvatar.innerHTML = photo
-      ? `<img src="${photo}" alt="" />`
-      : `
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Z"/>
-        </svg>
-      `;
+    if (userAvatar) {
+      userAvatar.innerHTML = photo
+        ? `<img src="${photo}" alt="" />`
+        : `
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Z"/>
+          </svg>
+        `;
+    }
 
-    userLabel.textContent = (name.split(" ")[0] || "User");
+    if (userLabel) userLabel.textContent = (name.split(" ")[0] || "User");
 
-    userPic.src = photo || "";
-    userPic.style.display = photo ? "block" : "none";
+    if (userPic) {
+      userPic.src = photo || "";
+      userPic.style.display = photo ? "block" : "none";
+    }
 
-    userFull.textContent = name;
-    userEmail.textContent = email;
+    if (userFull)  userFull.textContent  = name;
+    if (userEmail) userEmail.textContent = email;
 
-    guestCard.style.display = "none";
-    userCard.style.display = "block";
+    if (guestCard) guestCard.style.display = "none";
+    if (userCard)  userCard.style.display  = "block";
   }
 
-  /* Tabs */
   function setActiveTab(which){
     const isHome = which === "home";
 
@@ -2147,15 +2176,13 @@
   tabHome?.addEventListener("click", () => setActiveTab("home"));
   tabUser?.addEventListener("click", () => setActiveTab("user"));
 
-  /* React to auth state */
+  // React to auth state
   onAuthStateChanged(auth, (user) => {
     if(user){
       setSignedInUI(user);
 
-      // show sub menubar (tabs)
       if(subnav) subnav.hidden = false;
 
-      // fill user page details
       const name  = user?.displayName || "User";
       const email = user?.email || "";
       const photo = user?.photoURL || "";
@@ -2173,12 +2200,9 @@
         }
       }
 
-      // default to Home after login
       setActiveTab("home");
-    }else{
+    } else {
       setSignedOutUI();
-
-      // hide sub menubar (tabs) + force Home
       if(subnav) subnav.hidden = true;
       setActiveTab("home");
     }
