@@ -1997,26 +1997,6 @@
     browserLocalPersistence
   } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
-  // ---------- Debug overlay (visible on mobile) ----------
-  const dbg = document.createElement("div");
-  dbg.style.cssText = `
-    position:fixed; z-index:999999; left:10px; right:10px; bottom:10px;
-    background:rgba(0,0,0,.85); color:#fff; padding:10px 12px; border-radius:12px;
-    font:12px/1.35 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial;
-    max-height:40vh; overflow:auto;
-  `;
-  dbg.innerHTML = `<b>Auth debug</b><div id="dbglog">boot…</div>`;
-  document.body.appendChild(dbg);
-
-  const logEl = dbg.querySelector("#dbglog");
-  function log(...args){
-    const line = args.map(a => (typeof a === "string" ? a : JSON.stringify(a))).join(" ");
-    logEl.innerHTML += `<div>• ${line}</div>`;
-  }
-
-  window.addEventListener("error", (e) => log("window.error:", e.message));
-  window.addEventListener("unhandledrejection", (e) => log("unhandledrejection:", e?.reason?.message || String(e.reason)));
-
   // ---------- Firebase ----------
   const firebaseConfig = {
     apiKey: "AIzaSyAi9Sh8cVBpiMPar0-B22od03ZXNp5lBoc",
@@ -2121,49 +2101,35 @@
   tabHome?.addEventListener("click", () => setActiveTab("home"));
   tabUser?.addEventListener("click", () => setActiveTab("user"));
 
-  // ---------- Key: Persist + Redirect result completion ----------
-  await setPersistence(auth, browserLocalPersistence);
-  log("URL:", location.href);
-  log("UA:", navigator.userAgent);
+  // ---------- Persist + Redirect result completion ----------
+  try {
+    await setPersistence(auth, browserLocalPersistence);
+  } catch (_) {}
 
   // Track whether we started a redirect
   const REDIRECT_FLAG = "s4m_redirect_started";
-  const redirectStarted = localStorage.getItem(REDIRECT_FLAG) === "1";
-  log("redirectStarted flag:", redirectStarted);
 
   // Finish redirect if returning from firebase handler
   try{
-    const res = await getRedirectResult(auth);
-    log("getRedirectResult:", res ? "HAS_RESULT" : "null");
-    if(res?.user){
-      log("redirect user:", res.user.email || "no-email");
-    }
+    await getRedirectResult(auth);
     localStorage.removeItem(REDIRECT_FLAG);
-  }catch(e){
-    log("getRedirectResult ERROR:", e.code, e.message);
+  }catch(_){
     localStorage.removeItem(REDIRECT_FLAG);
   }
 
   // ---------- Sign-in: POPUP first, fallback to redirect ----------
   async function doSignIn(){
     try{
-      log("Sign-in clicked");
-
-      // try popup first (often works better on mobile than redirect-state restoring)
+      // try popup first
       try{
-        const r = await signInWithPopup(auth, provider);
-        log("popup success:", r?.user?.email || "no-email");
+        await signInWithPopup(auth, provider);
         return;
-      }catch(popupErr){
-        log("popup failed:", popupErr?.code || "", popupErr?.message || "");
-
+      }catch(_){
         // fallback to redirect
         localStorage.setItem(REDIRECT_FLAG, "1");
-        log("falling back to redirect…");
         await signInWithRedirect(auth, provider);
       }
     }catch(e){
-      log("doSignIn ERROR:", e.code, e.message);
       alert(e?.message || "Sign-in error");
     }
   }
@@ -2171,10 +2137,8 @@
   async function doSignOut(){
     try{
       await signOut(auth);
-      log("signed out");
       setUserMenu(false);
     }catch(e){
-      log("signOut ERROR:", e.code, e.message);
       alert(e?.message || "Sign-out error");
     }
   }
@@ -2184,8 +2148,6 @@
 
   // ---------- Auth state ----------
   onAuthStateChanged(auth, (user) => {
-    log("onAuthStateChanged:", user ? "SIGNED_IN" : "SIGNED_OUT");
-
     if(user){
       setSignedInUI(user);
       if(subnav) subnav.hidden = false;
@@ -2211,11 +2173,6 @@
       setSignedOutUI();
       if(subnav) subnav.hidden = true;
       setActiveTab("home");
-
-      // If we KNOW we tried redirect and came back, but still signed out:
-      if(localStorage.getItem(REDIRECT_FLAG) === "1"){
-        log("⚠️ Came back from redirect but still signed out => storage/cookies blocked OR domain mismatch.");
-      }
     }
   });
 </script>
