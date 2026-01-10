@@ -2027,7 +2027,7 @@
     // ✅ NEW: Welcome toast elements
     const welcomeToast = document.getElementById("welcomeToast");
     const welcomeMsg   = document.getElementById("welcomeMsg");
-    const WELCOME_EMAIL = "rajeshtr85@gmail.com";
+    const WELCOME_EMAIL = "nakshathragd.31@gmail.com";
     const WELCOME_FLAG  = "s4m_welcome_shown"; // session-only
 
     function showWelcomeToast(firstName){
@@ -2037,7 +2037,7 @@
       if(sessionStorage.getItem(WELCOME_FLAG) === "1") return;
       sessionStorage.setItem(WELCOME_FLAG, "1");
 
-      welcomeMsg.textContent = `Welcome, ${firstName || "Baby!!!"}!`;
+      welcomeMsg.textContent = `Welcome, ${firstName || "Nakshathra"}!`;
 
       welcomeToast.hidden = false;
       welcomeToast.classList.remove("show");
