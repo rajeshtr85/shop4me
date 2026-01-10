@@ -653,7 +653,7 @@
       transition: transform .45s var(--ease), box-shadow .45s var(--ease);
       align-self: start;
     }
-    .trustCard:hover{ transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+    .trustCard:hover{ transform: translateY(-2px); box-shadow:var(--shadow-sm); }
     .trustTitle{ font-weight: 950; letter-spacing: -0.01em; font-size: 14px; }
     .trustDesc{ margin-top: 10px; color: var(--muted); font-size: 13px; line-height: 1.45; }
 
@@ -1101,26 +1101,7 @@
       white-space:nowrap;
     }
 
-    .userBlank{
-      border:1px dashed rgba(15,23,42,0.20);
-      border-radius:18px;
-      padding:16px;
-      background:rgba(255,255,255,0.70);
-    }
-
-    .userBlankTitle{
-      font-weight:950;
-      font-size:14px;
-      letter-spacing:-0.01em;
-    }
-
-    .userBlankText{
-      margin-top:6px;
-      color:var(--muted);
-      font-size:13px;
-    }
-
-    /* ✅ NEW: Affiliate strip generator */
+    /* ✅ Affiliate strip generator */
     .affGrid{
       margin-top:14px;
       display:grid;
@@ -1754,7 +1735,7 @@
     <section class="section">
       <div class="eyebrow reveal">User</div>
       <h2 class="h2 reveal delay-1">Your account</h2>
-      <p class="lead reveal delay-2">User details are shown below. More content will be added later.</p>
+      <p class="lead reveal delay-2">Your details and tools are shown below.</p>
 
       <div class="grid">
         <div class="card panel col12 reveal">
@@ -1765,49 +1746,45 @@
               <div class="userPageEmail" id="userPageEmail">—</div>
             </div>
           </div>
-
-          <div class="userDivider" style="margin:16px 0;"></div>
-
-          <div class="userBlank">
-            <div class="userBlankTitle">Coming soon</div>
-            <div class="userBlankText">This space is reserved for future user features.</div>
-          </div>
         </div>
 
-        <!-- ✅ NEW: Affiliate strip generator card -->
+        <!-- ✅ Affiliate strip generator card (UPDATED) -->
         <div class="card panel col12 reveal">
           <div class="eyebrow" style="margin-bottom:10px;">Affiliate Tool</div>
           <h3 style="margin:0;font-size:16px;font-weight:950;letter-spacing:-0.01em;">Generate Amazon Product Strip</h3>
           <p style="margin:10px 0 0;color:var(--muted);font-size:13px;">
-            Paste an Amazon product URL → we extract ASIN → generate your affiliate link + strip HTML (no price/images).
+            Paste an Amazon product URL → we extract ASIN → generate your affiliate link (“stripe code”) + HTML snippet.
+            Preview tries to show the product image (best-effort) so you can confirm the ASIN.
           </p>
 
           <div class="affGrid">
             <div class="affField">
               <label class="affLabel" for="affUrl">Amazon Product URL</label>
               <input id="affUrl" type="text" placeholder="https://www.amazon.in/dp/B0XXXXXXX" />
+              <div class="affHint" id="affCreatorHint">Created by: — (sign in required)</div>
               <div class="affHint">We’ll auto-extract ASIN from /dp/ASIN or /gp/product/ASIN.</div>
-            </div>
-
-            <div class="affField">
-              <label class="affLabel" for="affTitle">Product title (optional)</label>
-              <input id="affTitle" type="text" placeholder="e.g., Apple AirPods Pro (2nd Gen)" />
-              <div class="affHint">Used only for display text in the strip.</div>
             </div>
 
             <div class="affActions">
               <button class="btn primary" type="button" id="affGenerateBtn">Generate Strip</button>
+              <button class="btn" type="button" id="affCopyLinkBtn">Copy Stripe Code</button>
               <button class="btn" type="button" id="affCopyBtn">Copy HTML</button>
             </div>
 
             <div class="affField">
               <div class="affLabel">Preview</div>
               <div class="affPreview" id="affPreview">
-                <div class="affEmpty">Your product strip preview will appear here.</div>
+                <div class="affEmpty">Your product preview will appear here.</div>
               </div>
               <div class="affWarn">
-                Tip: For compliance + accuracy, avoid showing price/ratings unless you use Amazon’s approved widgets/API.
+                Tip: The preview image is best-effort (Amazon may block hotlinking). Your copied HTML remains image-free for safer compliance.
               </div>
+            </div>
+
+            <div class="affField">
+              <label class="affLabel" for="affLink">Stripe code (affiliate link)</label>
+              <input id="affLink" type="text" readonly placeholder="Generated affiliate link will appear here..." />
+              <div class="affHint">This includes your Store ID tag (commission tracking). Do not edit the <b>tag=</b> value.</div>
             </div>
 
             <div class="affField">
@@ -1859,7 +1836,7 @@
     </div>
   </footer>
 
-  <!-- ✅ NEW: Welcome Toast (Rajesh only) -->
+  <!-- ✅ Welcome Toast -->
   <div class="welcomeToast" id="welcomeToast" aria-live="polite" aria-atomic="true" hidden>
     <div class="welcomeInner">
       <span class="welcomeHeart" aria-hidden="true">❤</span>
@@ -2123,20 +2100,34 @@
     const userPageName  = document.getElementById("userPageName");
     const userPageEmail = document.getElementById("userPageEmail");
 
-    // ✅ NEW: Affiliate generator elements
+    // ✅ Affiliate generator elements (UPDATED)
     const AFF_TAG = "shop4me0e-21";
-    const affUrlInput    = document.getElementById("affUrl");
-    const affTitleInput  = document.getElementById("affTitle");
-    const affGenerateBtn = document.getElementById("affGenerateBtn");
-    const affCopyBtn     = document.getElementById("affCopyBtn");
-    const affPreview     = document.getElementById("affPreview");
-    const affHtml        = document.getElementById("affHtml");
-    const affError       = document.getElementById("affError");
+    const affUrlInput     = document.getElementById("affUrl");
+    const affGenerateBtn  = document.getElementById("affGenerateBtn");
+    const affCopyBtn      = document.getElementById("affCopyBtn");      // Copy HTML
+    const affCopyLinkBtn  = document.getElementById("affCopyLinkBtn");  // Copy Stripe Code
+    const affPreview      = document.getElementById("affPreview");
+    const affHtml         = document.getElementById("affHtml");
+    const affLink         = document.getElementById("affLink");
+    const affError        = document.getElementById("affError");
+    const affCreatorHint  = document.getElementById("affCreatorHint");
+
+    // Track signed-in user for "created by" reference
+    let __s4mCreatorEmail = "";
+    let __s4mCreatorName  = "";
 
     function showAffError(msg){
       if(!affError) return;
       affError.textContent = msg || "";
       affError.style.display = msg ? "block" : "none";
+    }
+
+    function escapeAttr(s){
+      return String(s || "")
+        .replace(/&/g, "&amp;")
+        .replace(/"/g, "&quot;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
     }
 
     function extractAsin(urlStr){
@@ -2150,22 +2141,32 @@
     }
 
     function buildAffiliateUrl(asin){
+      // ✅ Keep the Store ID tag intact for commission tracking
       return `https://www.amazon.in/dp/${asin}?tag=${encodeURIComponent(AFF_TAG)}`;
     }
 
-    function buildStripHtml({ title, affiliateUrl }){
-      const safeTitle = (title || "View product on Amazon")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
+    function buildStripHtml({ asin, affiliateUrl, createdByEmail }){
+      // ✅ Add creator reference as metadata (does not alter tag mapping)
+      const createdAt = new Date().toISOString();
+      const createdBy = escapeAttr(createdByEmail || "");
 
       return `
-<div style="border:1px solid rgba(15,23,42,0.10);border-radius:14px;padding:14px;display:flex;gap:12px;align-items:center;max-width:560px;background:rgba(255,255,255,0.92);box-shadow:0 1px 0 rgba(2,6,23,0.03);">
+<!-- S4M_STRIPE asin=${asin} created_by=${createdBy} created_at=${createdAt} -->
+<div data-s4m-asin="${escapeAttr(asin)}"
+     data-s4m-created-by="${createdBy}"
+     data-s4m-created-at="${escapeAttr(createdAt)}"
+     data-s4m-aff-tag="${escapeAttr(AFF_TAG)}"
+     style="border:1px solid rgba(15,23,42,0.10);border-radius:14px;padding:14px;display:flex;gap:12px;align-items:center;max-width:560px;background:rgba(255,255,255,0.92);box-shadow:0 1px 0 rgba(2,6,23,0.03);">
   <div style="flex:1;min-width:0;">
-    <div style="font-weight:900;font-size:14px;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${safeTitle}</div>
-    <div style="margin-top:6px;font-size:12.5px;color:rgba(82,88,102,0.95);">As an Amazon Associate I earn from qualifying purchases.</div>
+    <div style="font-weight:900;font-size:14px;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+      Amazon product (${escapeAttr(asin)})
+    </div>
+    <div style="margin-top:6px;font-size:12.5px;color:rgba(82,88,102,0.95);">
+      As an Amazon Associate I earn from qualifying purchases.
+    </div>
   </div>
 
-  <a href="${affiliateUrl}"
+  <a href="${escapeAttr(affiliateUrl)}"
      target="_blank"
      rel="nofollow sponsored noopener"
      style="display:inline-flex;align-items:center;justify-content:center;height:40px;padding:0 14px;border-radius:12px;background:rgba(2,6,23,0.94);color:#fff;text-decoration:none;font-weight:900;font-size:13px;white-space:nowrap;">
@@ -2174,17 +2175,68 @@
 </div>`.trim();
     }
 
-    function renderPreview(html){
+    function renderPreviewCard({ asin, affiliateUrl }){
       if(!affPreview) return;
-      affPreview.innerHTML = html;
+
+      // Best-effort image by ASIN (may fail due to hotlinking / missing asset)
+      const imgUrl = `https://m.media-amazon.com/images/P/${asin}.01._SX240_.jpg`;
+
+      affPreview.innerHTML = `
+        <div style="display:flex; gap:12px; align-items:center;">
+          <div id="affImgWrap"
+               style="width:72px;height:72px;border-radius:16px;border:1px solid rgba(15,23,42,0.10);background:rgba(2,6,23,0.04);overflow:hidden;flex:0 0 auto;display:flex;align-items:center;justify-content:center;">
+            <img id="affImg"
+                 src="${escapeAttr(imgUrl)}"
+                 alt=""
+                 style="width:100%;height:100%;object-fit:cover;display:block;" />
+          </div>
+
+          <div style="flex:1;min-width:0;">
+            <div style="font-weight:950;font-size:13px;letter-spacing:-0.01em;">ASIN: ${escapeAttr(asin)}</div>
+            <div style="margin-top:6px;font-size:12.5px;color:rgba(82,88,102,0.95);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+              ${escapeAttr(affiliateUrl)}
+            </div>
+            <div style="margin-top:6px;font-size:12.5px;color:rgba(82,88,102,0.95);">
+              Created by: ${escapeAttr(__s4mCreatorEmail || "—")}
+            </div>
+          </div>
+
+          <a href="${escapeAttr(affiliateUrl)}"
+             target="_blank"
+             rel="nofollow sponsored noopener"
+             style="display:inline-flex;align-items:center;justify-content:center;height:40px;padding:0 14px;border-radius:12px;background:rgba(2,6,23,0.94);color:#fff;text-decoration:none;font-weight:900;font-size:13px;white-space:nowrap;">
+            Open
+          </a>
+        </div>
+      `;
+
+      const img = document.getElementById("affImg");
+      img?.addEventListener("error", () => {
+        const wrap = document.getElementById("affImgWrap");
+        if(!wrap) return;
+        wrap.innerHTML = `
+          <div style="padding:8px;text-align:center;font-weight:900;font-size:12px;color:rgba(82,88,102,0.95);">
+            No image
+          </div>`;
+      }, { once:true });
+    }
+
+    function clearOutputs(){
+      showAffError("");
+      if(affHtml) affHtml.value = "";
+      if(affLink) affLink.value = "";
+      if(affPreview) affPreview.innerHTML = `<div class="affEmpty">Your product preview will appear here.</div>`;
     }
 
     function generateStrip(){
       showAffError("");
 
-      const rawUrl = (affUrlInput?.value || "").trim();
-      const title = (affTitleInput?.value || "").trim();
+      if(!__s4mCreatorEmail){
+        showAffError("Please sign in to generate (needed to store 'created by' reference).");
+        return;
+      }
 
+      const rawUrl = (affUrlInput?.value || "").trim();
       if(!rawUrl){
         showAffError("Please paste an Amazon product URL.");
         return;
@@ -2200,13 +2252,40 @@
       }
 
       const affiliateUrl = buildAffiliateUrl(asin);
+
+      // Outputs
+      if(affLink) affLink.value = affiliateUrl;
+
       const html = buildStripHtml({
-        title: title || `Amazon Product (${asin})`,
-        affiliateUrl
+        asin,
+        affiliateUrl,
+        createdByEmail: __s4mCreatorEmail
       });
 
       if(affHtml) affHtml.value = html;
-      renderPreview(html);
+
+      // Preview shows image (best-effort) for confirmation
+      renderPreviewCard({ asin, affiliateUrl });
+    }
+
+    async function copyStripeCode(){
+      showAffError("");
+      const text = (affLink?.value || "").trim();
+      if(!text){
+        showAffError("Nothing to copy yet — generate the strip first.");
+        return;
+      }
+
+      try{
+        await navigator.clipboard.writeText(text);
+        const prev = affCopyLinkBtn?.textContent || "Copy Stripe Code";
+        if(affCopyLinkBtn){
+          affCopyLinkBtn.textContent = "Copied ✅";
+          setTimeout(() => (affCopyLinkBtn.textContent = prev), 900);
+        }
+      }catch(_){
+        showAffError("Copy failed (browser blocked clipboard). Select the link manually and copy.");
+      }
     }
 
     async function copyHtml(){
@@ -2230,12 +2309,13 @@
     }
 
     affGenerateBtn?.addEventListener("click", generateStrip);
+    affCopyLinkBtn?.addEventListener("click", copyStripeCode);
     affCopyBtn?.addEventListener("click", copyHtml);
     affUrlInput?.addEventListener("keydown", (e) => {
       if(e.key === "Enter") generateStrip();
     });
 
-    // ✅ NEW: Welcome toast elements
+    // ✅ Welcome toast elements
     const welcomeToast = document.getElementById("welcomeToast");
     const welcomeMsg   = document.getElementById("welcomeMsg");
     const WELCOME_EMAIL = "nakshathragd.31@gmail.com";
@@ -2305,6 +2385,11 @@
     });
 
     function setSignedOutUI(){
+      __s4mCreatorEmail = "";
+      __s4mCreatorName = "";
+      if(affCreatorHint) affCreatorHint.textContent = "Created by: — (sign in required)";
+      clearOutputs();
+
       if(userAvatar){
         userAvatar.innerHTML = `
           <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -2323,6 +2408,10 @@
       const name  = user?.displayName || "User";
       const email = user?.email || "";
       const photo = user?.photoURL || "";
+
+      __s4mCreatorEmail = email || "";
+      __s4mCreatorName  = name || "";
+      if(affCreatorHint) affCreatorHint.textContent = `Created by: ${email || "—"}`;
 
       if(userAvatar){
         userAvatar.innerHTML = photo ? `<img src="${photo}" alt="" />` : `
@@ -2358,7 +2447,7 @@
         }
       }
 
-      // ✅ NEW: Heartbeat welcome for Rajesh
+      // ✅ Heartbeat welcome
       const emailLower = (email || "").toLowerCase();
       if(emailLower === WELCOME_EMAIL){
         showWelcomeToast(name.split(" ")[0] || "Rajesh");
@@ -2401,7 +2490,7 @@
 
     async function doSignOut(){
       try{
-        // ✅ allow welcome to show again next sign-in (optional but nicer)
+        // allow welcome to show again next sign-in
         sessionStorage.removeItem(WELCOME_FLAG);
 
         await signOut(auth);
