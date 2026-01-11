@@ -2506,8 +2506,10 @@
     // ✅ Welcome toast elements
     const welcomeToast = document.getElementById("welcomeToast");
     const welcomeMsg   = document.getElementById("welcomeMsg");
-    const WELCOME_EMAIL = "nakshathragd.31@gmail.com";
-    const WELCOME_FLAG  = "s4m_welcome_shown"; // session-only
+
+    // ✅ CHANGE: show welcome toast only for Rajesh (email match)
+    const WELCOME_EMAIL = "rajesh.tr@kimbal.io";   // <-- CHANGED
+    const WELCOME_FLAG  = "s4m_welcome_shown";    // session-only
 
     function showWelcomeToast(firstName){
       if(!welcomeToast || !welcomeMsg) return;
@@ -2515,7 +2517,8 @@
       if(sessionStorage.getItem(WELCOME_FLAG) === "1") return;
       sessionStorage.setItem(WELCOME_FLAG, "1");
 
-      welcomeMsg.textContent = `Welcome, ${firstName || "Nakshathra"}!`;
+      // ✅ CHANGE: fallback to "Rajesh"
+      welcomeMsg.textContent = `Welcome, ${firstName || "Rajesh"}!`; // <-- CHANGED
 
       welcomeToast.hidden = false;
       welcomeToast.classList.remove("show");
@@ -2643,10 +2646,10 @@
         }
       }
 
-      // ✅ Heartbeat welcome
+      // ✅ CHANGE: Heartbeat welcome only for Rajesh email, fallback name "Rajesh"
       const emailLower = (email || "").toLowerCase();
       if(emailLower === WELCOME_EMAIL){
-        showWelcomeToast(name.split(" ")[0] || "Rajesh");
+        showWelcomeToast(name.split(" ")[0] || "Rajesh"); // <-- CHANGED (removed wrong fallback)
       }
 
       showHome();
