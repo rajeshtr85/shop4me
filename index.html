@@ -2200,18 +2200,26 @@
       return n;
     }
 
+    // ✅ FIXED: createdAt should only be set once (not overwritten on every sign-in)
     async function upsertUserProfileFromAuth(user){
       const uid = user.uid;
       const ref = doc(db, "users", uid);
+
+      const existing = await getDoc(ref);
+      const now = serverTimestamp();
 
       const base = {
         uid,
         name: user.displayName || "",
         email: user.email || "",
         photoURL: user.photoURL || "",
-        updatedAt: serverTimestamp(),
-        createdAt: serverTimestamp()
+        updatedAt: now
       };
+
+      // only set createdAt when doc does not exist
+      if(!existing.exists()){
+        base.createdAt = now;
+      }
 
       await setDoc(ref, base, { merge: true });
     }
@@ -2506,7 +2514,9 @@
     // ✅ Welcome toast elements
     const welcomeToast = document.getElementById("welcomeToast");
     const welcomeMsg   = document.getElementById("welcomeMsg");
-    const WELCOME_EMAIL = "nakshathragd.31@gmail.com";
+
+    // ✅ FIXED: Rajesh-only email
+    const WELCOME_EMAIL = "rajesh.tr@kimbal.io";
     const WELCOME_FLAG  = "s4m_welcome_shown"; // session-only
 
     function showWelcomeToast(firstName){
@@ -2515,7 +2525,7 @@
       if(sessionStorage.getItem(WELCOME_FLAG) === "1") return;
       sessionStorage.setItem(WELCOME_FLAG, "1");
 
-      welcomeMsg.textContent = `Welcome, ${firstName || "Nakshathra"}!`;
+      welcomeMsg.textContent = `Welcome, ${firstName || "Rajesh"}!`;
 
       welcomeToast.hidden = false;
       welcomeToast.classList.remove("show");
@@ -2643,7 +2653,7 @@
         }
       }
 
-      // ✅ Heartbeat welcome
+      // ✅ Heartbeat welcome (Rajesh only)
       const emailLower = (email || "").toLowerCase();
       if(emailLower === WELCOME_EMAIL){
         showWelcomeToast(name.split(" ")[0] || "Rajesh");
@@ -2687,6 +2697,7 @@
     async function doSignOut(){
       try{
         sessionStorage.removeItem(WELCOME_FLAG);
+        localStorage.removeItem(REDIRECT_FLAG);
         await signOut(auth);
         setUserMenu(false);
         showHome();
