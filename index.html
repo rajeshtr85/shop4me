@@ -1826,9 +1826,9 @@
             </div>
 
             <div class="affField">
-              <label class="affLabel" for="affLink">Stripe code (affiliate link)</label>
+              <label class="affLabel" for="affLink">Stripe code (tracking link)</label>
               <input id="affLink" type="text" readonly placeholder="Generated affiliate link will appear here..." />
-              <div class="affHint">This includes your Store ID tag (commission tracking). Do not edit the <b>tag=</b> value.</div>
+              <div class="affHint">This is a Shop4Me tracking link. It redirects to your affiliate URL and logs clicks (so we can map sales later).</div>
             </div>
 
             <div class="affField">
@@ -2166,6 +2166,25 @@
 
     // ✅ Affiliate generator elements (UPDATED)
     const AFF_TAG = "shop4me0e-21";
+    // ✅ Click-tracking redirect (Firebase Hosting rewrite -> Cloud Function)
+    // The tracking link looks like: https://shop4me.in/go?to=<encodedAffiliateUrl>&user=<creatorUid>
+    // 'user' is used to attribute clicks/sales to the micro-affiliate (creator).
+    const SITE_ORIGIN = window.location.origin;
+
+    function buildAmazonAffiliateUrl(asin, subtag){
+      const u = new URL(`https://www.amazon.in/dp/${asin}`);
+      u.searchParams.set("tag", AFF_TAG);
+      // Amazon sub-tagging varies by locale; this param is a best-effort.
+      if(subtag) u.searchParams.set("ascsubtag", subtag);
+      return u.toString();
+    }
+
+    function buildTrackingUrl(destinationUrl, userId){
+      const to = encodeURIComponent(destinationUrl);
+      const user = encodeURIComponent(userId || "");
+      return `${SITE_ORIGIN}/go?to=${to}&user=${user}`;
+    }
+
     const affUrlInput     = document.getElementById("affUrl");
     const affGenerateBtn  = document.getElementById("affGenerateBtn");
     const affCopyBtn      = document.getElementById("affCopyBtn");      // Copy HTML
@@ -2179,6 +2198,7 @@
     // Track signed-in user for "created by" reference
     let __s4mCreatorEmail = "";
     let __s4mCreatorName  = "";
+    let __s4mCreatorUid   = "";
 
     // ---------- Firestore Profile helpers ----------
     function setProfileStatus(msg, isError=false){
@@ -2335,19 +2355,22 @@
     }
 
     function buildAffiliateUrl(asin){
-      return `https://www.amazon.in/dp/${asin}?tag=${encodeURIComponent(AFF_TAG)}`;
+      return buildAmazonAffiliateUrl(asin, __s4mCreatorUid);
     }
 
-    function buildStripHtml({ asin, affiliateUrl, createdByEmail }){
+    function buildStripHtml({ asin, trackingUrl, destinationUrl, createdByEmail, createdByUid }){
       const createdAt = new Date().toISOString();
       const createdBy = escapeAttr(createdByEmail || "");
+      const createdUid = escapeAttr(createdByUid || "");
 
       return `
-<!-- S4M_STRIPE asin=${asin} created_by=${createdBy} created_at=${createdAt} -->
+<!-- S4M_STRIPE asin=${asin} created_by=${createdBy} created_uid=${createdUid} created_at=${createdAt} dest=${escapeAttr(destinationUrl)} -->
 <div data-s4m-asin="${escapeAttr(asin)}"
      data-s4m-created-by="${createdBy}"
+     data-s4m-created-uid="${createdUid}"
      data-s4m-created-at="${escapeAttr(createdAt)}"
      data-s4m-aff-tag="${escapeAttr(AFF_TAG)}"
+     data-s4m-destination-url="${escapeAttr(destinationUrl)}"
      style="border:1px solid rgba(15,23,42,0.10);border-radius:14px;padding:14px;display:flex;gap:12px;align-items:center;max-width:560px;background:rgba(255,255,255,0.92);box-shadow:0 1px 0 rgba(2,6,23,0.03);">
   <div style="flex:1;min-width:0;">
     <div style="font-weight:900;font-size:14px;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
@@ -2358,7 +2381,7 @@
     </div>
   </div>
 
-  <a href="${escapeAttr(affiliateUrl)}"
+  <a href="${escapeAttr(trackingUrl)}"
      target="_blank"
      rel="nofollow sponsored noopener"
      style="display:inline-flex;align-items:center;justify-content:center;height:40px;padding:0 14px;border-radius:12px;background:rgba(2,6,23,0.94);color:#fff;text-decoration:none;font-weight:900;font-size:13px;white-space:nowrap;">
@@ -2367,7 +2390,7 @@
 </div>`.trim();
     }
 
-    function renderPreviewCard({ asin, affiliateUrl }){
+    function renderPreviewCard({ asin, trackingUrl, destinationUrl }){
       if(!affPreview) return;
 
       const imgUrl = `https://m.media-amazon.com/images/P/${asin}.01._SX240_.jpg`;
@@ -2385,14 +2408,17 @@
           <div style="flex:1;min-width:0;">
             <div style="font-weight:950;font-size:13px;letter-spacing:-0.01em;">ASIN: ${escapeAttr(asin)}</div>
             <div style="margin-top:6px;font-size:12.5px;color:rgba(82,88,102,0.95);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-              ${escapeAttr(affiliateUrl)}
+              ${escapeAttr(trackingUrl)}
+            </div>
+            <div style="margin-top:6px;font-size:12.5px;color:rgba(82,88,102,0.95);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+              Dest: ${escapeAttr(destinationUrl)}
             </div>
             <div style="margin-top:6px;font-size:12.5px;color:rgba(82,88,102,0.95);">
               Created by: ${escapeAttr(__s4mCreatorEmail || "—")}
             </div>
           </div>
 
-          <a href="${escapeAttr(affiliateUrl)}"
+          <a href="${escapeAttr(trackingUrl)}"
              target="_blank"
              rel="nofollow sponsored noopener"
              style="display:inline-flex;align-items:center;justify-content:center;height:40px;padding:0 14px;border-radius:12px;background:rgba(2,6,23,0.94);color:#fff;text-decoration:none;font-weight:900;font-size:13px;white-space:nowrap;">
@@ -2422,7 +2448,7 @@
     function generateStrip(){
       showAffError("");
 
-      if(!__s4mCreatorEmail){
+      if(!__s4mCreatorUid){
         showAffError("Please sign in to generate (needed to store 'created by' reference).");
         return;
       }
@@ -2442,18 +2468,22 @@
         return;
       }
 
-      const affiliateUrl = buildAffiliateUrl(asin);
+      const destinationUrl = buildAffiliateUrl(asin); // merchant affiliate URL (includes tag + best-effort subtag)
+      const trackingUrl = buildTrackingUrl(destinationUrl, __s4mCreatorUid); // Shop4Me /go link for click logging
 
-      if(affLink) affLink.value = affiliateUrl;
+      // Stripe code should be the tracking link (share this)
+      if(affLink) affLink.value = trackingUrl;
 
       const html = buildStripHtml({
         asin,
-        affiliateUrl,
-        createdByEmail: __s4mCreatorEmail
+        trackingUrl,
+        destinationUrl,
+        createdByEmail: __s4mCreatorEmail,
+        createdByUid: __s4mCreatorUid
       });
 
       if(affHtml) affHtml.value = html;
-      renderPreviewCard({ asin, affiliateUrl });
+      renderPreviewCard({ asin, trackingUrl, destinationUrl });
     }
 
     async function copyStripeCode(){
@@ -2506,10 +2536,8 @@
     // ✅ Welcome toast elements
     const welcomeToast = document.getElementById("welcomeToast");
     const welcomeMsg   = document.getElementById("welcomeMsg");
-
-    // ✅ CHANGE: show welcome toast only for Rajesh (email match)
-    const WELCOME_EMAIL = "rajesh.tr@kimbal.io";   // <-- CHANGED
-    const WELCOME_FLAG  = "s4m_welcome_shown";    // session-only
+    const WELCOME_EMAIL = "nakshathragd.31@gmail.com";
+    const WELCOME_FLAG  = "s4m_welcome_shown"; // session-only
 
     function showWelcomeToast(firstName){
       if(!welcomeToast || !welcomeMsg) return;
@@ -2517,8 +2545,7 @@
       if(sessionStorage.getItem(WELCOME_FLAG) === "1") return;
       sessionStorage.setItem(WELCOME_FLAG, "1");
 
-      // ✅ CHANGE: fallback to "Rajesh"
-      welcomeMsg.textContent = `Welcome, ${firstName || "Rajesh"}!`; // <-- CHANGED
+      welcomeMsg.textContent = `Welcome, ${firstName || "Nakshathra"}!`;
 
       welcomeToast.hidden = false;
       welcomeToast.classList.remove("show");
@@ -2586,6 +2613,7 @@
     function setSignedOutUI(){
       __s4mCreatorEmail = "";
       __s4mCreatorName = "";
+      __s4mCreatorUid  = "";
       if(affCreatorHint) affCreatorHint.textContent = "Created by: — (sign in required)";
       clearOutputs();
       clearProfileUI();
@@ -2611,6 +2639,7 @@
 
       __s4mCreatorEmail = email || "";
       __s4mCreatorName  = name || "";
+      __s4mCreatorUid   = user?.uid || "";
       if(affCreatorHint) affCreatorHint.textContent = `Created by: ${email || "—"}`;
 
       if(userAvatar){
@@ -2646,10 +2675,10 @@
         }
       }
 
-      // ✅ CHANGE: Heartbeat welcome only for Rajesh email, fallback name "Rajesh"
+      // ✅ Heartbeat welcome
       const emailLower = (email || "").toLowerCase();
       if(emailLower === WELCOME_EMAIL){
-        showWelcomeToast(name.split(" ")[0] || "Rajesh"); // <-- CHANGED (removed wrong fallback)
+        showWelcomeToast(name.split(" ")[0] || "Rajesh");
       }
 
       showHome();
