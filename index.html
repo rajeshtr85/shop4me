@@ -1748,6 +1748,50 @@
           </div>
         </div>
 
+        <!-- ✅ NEW: PROFILE (Firestore) -->
+        <div class="card panel col12 reveal">
+          <div class="eyebrow" style="margin-bottom:10px;">Profile</div>
+          <h3 style="margin:0;font-size:16px;font-weight:950;letter-spacing:-0.01em;">Your saved details</h3>
+          <p style="margin:10px 0 0;color:var(--muted);font-size:13px;">
+            We auto-save your Google name/email. Add your mobile number and birth year here.
+          </p>
+
+          <div class="affGrid">
+            <div class="affField">
+              <div class="affLabel">Account</div>
+              <div style="display:grid;gap:6px;font-size:13px;color:rgba(2,6,23,0.86);">
+                <div><b>UID:</b> <span id="u_uid">—</span></div>
+                <div><b>Name:</b> <span id="u_name">—</span></div>
+                <div><b>Email:</b> <span id="u_email">—</span></div>
+              </div>
+            </div>
+
+            <div class="affField">
+              <label class="affLabel" for="u_mobile">Mobile number</label>
+              <input id="u_mobile" type="text" placeholder="e.g., 9876543210" />
+              <div class="affHint">Saved in Firestore under <b>users/&lt;uid&gt;</b>.</div>
+            </div>
+
+            <div class="affField">
+              <label class="affLabel" for="u_birthYear">Birth year</label>
+              <input id="u_birthYear" type="number" min="1900" max="2100" placeholder="e.g., 1998" />
+              <div class="affHint">Optional.</div>
+            </div>
+
+            <div class="affActions">
+              <button class="btn primary" type="button" id="u_saveBtn">Save profile</button>
+              <button class="btn" type="button" id="u_reloadBtn">Reload</button>
+            </div>
+
+            <div class="affField">
+              <div class="affLabel">Status</div>
+              <div class="affPreview" id="u_status">
+                <div class="affEmpty">Not saved yet.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- ✅ Affiliate strip generator card (UPDATED) -->
         <div class="card panel col12 reveal">
           <div class="eyebrow" style="margin-bottom:10px;">Affiliate Tool</div>
@@ -2062,6 +2106,15 @@
       browserLocalPersistence
     } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
+    // ✅ Firestore imports
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      setDoc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
     // ---------- Firebase ----------
     const firebaseConfig = {
       apiKey: "AIzaSyAi9Sh8cVBpiMPar0-B22od03ZXNp5lBoc",
@@ -2075,6 +2128,7 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+    const db = getFirestore(app);
 
     const provider = new GoogleAuthProvider();
     provider.setCustomParameters({ prompt: "select_account" });
@@ -2100,6 +2154,16 @@
     const userPageName  = document.getElementById("userPageName");
     const userPageEmail = document.getElementById("userPageEmail");
 
+    // ✅ Profile elements (Firestore)
+    const u_uid = document.getElementById("u_uid");
+    const u_name = document.getElementById("u_name");
+    const u_email = document.getElementById("u_email");
+    const u_mobile = document.getElementById("u_mobile");
+    const u_birthYear = document.getElementById("u_birthYear");
+    const u_saveBtn = document.getElementById("u_saveBtn");
+    const u_reloadBtn = document.getElementById("u_reloadBtn");
+    const u_status = document.getElementById("u_status");
+
     // ✅ Affiliate generator elements (UPDATED)
     const AFF_TAG = "shop4me0e-21";
     const affUrlInput     = document.getElementById("affUrl");
@@ -2116,6 +2180,136 @@
     let __s4mCreatorEmail = "";
     let __s4mCreatorName  = "";
 
+    // ---------- Firestore Profile helpers ----------
+    function setProfileStatus(msg, isError=false){
+      if(!u_status) return;
+      u_status.innerHTML = `
+        <div style="font-size:13px;font-weight:900;color:${isError ? "rgba(220,38,38,0.95)" : "rgba(2,6,23,0.86)"};">
+          ${msg}
+        </div>`;
+    }
+
+    function normalizeMobile(v){
+      return (v || "").replace(/[^\d+]/g, "").trim();
+    }
+
+    function normalizeBirthYear(v){
+      const n = Number(String(v || "").trim());
+      if(!n) return null;
+      if(n < 1900 || n > 2100) return null;
+      return n;
+    }
+
+    async function upsertUserProfileFromAuth(user){
+      const uid = user.uid;
+      const ref = doc(db, "users", uid);
+
+      const base = {
+        uid,
+        name: user.displayName || "",
+        email: user.email || "",
+        photoURL: user.photoURL || "",
+        updatedAt: serverTimestamp(),
+        createdAt: serverTimestamp()
+      };
+
+      await setDoc(ref, base, { merge: true });
+    }
+
+    async function loadUserProfile(uid){
+      const ref = doc(db, "users", uid);
+      const snap = await getDoc(ref);
+      return snap.exists() ? snap.data() : null;
+    }
+
+    function renderUserProfileToUI(user, profile){
+      const uid   = user?.uid || profile?.uid || "—";
+      const name  = user?.displayName || profile?.name || "—";
+      const email = user?.email || profile?.email || "—";
+
+      if(u_uid) u_uid.textContent = uid;
+      if(u_name) u_name.textContent = name;
+      if(u_email) u_email.textContent = email;
+
+      if(u_mobile) u_mobile.value = profile?.mobileNumber || "";
+      if(u_birthYear) u_birthYear.value = profile?.birthYear || "";
+    }
+
+    async function saveUserExtraFields(user){
+      const uid = user.uid;
+      const ref = doc(db, "users", uid);
+
+      const mobile = normalizeMobile(u_mobile?.value || "");
+      const birthYear = normalizeBirthYear(u_birthYear?.value || "");
+
+      if(mobile && mobile.length < 8){
+        setProfileStatus("Mobile number looks too short.", true);
+        return;
+      }
+      if((u_birthYear?.value || "").trim() && birthYear === null){
+        setProfileStatus("Birth year must be between 1900 and 2100.", true);
+        return;
+      }
+
+      await setDoc(ref, {
+        mobileNumber: mobile || "",
+        birthYear: birthYear || null,
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+
+      setProfileStatus("Saved ✅");
+      // also fill Zoho (best-effort) after save
+      fillZohoFromProfile(user, { mobileNumber: mobile || "", birthYear: birthYear || null });
+    }
+
+    // ✅ Autofill Zoho request form (name + phone only, best-effort)
+    function fillZohoFromProfile(user, profile){
+      const form = document.getElementById("form");
+      if(!form) return;
+
+      const nameInput = form.querySelector('input[name="SingleLine"]');
+      const phoneInput = form.querySelector('input[name="Number"]');
+
+      const name = user?.displayName || profile?.name || "";
+      const phone = profile?.mobileNumber || "";
+
+      // Fill only if empty (so user edits won't be overwritten)
+      if(nameInput && !String(nameInput.value || "").trim()) nameInput.value = name;
+      if(phoneInput && !String(phoneInput.value || "").trim()) phoneInput.value = phone;
+    }
+
+    u_saveBtn?.addEventListener("click", async () => {
+      const user = auth.currentUser;
+      if(!user){
+        setProfileStatus("Please sign in first.", true);
+        return;
+      }
+      try{
+        setProfileStatus("Saving...");
+        await saveUserExtraFields(user);
+      }catch(e){
+        setProfileStatus(e?.message || "Save failed.", true);
+      }
+    });
+
+    u_reloadBtn?.addEventListener("click", async () => {
+      const user = auth.currentUser;
+      if(!user){
+        setProfileStatus("Please sign in first.", true);
+        return;
+      }
+      try{
+        setProfileStatus("Loading...");
+        const profile = await loadUserProfile(user.uid);
+        renderUserProfileToUI(user, profile);
+        fillZohoFromProfile(user, profile || {});
+        setProfileStatus(profile ? "Loaded ✅" : "No profile found yet (will be created on sign-in).");
+      }catch(e){
+        setProfileStatus(e?.message || "Load failed.", true);
+      }
+    });
+
+    // ---------- Affiliate tool ----------
     function showAffError(msg){
       if(!affError) return;
       affError.textContent = msg || "";
@@ -2141,12 +2335,10 @@
     }
 
     function buildAffiliateUrl(asin){
-      // ✅ Keep the Store ID tag intact for commission tracking
       return `https://www.amazon.in/dp/${asin}?tag=${encodeURIComponent(AFF_TAG)}`;
     }
 
     function buildStripHtml({ asin, affiliateUrl, createdByEmail }){
-      // ✅ Add creator reference as metadata (does not alter tag mapping)
       const createdAt = new Date().toISOString();
       const createdBy = escapeAttr(createdByEmail || "");
 
@@ -2178,7 +2370,6 @@
     function renderPreviewCard({ asin, affiliateUrl }){
       if(!affPreview) return;
 
-      // Best-effort image by ASIN (may fail due to hotlinking / missing asset)
       const imgUrl = `https://m.media-amazon.com/images/P/${asin}.01._SX240_.jpg`;
 
       affPreview.innerHTML = `
@@ -2253,7 +2444,6 @@
 
       const affiliateUrl = buildAffiliateUrl(asin);
 
-      // Outputs
       if(affLink) affLink.value = affiliateUrl;
 
       const html = buildStripHtml({
@@ -2263,8 +2453,6 @@
       });
 
       if(affHtml) affHtml.value = html;
-
-      // Preview shows image (best-effort) for confirmation
       renderPreviewCard({ asin, affiliateUrl });
     }
 
@@ -2324,7 +2512,6 @@
     function showWelcomeToast(firstName){
       if(!welcomeToast || !welcomeMsg) return;
 
-      // show once per tab session
       if(sessionStorage.getItem(WELCOME_FLAG) === "1") return;
       sessionStorage.setItem(WELCOME_FLAG, "1");
 
@@ -2332,7 +2519,7 @@
 
       welcomeToast.hidden = false;
       welcomeToast.classList.remove("show");
-      void welcomeToast.offsetWidth; // restart animation
+      void welcomeToast.offsetWidth;
       welcomeToast.classList.add("show");
 
       clearTimeout(window.__s4mWelcomeT);
@@ -2384,11 +2571,21 @@
       showUserPage();
     });
 
+    function clearProfileUI(){
+      if(u_uid) u_uid.textContent = "—";
+      if(u_name) u_name.textContent = "—";
+      if(u_email) u_email.textContent = "—";
+      if(u_mobile) u_mobile.value = "";
+      if(u_birthYear) u_birthYear.value = "";
+      setProfileStatus("Not signed in.", false);
+    }
+
     function setSignedOutUI(){
       __s4mCreatorEmail = "";
       __s4mCreatorName = "";
       if(affCreatorHint) affCreatorHint.textContent = "Created by: — (sign in required)";
       clearOutputs();
+      clearProfileUI();
 
       if(userAvatar){
         userAvatar.innerHTML = `
@@ -2430,7 +2627,6 @@
       if(guestCard) guestCard.style.display = "none";
       if(userCard)  userCard.style.display  = "block";
 
-      // close dropdown after sign-in
       setUserMenu(false);
 
       // fill user page details too
@@ -2490,9 +2686,7 @@
 
     async function doSignOut(){
       try{
-        // allow welcome to show again next sign-in
         sessionStorage.removeItem(WELCOME_FLAG);
-
         await signOut(auth);
         setUserMenu(false);
         showHome();
@@ -2504,10 +2698,23 @@
     signInBtn?.addEventListener("click", doSignIn);
     signOutBtn?.addEventListener("click", doSignOut);
 
-    // ---------- Auth state ----------
-    onAuthStateChanged(auth, (user) => {
+    // ---------- Auth state + Firestore sync ----------
+    onAuthStateChanged(auth, async (user) => {
       if(user){
         setSignedInUI(user);
+
+        try{
+          setProfileStatus("Syncing profile...");
+          await upsertUserProfileFromAuth(user);
+
+          const profile = await loadUserProfile(user.uid);
+          renderUserProfileToUI(user, profile || {});
+          fillZohoFromProfile(user, profile || {});
+          setProfileStatus("Profile ready ✅");
+        }catch(e){
+          setProfileStatus(e?.message || "Profile sync failed.", true);
+        }
+
       }else{
         setSignedOutUI();
       }
