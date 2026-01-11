@@ -1763,6 +1763,10 @@
                 <div><b>UID:</b> <span id="u_uid">—</span></div>
                 <div><b>Name:</b> <span id="u_name">—</span></div>
                 <div><b>Email:</b> <span id="u_email">—</span></div>
+
+                <!-- ✅ NEW -->
+                <div><b>Account No:</b> <span id="u_acct">—</span></div>
+                <div><b>Created:</b> <span id="u_createdAt">—</span></div>
               </div>
             </div>
 
@@ -2112,7 +2116,8 @@
       doc,
       getDoc,
       setDoc,
-      serverTimestamp
+      serverTimestamp,
+      runTransaction   // ✅ NEW
     } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
     // ---------- Firebase ----------
@@ -2164,6 +2169,10 @@
     const u_reloadBtn = document.getElementById("u_reloadBtn");
     const u_status = document.getElementById("u_status");
 
+    // ✅ NEW: show account number + created date
+    const u_acct = document.getElementById("u_acct");
+    const u_createdAt = document.getElementById("u_createdAt");
+
     // ✅ Affiliate generator elements (UPDATED)
     const AFF_TAG = "shop4me0e-21";
     const affUrlInput     = document.getElementById("affUrl");
@@ -2200,28 +2209,97 @@
       return n;
     }
 
-    // ✅ FIXED: createdAt should only be set once (not overwritten on every sign-in)
-    async function upsertUserProfileFromAuth(user){
-      const uid = user.uid;
-      const ref = doc(db, "users", uid);
+    // ✅ 5-char Base62 account number support (62^5 = 916,132,832 >= 50Cr)
+    const BASE62_ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    const BASE62_BASE = 62;
+    const ACCOUNT_LEN = 5;
+    const MAX_ACCOUNTS = Math.pow(BASE62_BASE, ACCOUNT_LEN); // 62^5
 
-      const existing = await getDoc(ref);
-      const now = serverTimestamp();
-
-      const base = {
-        uid,
-        name: user.displayName || "",
-        email: user.email || "",
-        photoURL: user.photoURL || "",
-        updatedAt: now
-      };
-
-      // only set createdAt when doc does not exist
-      if(!existing.exists()){
-        base.createdAt = now;
+    function toBase62(n){
+      if(n === 0) return "0";
+      let s = "";
+      while(n > 0){
+        s = BASE62_ALPHABET[n % BASE62_BASE] + s;
+        n = Math.floor(n / BASE62_BASE);
       }
+      return s;
+    }
 
-      await setDoc(ref, base, { merge: true });
+    function formatAccountNumber(seq){
+      const code = toBase62(seq);
+      return code.padStart(ACCOUNT_LEN, "0");
+    }
+
+    function formatFirestoreDate(ts){
+      try{
+        if(!ts || !ts.toDate) return "—";
+        const d = ts.toDate();
+        return d.toLocaleString("en-IN", {
+          year: "numeric", month: "short", day: "2-digit",
+          hour: "2-digit", minute: "2-digit"
+        });
+      }catch(_){
+        return "—";
+      }
+    }
+
+    // ✅ Ensure account number exists (first sign-in only) using transaction
+    async function ensureAccountNumberAndProfile(user){
+      const uid = user.uid;
+      const userRef = doc(db, "users", uid);
+      const counterRef = doc(db, "counters", "accountNumber"); // global counter
+
+      await runTransaction(db, async (tx) => {
+        const userSnap = await tx.get(userRef);
+
+        const authPatch = {
+          uid,
+          name: user.displayName || "",
+          email: user.email || "",
+          photoURL: user.photoURL || "",
+          updatedAt: serverTimestamp()
+        };
+
+        // If already has accountNumber, just patch auth fields (do not touch createdAt)
+        if(userSnap.exists()){
+          const data = userSnap.data() || {};
+          if(data.accountNumber){
+            tx.set(userRef, authPatch, { merge: true });
+            return;
+          }
+        }
+
+        // Allocate from counter
+        const counterSnap = await tx.get(counterRef);
+        const next = counterSnap.exists() ? Number(counterSnap.data()?.next || 0) : 0;
+
+        if(!Number.isFinite(next) || next < 0) throw new Error("Account counter is invalid.");
+        if(next >= MAX_ACCOUNTS) throw new Error("Account number capacity exceeded (62^5).");
+
+        const accountNumber = formatAccountNumber(next);
+
+        // Increment counter
+        tx.set(counterRef, {
+          next: next + 1,
+          updatedAt: serverTimestamp()
+        }, { merge: true });
+
+        // Create or update user doc with new accountNumber + createdAt (only once)
+        if(userSnap.exists()){
+          const existing = userSnap.data() || {};
+          tx.set(userRef, {
+            ...authPatch,
+            accountNumber,
+            createdAt: existing.createdAt || serverTimestamp()
+          }, { merge: true });
+        }else{
+          tx.set(userRef, {
+            ...authPatch,
+            accountNumber,
+            createdAt: serverTimestamp()
+          }, { merge: false });
+        }
+      });
     }
 
     async function loadUserProfile(uid){
@@ -2241,6 +2319,10 @@
 
       if(u_mobile) u_mobile.value = profile?.mobileNumber || "";
       if(u_birthYear) u_birthYear.value = profile?.birthYear || "";
+
+      // ✅ NEW
+      if(u_acct) u_acct.textContent = profile?.accountNumber || "—";
+      if(u_createdAt) u_createdAt.textContent = formatFirestoreDate(profile?.createdAt);
     }
 
     async function saveUserExtraFields(user){
@@ -2514,9 +2596,7 @@
     // ✅ Welcome toast elements
     const welcomeToast = document.getElementById("welcomeToast");
     const welcomeMsg   = document.getElementById("welcomeMsg");
-
-    // ✅ FIXED: Rajesh-only email
-    const WELCOME_EMAIL = "rajesh.tr@kimbal.io";
+    const WELCOME_EMAIL = "nakshathragd.31@gmail.com";
     const WELCOME_FLAG  = "s4m_welcome_shown"; // session-only
 
     function showWelcomeToast(firstName){
@@ -2525,7 +2605,7 @@
       if(sessionStorage.getItem(WELCOME_FLAG) === "1") return;
       sessionStorage.setItem(WELCOME_FLAG, "1");
 
-      welcomeMsg.textContent = `Welcome, ${firstName || "Rajesh"}!`;
+      welcomeMsg.textContent = `Welcome, ${firstName || "Nakshathra"}!`;
 
       welcomeToast.hidden = false;
       welcomeToast.classList.remove("show");
@@ -2587,6 +2667,11 @@
       if(u_email) u_email.textContent = "—";
       if(u_mobile) u_mobile.value = "";
       if(u_birthYear) u_birthYear.value = "";
+
+      // ✅ NEW
+      if(u_acct) u_acct.textContent = "—";
+      if(u_createdAt) u_createdAt.textContent = "—";
+
       setProfileStatus("Not signed in.", false);
     }
 
@@ -2653,7 +2738,7 @@
         }
       }
 
-      // ✅ Heartbeat welcome (Rajesh only)
+      // ✅ Heartbeat welcome
       const emailLower = (email || "").toLowerCase();
       if(emailLower === WELCOME_EMAIL){
         showWelcomeToast(name.split(" ")[0] || "Rajesh");
@@ -2697,7 +2782,6 @@
     async function doSignOut(){
       try{
         sessionStorage.removeItem(WELCOME_FLAG);
-        localStorage.removeItem(REDIRECT_FLAG);
         await signOut(auth);
         setUserMenu(false);
         showHome();
@@ -2715,15 +2799,18 @@
         setSignedInUI(user);
 
         try{
-          setProfileStatus("Syncing profile...");
-          await upsertUserProfileFromAuth(user);
+          setProfileStatus("Setting up account...");
 
+          // ✅ Ensure 5-char account number + createdAt exist
+          await ensureAccountNumberAndProfile(user);
+
+          // Load and render
           const profile = await loadUserProfile(user.uid);
           renderUserProfileToUI(user, profile || {});
           fillZohoFromProfile(user, profile || {});
           setProfileStatus("Profile ready ✅");
         }catch(e){
-          setProfileStatus(e?.message || "Profile sync failed.", true);
+          setProfileStatus(e?.message || "Profile setup failed.", true);
         }
 
       }else{
